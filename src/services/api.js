@@ -109,6 +109,11 @@ class ApiService {
     return this.request(`/stations/${id}`);
   }
 
+  // Pump/Nozzle methods
+  async getStationPumps() {
+    return this.request('/station/pumps');
+  }
+
   // Dashboard methods
   async getDashboardOverview() {
     return this.request('/dashboard/overview');
