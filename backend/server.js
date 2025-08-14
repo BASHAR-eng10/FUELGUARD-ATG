@@ -45,6 +45,7 @@ app.get("/", (req, res) => {
       "POST /api/auth/login",
       "POST /api/auth/logout",
       "GET /api/auth/me",
+      "GET /api/stations/pumps",
       "GET /api/stations (requires auth)",
       "GET /api/stations/stats (requires auth)",
       "GET /api/stations/:id (requires auth)",
@@ -103,15 +104,13 @@ app.use("*", (req, res) => {
   });
 });
 
-if (process.env.NODE_ENV == "development") {
-  // Start server
-  app.listen(PORT, () => {
-    console.log(`🚀 Server running on http://localhost:${PORT}`);
-    console.log(`💡 Health check: http://localhost:${PORT}/health`);
-    console.log(`🔐 Auth API: http://localhost:${PORT}/api/auth`);
-    console.log(`⛽ Stations API: http://localhost:${PORT}/api/stations`);
-    console.log(`📊 Dashboard API: http://localhost:${PORT}/api/dashboard`);
-  });
-}
+// Start server
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(`💡 Health check: http://localhost:${PORT}/health`);
+  console.log(`🔐 Auth API: http://localhost:${PORT}/api/auth`);
+  console.log(`⛽ Stations API: http://localhost:${PORT}/api/stations`);
+  console.log(`📊 Dashboard API: http://localhost:${PORT}/api/dashboard`);
+});
 
 module.exports = app;

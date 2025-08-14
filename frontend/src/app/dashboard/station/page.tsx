@@ -19,12 +19,16 @@ interface StationData {
   password?: string
 }
 
+interface PumpData {
+  name: string
+}
+
 interface NozzleData {
   id: number
   name: string
   sold: number
   percentage: number
-  status: string
+  status: boolean 
 }
 
 const styles = {
@@ -456,13 +460,246 @@ const styles = {
   },
   messageText: {
     color: '#1e3a8a'
+  },
+  loadingState: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    color: '#6b7280',
+    fontSize: '14px'
+  },
+  modalOverlay: {
+    position: 'fixed' as const,
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 1000
+  },
+  modalContent: {
+    backgroundColor: '#ffffff',
+    borderRadius: '16px',
+    padding: '32px',
+    width: '90%',
+    maxWidth: '500px',
+    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
+  },
+  modalHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '24px'
+  },
+  modalTitle: {
+    fontSize: '20px',
+    fontWeight: '600',
+    color: '#111827',
+    margin: 0
+  },
+  closeButton: {
+    background: 'transparent',
+    border: 'none',
+    cursor: 'pointer',
+    padding: '8px',
+    borderRadius: '8px',
+    color: '#6b7280'
+  },
+  checklistContainer: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: '16px'
+  },
+  checklistItem: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+    padding: '16px',
+    backgroundColor: '#f8fafc',
+    borderRadius: '12px',
+    border: '1px solid #e2e8f0',
+    transition: 'all 0.2s'
+  },
+  checklistItemChecked: {
+    backgroundColor: '#dcfce7',
+    borderColor: '#16a34a'
+  },
+  checkbox: {
+    width: '20px',
+    height: '20px',
+    borderRadius: '4px',
+    border: '2px solid #d1d5db',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#ffffff'
+  },
+  checkboxChecked: {
+    backgroundColor: '#16a34a',
+    borderColor: '#16a34a',
+    color: '#ffffff'
+  },
+  checklistLabel: {
+    fontSize: '16px',
+    color: '#374151',
+    fontWeight: '500',
+    flex: 1
+  },
+  checklistLabelChecked: {
+    color: '#166534'
+  },
+  modalFooter: {
+    marginTop: '24px',
+    display: 'flex',
+    justifyContent: 'flex-end',
+    gap: '12px'
+  },
+  modalButton: {
+    padding: '12px 24px',
+    borderRadius: '8px',
+    border: 'none',
+    cursor: 'pointer',
+    fontSize: '14px',
+    fontWeight: '500',
+    transition: 'all 0.2s'
+  },
+  saveButton: {
+    backgroundColor: '#16a34a',
+    color: '#ffffff'
+  },
+  cancelButton: {
+    backgroundColor: '#f3f4f6',
+    color: '#374151'
+  },
+  salesRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '16px',
+    backgroundColor: '#f8fafc',
+    borderRadius: '12px',
+    border: '1px solid #e2e8f0',
+    marginBottom: '12px'
+  },
+  salesRowTotal: {
+    backgroundColor: '#dbeafe',
+    borderColor: '#3b82f6',
+    fontWeight: '600'
+  },
+  salesRowETotals: {
+    backgroundColor: '#dcfce7',
+    borderColor: '#16a34a',
+    fontWeight: '600'
+  },
+  salesLabel: {
+    fontSize: '16px',
+    color: '#374151',
+    fontWeight: '500'
+  },
+  salesValue: {
+    fontSize: '18px',
+    fontWeight: '600',
+    color: '#111827'
+  },
+  salesValueHighlight: {
+    color: '#16a34a',
+    fontSize: '20px'
+  },
+  salesDetails: {
+    fontSize: '12px',
+    color: '#6b7280',
+    marginTop: '4px'
+  },
+  salesIcon: {
+    marginRight: '8px'
+  },
+  textarea: {
+    width: '100%',
+    minHeight: '120px',
+    padding: '12px',
+    border: '1px solid #e2e8f0',
+    borderRadius: '8px',
+    fontSize: '14px',
+    fontFamily: 'inherit',
+    resize: 'vertical' as const,
+    outline: 'none',
+    transition: 'border-color 0.2s'
+  },
+  selectField: {
+    width: '100%',
+    padding: '12px',
+    border: '1px solid #e2e8f0',
+    borderRadius: '8px',
+    fontSize: '14px',
+    backgroundColor: '#ffffff',
+    outline: 'none',
+    transition: 'border-color 0.2s'
+  },
+  formGroup: {
+    marginBottom: '16px'
+  },
+  formLabel: {
+    display: 'block',
+    fontSize: '14px',
+    fontWeight: '500',
+    color: '#374151',
+    marginBottom: '8px'
+  },
+  urgentCategory: {
+    backgroundColor: '#fee2e2',
+    borderColor: '#dc2626'
+  },
+  characterCount: {
+    fontSize: '12px',
+    color: '#6b7280',
+    textAlign: 'right' as const,
+    marginTop: '4px'
+  },
+  sendingButton: {
+    backgroundColor: '#9ca3af',
+    cursor: 'not-allowed'
   }
 }
 
 export default function StationDashboard() {
   const [stationData, setStationData] = useState<StationData | null>(null)
+  // const [pumpData, setPumpData] = useState<PumpData[]>([])
+  const [nozzleData, setNozzleData] = useState<NozzleData[]>([])
   const [loading, setLoading] = useState(true)
+  const [pumpsLoading, setPumpsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [pumpsError, setPumpsError] = useState<string | null>(null)
+  const [showChecklistModal, setShowChecklistModal] = useState(false)
+  const [showSalesModal, setShowSalesModal] = useState(false)
+  const [showIssueModal, setShowIssueModal] = useState(false)
+  const [issueMessage, setIssueMessage] = useState('')
+  const [issueCategory, setIssueCategory] = useState('general')
+  const [issueSending, setIssueSending] = useState(false)
+  const [checklistItems, setChecklistItems] = useState({
+    calibration: false,
+    pipelineLeak: false,
+    tankLeak: false,
+    safetyEquipment: false
+  })
+  
+  // Sales data - normally would come from API
+  const [salesData] = useState({
+    unleaded: {
+      liters: 4220,
+      pricePerLiter: 1.45,
+      cash: 4220 * 1.45
+    },
+    diesel: {
+      liters: 5800,
+      pricePerLiter: 1.52,
+      cash: 5800 * 1.52
+    },
+    eTotalCash: 14629
+  })
   
   // Get station ID from URL
   const getStationId = (): string => {
@@ -471,6 +708,27 @@ export default function StationDashboard() {
       return urlParams.get('id') || '1'
     }
     return '1'
+  }
+
+  // Fetch pump data from API
+  const fetchPumpData = async () => {
+    try {
+      setPumpsLoading(true)
+      setPumpsError(null)
+			const response = await apiService.getStationPumps()
+
+			if (response.data && Array.isArray(response.data)) {
+				setNozzleData(response.data)
+			} else {
+				throw new Error('Invalid API response structure')
+			}
+
+    } catch (err) {
+      console.error('Error fetching pump data:', err)
+      setPumpsError((err as Error).message)
+    } finally {
+      setPumpsLoading(false)
+    }
   }
 
   // Fetch station data from API
@@ -483,7 +741,6 @@ export default function StationDashboard() {
       console.log('Fetching station data for ID:', stationId)
       
       // Fetch station info
-
       const result = await apiService.getAllStations()
       console.log('Station API Response:', result)
       
@@ -533,22 +790,88 @@ export default function StationDashboard() {
     }
   }
 
-  useEffect(() => {
-    fetchStationData()
-  }, [])
+  const refreshAllData = async () => {
+    await Promise.all([fetchStationData(), fetchPumpData()])
+  }
 
-  // Sample data - will come from endpoints later
-  const nozzleData: NozzleData[] = [
-    { id: 1, name: 'Nozzle 1', sold: 1250, percentage: 15.2, status: 'active' },
-    { id: 2, name: 'Nozzle 2', sold: 980, percentage: 12.8, status: 'active' },
-    { id: 3, name: 'Nozzle 3', sold: 1450, percentage: 18.5, status: 'active' },
-    { id: 4, name: 'Nozzle 4', sold: 750, percentage: 9.1, status: 'inactive' },
-    { id: 5, name: 'Nozzle 5', sold: 1120, percentage: 14.3, status: 'active' },
-    { id: 6, name: 'Nozzle 6', sold: 890, percentage: 11.7, status: 'active' }
-  ]
+  useEffect(() => {
+    refreshAllData()
+  }, [])
 
   const handleSignOut = () => {
     window.location.href = '/signin'
+  }
+
+  const handleChecklistItemChange = (item: keyof typeof checklistItems) => {
+    setChecklistItems(prev => ({
+      ...prev,
+      [item]: !prev[item]
+    }))
+  }
+
+  const handleSaveChecklist = () => {
+    console.log('Checklist saved:', checklistItems)
+    // Here you would typically save to your API
+    setShowChecklistModal(false)
+  }
+
+  const handleCloseModal = () => {
+    setShowChecklistModal(false)
+  }
+
+  const handleCloseSalesModal = () => {
+    setShowSalesModal(false)
+  }
+
+  const handleSaveSales = () => {
+    console.log('Sales data recorded:', salesData)
+    // Here you would typically save to your API
+    setShowSalesModal(false)
+  }
+
+  const handleCloseIssueModal = () => {
+    setShowIssueModal(false)
+    setIssueMessage('')
+    setIssueCategory('general')
+  }
+
+  const handleSendIssueReport = async () => {
+    if (!issueMessage.trim()) {
+      alert('Please enter an issue description before sending.')
+      return
+    }
+
+    setIssueSending(true)
+    
+    try {
+      // Simulate API call to send SMS
+      const issueData = {
+        stationId: stationData?.id,
+        stationName: stationData?.name,
+        category: issueCategory,
+        message: issueMessage,
+        timestamp: new Date().toISOString(),
+        managerName: 'Station Manager', // Could be from auth context
+        urgency: issueCategory === 'emergency' ? 'HIGH' : 'NORMAL'
+      }
+
+      console.log('Sending issue report:', issueData)
+      
+      // Here you would call your SMS API
+      // await apiService.sendIssueReport(issueData)
+      
+      // Simulate delay
+      await new Promise(resolve => setTimeout(resolve, 2000))
+      
+      alert(`Issue report sent successfully!\n\nSMS sent to General Manager:\n"STATION ALERT: ${stationData?.name || 'Station'} - ${issueCategory.toUpperCase()}\n${issueMessage}\nReported by: Station Manager\nTime: ${new Date().toLocaleString()}"`)
+      
+      handleCloseIssueModal()
+    } catch (error) {
+      console.error('Error sending issue report:', error)
+      alert('Failed to send issue report. Please try again.')
+    } finally {
+      setIssueSending(false)
+    }
   }
 
   return (
@@ -599,7 +922,7 @@ export default function StationDashboard() {
       <main style={styles.main}>
         {/* Welcome Section */}
         <div style={styles.welcomeSection}>
-          <h2 style={styles.welcomeTitle}>Station Overview 🏪</h2>
+          <h2 style={styles.welcomeTitle}>Station Overview 🛸</h2>
           <p style={styles.welcomeText}>
             {loading ? 'Loading station information...' : 
              error ? `Error: ${error}` :
@@ -624,9 +947,24 @@ export default function StationDashboard() {
                 <div>🏢 <strong>Operator:</strong> {stationData.operatorName}</div>
                 <div>📋 <strong>License:</strong> {stationData.ewuraLicense}</div>
                 <div>⛽ <strong>Tanks:</strong> {stationData.tanks}</div>
+                <div>🚰 <strong>Pumps/Nozzles:</strong> {pumpsLoading ? 'Loading...' : nozzleData.length}</div>
               </div>
+              
+              {pumpsError && (
+                <div style={{
+                  marginTop: '8px',
+                  padding: '8px',
+                  backgroundColor: '#fee2e2',
+                  borderRadius: '6px',
+                  fontSize: '12px',
+                  color: '#dc2626'
+                }}>
+                  ⚠️ Pump data error: {pumpsError} (Using fallback data)
+                </div>
+              )}
+              
               <button
-                onClick={fetchStationData}
+                onClick={refreshAllData}
                 style={{
                   marginTop: '8px',
                   padding: '6px 12px',
@@ -642,7 +980,7 @@ export default function StationDashboard() {
                 }}
               >
                 <RefreshCw size={12} />
-                Refresh Data
+                Refresh All Data
               </button>
             </div>
           )}
@@ -1088,7 +1426,13 @@ export default function StationDashboard() {
         <div style={styles.nozzleSection}>
           <h3 style={styles.nozzleTitle}>
             <Target size={20} color="#6366f1" />
-            Nozzle Performance
+            Pump/Nozzle Performance
+            {pumpsLoading && (
+              <div style={styles.loadingState}>
+                <Loader2 size={16} className="animate-spin" />
+                Loading pump data...
+              </div>
+            )}
           </h3>
           <div style={styles.nozzleGrid}>
             {nozzleData.map((nozzle) => (
@@ -1097,10 +1441,10 @@ export default function StationDashboard() {
                   <span style={styles.nozzleName}>{nozzle.name}</span>
                   <span style={{
                     ...styles.nozzleStatus,
-                    color: nozzle.status === 'active' ? '#166534' : '#dc2626',
-                    backgroundColor: nozzle.status === 'active' ? '#dcfce7' : '#fee2e2'
+                    color: nozzle.status ? '#166534' : '#dc2626',
+                    backgroundColor: nozzle.status ? '#dcfce7' : '#fee2e2'
                   }}>
-                    {nozzle.status === 'active' ? 'Active' : 'Inactive'}
+                    {nozzle.status ? 'Active' : 'Inactive'}
                   </span>
                 </div>
                 <div style={styles.nozzleMetrics}>
@@ -1167,13 +1511,17 @@ export default function StationDashboard() {
               <div style={{...styles.statIcon, backgroundColor: '#f3e8ff'}}>
                 <Target size={24} color="#9333ea" />
               </div>
-              <span style={{...styles.statusBadge, color: '#166534', backgroundColor: '#dcfce7'}}>All Online</span>
+              <span style={{...styles.statusBadge, color: '#166534', backgroundColor: '#dcfce7'}}>
+                {pumpsLoading ? 'Loading...' : `${nozzleData.filter(n => n.status).length}/${nozzleData.length} Online`}
+              </span>
             </div>
-            <h3 style={styles.statValue}>6/6</h3>
-            <p style={styles.statLabel}>Nozzles Active</p>
+            <h3 style={styles.statValue}>
+              {pumpsLoading ? '...' : `${nozzleData.filter(n => n.status).length}/${nozzleData.length}`}
+            </h3>
+            <p style={styles.statLabel}>Pumps/Nozzles Active</p>
             <div style={styles.statFooter}>
               <TrendingUp size={12} style={{marginRight: '4px'}} />
-              100% uptime
+              {pumpsLoading ? 'Loading...' : `${Math.round((nozzleData.filter(n => n.status).length / nozzleData.length) * 100)}% uptime`}
             </div>
           </div>
 
@@ -1210,6 +1558,7 @@ export default function StationDashboard() {
               <span>Update Levels</span>
             </button>
             <button 
+              onClick={() => setShowSalesModal(true)}
               style={{...styles.actionButton, backgroundColor: '#dcfce7', color: '#166534'}}
               onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#bbf7d0')}
               onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#dcfce7')}
@@ -1218,14 +1567,16 @@ export default function StationDashboard() {
               <span>Record Sales</span>
             </button>
             <button 
+              onClick={() => setShowChecklistModal(true)}
               style={{...styles.actionButton, backgroundColor: '#f3e8ff', color: '#7c3aed'}}
               onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#e9d5ff')}
               onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#f3e8ff')}
             >
               <Clock size={24} style={{marginBottom: '8px'}} />
-              <span>Daily Checklist</span>
+              <span>Checklist</span>
             </button>
             <button 
+              onClick={() => setShowIssueModal(true)}
               style={{...styles.actionButton, backgroundColor: '#fed7aa', color: '#c2410c'}}
               onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#fdba74')}
               onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#fed7aa')}
@@ -1245,11 +1596,417 @@ export default function StationDashboard() {
             <div>
               <h3 style={styles.messageTitle}>🎉 Station System Active</h3>
               <p style={styles.messageText}>
-                Your station monitoring tools are running perfectly! Tank levels, sales tracking, and alert systems are all operational.
+                Your station monitoring tools are running perfectly! Tank levels, sales tracking, pump monitoring, and alert systems are all operational.
+                {!pumpsLoading && ` Currently monitoring ${nozzleData.length} pumps/nozzles.`}
               </p>
             </div>
           </div>
         </div>
+
+        {/* Checklist Modal */}
+        {showChecklistModal && (
+          <div style={styles.modalOverlay} onClick={handleCloseModal}>
+            <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+              <div style={styles.modalHeader}>
+                <h3 style={styles.modalTitle}>Daily Safety Checklist</h3>
+                <button 
+                  onClick={handleCloseModal}
+                  style={styles.closeButton}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f3f4f6')}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+                >
+                  ✕
+                </button>
+              </div>
+              
+              <div style={styles.checklistContainer}>
+                <div 
+                  style={{
+                    ...styles.checklistItem,
+                    ...(checklistItems.calibration ? styles.checklistItemChecked : {})
+                  }}
+                  onClick={() => handleChecklistItemChange('calibration')}
+                >
+                  <div 
+                    style={{
+                      ...styles.checkbox,
+                      ...(checklistItems.calibration ? styles.checkboxChecked : {})
+                    }}
+                  >
+                    {checklistItems.calibration && '✓'}
+                  </div>
+                  <span 
+                    style={{
+                      ...styles.checklistLabel,
+                      ...(checklistItems.calibration ? styles.checklistLabelChecked : {})
+                    }}
+                  >
+                    Calibration completed and verified?
+                  </span>
+                </div>
+
+                <div 
+                  style={{
+                    ...styles.checklistItem,
+                    ...(checklistItems.pipelineLeak ? styles.checklistItemChecked : {})
+                  }}
+                  onClick={() => handleChecklistItemChange('pipelineLeak')}
+                >
+                  <div 
+                    style={{
+                      ...styles.checkbox,
+                      ...(checklistItems.pipelineLeak ? styles.checkboxChecked : {})
+                    }}
+                  >
+                    {checklistItems.pipelineLeak && '✓'}
+                  </div>
+                  <span 
+                    style={{
+                      ...styles.checklistLabel,
+                      ...(checklistItems.pipelineLeak ? styles.checklistLabelChecked : {})
+                    }}
+                  >
+                    Pipeline inspected for leaks or damage?
+                  </span>
+                </div>
+
+                <div 
+                  style={{
+                    ...styles.checklistItem,
+                    ...(checklistItems.tankLeak ? styles.checklistItemChecked : {})
+                  }}
+                  onClick={() => handleChecklistItemChange('tankLeak')}
+                >
+                  <div 
+                    style={{
+                      ...styles.checkbox,
+                      ...(checklistItems.tankLeak ? styles.checkboxChecked : {})
+                    }}
+                  >
+                    {checklistItems.tankLeak && '✓'}
+                  </div>
+                  <span 
+                    style={{
+                      ...styles.checklistLabel,
+                      ...(checklistItems.tankLeak ? styles.checklistLabelChecked : {})
+                    }}
+                  >
+                    Storage tanks checked for leaks or structural issues?
+                  </span>
+                </div>
+
+                <div 
+                  style={{
+                    ...styles.checklistItem,
+                    ...(checklistItems.safetyEquipment ? styles.checklistItemChecked : {})
+                  }}
+                  onClick={() => handleChecklistItemChange('safetyEquipment')}
+                >
+                  <div 
+                    style={{
+                      ...styles.checkbox,
+                      ...(checklistItems.safetyEquipment ? styles.checkboxChecked : {})
+                    }}
+                  >
+                    {checklistItems.safetyEquipment && '✓'}
+                  </div>
+                  <span 
+                    style={{
+                      ...styles.checklistLabel,
+                      ...(checklistItems.safetyEquipment ? styles.checklistLabelChecked : {})
+                    }}
+                  >
+                    Safety equipment functional and accessible?
+                  </span>
+                </div>
+              </div>
+
+              <div style={styles.modalFooter}>
+                <button 
+                  onClick={handleCloseModal}
+                  style={{...styles.modalButton, ...styles.cancelButton}}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#e5e7eb')}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#f3f4f6')}
+                >
+                  Cancel
+                </button>
+                <button 
+                  onClick={handleSaveChecklist}
+                  style={{...styles.modalButton, ...styles.saveButton}}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#15803d')}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#16a34a')}
+                >
+                  Save Checklist
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Sales Record Modal */}
+        {showSalesModal && (
+          <div style={styles.modalOverlay} onClick={handleCloseSalesModal}>
+            <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+              <div style={styles.modalHeader}>
+                <h3 style={styles.modalTitle}>Daily Sales Record</h3>
+                <button 
+                  onClick={handleCloseSalesModal}
+                  style={styles.closeButton}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f3f4f6')}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+                >
+                  ✕
+                </button>
+              </div>
+              
+              <div style={styles.checklistContainer}>
+                {/* Unleaded Sales */}
+                <div style={styles.salesRow}>
+                  <div>
+                    <div style={styles.salesLabel}>
+                      <span style={styles.salesIcon}>⛽</span>
+                      Unleaded Sales
+                    </div>
+                    <div style={styles.salesDetails}>
+                      {salesData.unleaded.liters.toLocaleString()} L × ${salesData.unleaded.pricePerLiter}
+                    </div>
+                  </div>
+                  <div style={styles.salesValue}>
+                    ${salesData.unleaded.cash.toLocaleString()}
+                  </div>
+                </div>
+
+                {/* Diesel Sales */}
+                <div style={styles.salesRow}>
+                  <div>
+                    <div style={styles.salesLabel}>
+                      <span style={styles.salesIcon}>🚛</span>
+                      Diesel Sales
+                    </div>
+                    <div style={styles.salesDetails}>
+                      {salesData.diesel.liters.toLocaleString()} L × ${salesData.diesel.pricePerLiter}
+                    </div>
+                  </div>
+                  <div style={styles.salesValue}>
+                    ${salesData.diesel.cash.toLocaleString()}
+                  </div>
+                </div>
+
+                {/* Combined Fuel Sales */}
+                <div style={{...styles.salesRow, ...styles.salesRowTotal}}>
+                  <div>
+                    <div style={styles.salesLabel}>
+                      <span style={styles.salesIcon}>📊</span>
+                      Total Fuel Sales (Unleaded + Diesel)
+                    </div>
+                    <div style={styles.salesDetails}>
+                      Combined cash from both fuel types
+                    </div>
+                  </div>
+                  <div style={{...styles.salesValue, color: '#1d4ed8'}}>
+                    ${(salesData.unleaded.cash + salesData.diesel.cash).toLocaleString()}
+                  </div>
+                </div>
+
+                {/* E_Total System Sales */}
+                <div style={{...styles.salesRow, ...styles.salesRowETotals}}>
+                  <div>
+                    <div style={styles.salesLabel}>
+                      <span style={styles.salesIcon}>💰</span>
+                      E_Total System Revenue
+                    </div>
+                    <div style={styles.salesDetails}>
+                      Electronic system total (includes all transactions)
+                    </div>
+                  </div>
+                  <div style={{...styles.salesValue, ...styles.salesValueHighlight}}>
+                    ${salesData.eTotalCash.toLocaleString()}
+                  </div>
+                </div>
+
+                {/* Variance Analysis */}
+                <div style={{
+                  ...styles.salesRow,
+                  backgroundColor: '#fef3c7',
+                  borderColor: '#f59e0b'
+                }}>
+                  <div>
+                    <div style={styles.salesLabel}>
+                      <span style={styles.salesIcon}>📈</span>
+                      Variance Analysis
+                    </div>
+                    <div style={styles.salesDetails}>
+                      Difference between manual calculation and E_Total
+                    </div>
+                  </div>
+                  <div style={{
+                    ...styles.salesValue,
+                    color: salesData.eTotalCash - (salesData.unleaded.cash + salesData.diesel.cash) >= 0 ? '#16a34a' : '#dc2626'
+                  }}>
+                    {salesData.eTotalCash - (salesData.unleaded.cash + salesData.diesel.cash) >= 0 ? '+' : ''}
+                    ${(salesData.eTotalCash - (salesData.unleaded.cash + salesData.diesel.cash)).toLocaleString()}
+                  </div>
+                </div>
+              </div>
+
+              <div style={styles.modalFooter}>
+                <button 
+                  onClick={handleCloseSalesModal}
+                  style={{...styles.modalButton, ...styles.cancelButton}}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#e5e7eb')}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#f3f4f6')}
+                >
+                  Close
+                </button>
+                <button 
+                  onClick={handleSaveSales}
+                  style={{...styles.modalButton, ...styles.saveButton}}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#15803d')}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#16a34a')}
+                >
+                  Record Sales
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Report Issue Modal */}
+        {showIssueModal && (
+          <div style={styles.modalOverlay} onClick={handleCloseIssueModal}>
+            <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+              <div style={styles.modalHeader}>
+                <h3 style={styles.modalTitle}>🚨 Report Station Issue</h3>
+                <button 
+                  onClick={handleCloseIssueModal}
+                  style={styles.closeButton}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f3f4f6')}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+                >
+                  ✕
+                </button>
+              </div>
+              
+              <div style={styles.checklistContainer}>
+                {/* Issue Category */}
+                <div style={styles.formGroup}>
+                  <label style={styles.formLabel}>Issue Category</label>
+                  <select 
+                    value={issueCategory}
+                    onChange={(e) => setIssueCategory(e.target.value)}
+                    style={{
+                      ...styles.selectField,
+                      ...(issueCategory === 'emergency' ? styles.urgentCategory : {})
+                    }}
+                    onFocus={(e) => (e.target.style.borderColor = '#3b82f6')}
+                    onBlur={(e) => (e.target.style.borderColor = '#e2e8f0')}
+                  >
+                    <option value="general">🔧 General Issue</option>
+                    <option value="equipment">⚙️ Equipment Malfunction</option>
+                    <option value="safety">⚠️ Safety Concern</option>
+                    <option value="fuel">⛽ Fuel System Problem</option>
+                    <option value="power">🔌 Power/Electrical Issue</option>
+                    <option value="emergency">🚨 EMERGENCY</option>
+                  </select>
+                </div>
+
+                {/* Issue Description */}
+                <div style={styles.formGroup}>
+                  <label style={styles.formLabel}>
+                    Issue Description 
+                    {issueCategory === 'emergency' && <span style={{color: '#dc2626'}}> (URGENT)</span>}
+                  </label>
+                  <textarea
+                    value={issueMessage}
+                    onChange={(e) => setIssueMessage(e.target.value)}
+                    placeholder="Please describe the issue in detail. Include location, time noticed, severity, and any immediate actions taken..."
+                    style={{
+                      ...styles.textarea,
+                      ...(issueCategory === 'emergency' ? styles.urgentCategory : {})
+                    }}
+                    onFocus={(e) => (e.target.style.borderColor = '#3b82f6')}
+                    onBlur={(e) => (e.target.style.borderColor = '#e2e8f0')}
+                    maxLength={500}
+                  />
+                  <div style={styles.characterCount}>
+                    {issueMessage.length}/500 characters
+                  </div>
+                </div>
+
+                {/* SMS Preview */}
+                <div style={{
+                  ...styles.salesRow,
+                  backgroundColor: '#f0f9ff',
+                  borderColor: '#0ea5e9'
+                }}>
+                  <div>
+                    <div style={styles.salesLabel}>
+                      <span style={styles.salesIcon}>📱</span>
+                      SMS Preview to General Manager
+                    </div>
+                    <div style={{
+                      fontSize: '12px',
+                      color: '#374151',
+                      marginTop: '8px',
+                      fontStyle: 'italic',
+                      padding: '8px',
+                      backgroundColor: '#ffffff',
+                      borderRadius: '6px',
+                      border: '1px solid #e2e8f0'
+                    }}>
+                      "STATION ALERT: {stationData?.name || 'Station'} - {issueCategory.toUpperCase()}<br/>
+                      {issueMessage || '[Issue description will appear here]'}<br/>
+                      Reported by: Station Manager<br/>
+                      Time: {new Date().toLocaleString()}"
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div style={styles.modalFooter}>
+                <button 
+                  onClick={handleCloseIssueModal}
+                  style={{...styles.modalButton, ...styles.cancelButton}}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#e5e7eb')}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#f3f4f6')}
+                >
+                  Cancel
+                </button>
+                <button 
+                  onClick={handleSendIssueReport}
+                  disabled={issueSending || !issueMessage.trim()}
+                  style={{
+                    ...styles.modalButton,
+                    ...(issueCategory === 'emergency' ? {backgroundColor: '#dc2626'} : styles.saveButton),
+                    ...(issueSending ? styles.sendingButton : {})
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!issueSending && issueMessage.trim()) {
+                      e.currentTarget.style.backgroundColor = issueCategory === 'emergency' ? '#b91c1c' : '#15803d'
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!issueSending && issueMessage.trim()) {
+                      e.currentTarget.style.backgroundColor = issueCategory === 'emergency' ? '#dc2626' : '#16a34a'
+                    }
+                  }}
+                >
+                  {issueSending ? (
+                    <>
+                      <Loader2 size={16} style={{marginRight: '8px', animation: 'spin 1s linear infinite'}} />
+                      Sending SMS...
+                    </>
+                  ) : (
+                    <>
+                      📱 Send SMS Alert
+                      {issueCategory === 'emergency' && ' (URGENT)'}
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   )

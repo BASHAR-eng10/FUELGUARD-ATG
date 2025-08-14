@@ -48,7 +48,7 @@ class ExternalApiService {
           console.warn('Failed to get auth token for request:', error.message);
         }
         
-        console.log(`📡 API Request: ${config.method?.toUpperCase()} ${config.url}`);
+        console.log(`📡 API Request: ${config.method?.toUpperCase()} ${config.url} ${token}`);
         return config;
       },
       (error) => Promise.reject(error)
@@ -175,7 +175,8 @@ class ExternalApiService {
       }
 
       const response = await this.axiosInstance.get('/stationinfo/all');
-      
+			console.log('🔍 Station info response structure:', JSON.stringify(response.data, null, 2));
+
       if (response.data && response.data.data) {
         this.dataCache.set(cacheKey, response.data.data);
         return response.data.data;

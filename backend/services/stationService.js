@@ -5,7 +5,7 @@ const NodeCache = require('node-cache');
 class StationService {
   constructor() {
     // Local cache for transformed data
-    this.cache = new NodeCache({ stdTTL: 300 }); // 5 minutes cache
+    this.cache = new NodeCache({ stdTTL: 1 }); // 1 second cache
   }
 
   // Get all stations from external API
