@@ -43,6 +43,7 @@ app.get('/', (req, res) => {
       'POST /api/auth/login',
       'POST /api/auth/logout',
       'GET /api/auth/me',
+      'GET /api/stations/pumps',
       'GET /api/stations (requires auth)',
       'GET /api/stations/stats (requires auth)',
       'GET /api/stations/:id (requires auth)',

@@ -28,7 +28,7 @@ interface NozzleData {
   name: string
   sold: number
   percentage: number
-  status: string
+  status: boolean 
 }
 
 const styles = {
@@ -667,7 +667,7 @@ const styles = {
 
 export default function StationDashboard() {
   const [stationData, setStationData] = useState<StationData | null>(null)
-  const [pumpData, setPumpData] = useState<PumpData[]>([])
+  // const [pumpData, setPumpData] = useState<PumpData[]>([])
   const [nozzleData, setNozzleData] = useState<NozzleData[]>([])
   const [loading, setLoading] = useState(true)
   const [pumpsLoading, setPumpsLoading] = useState(true)
@@ -715,59 +715,17 @@ export default function StationDashboard() {
     try {
       setPumpsLoading(true)
       setPumpsError(null)
-      
-      console.log('Fetching pump data...')
-      const result = await apiService.getStationPumps()
-      console.log('Pump API Response:', result)
-      
-      if (result.data && result.data.page_records) {
-        const pumps = result.data.page_records
-        setPumpData(pumps)
-        
-        // Get the number of nozzles from the API response
-        const numberOfNozzles = pumps.length
-        
-        // Generate nozzle data using for loop from 1 to n
-        // Each pump has 2 nozzles: A1 and A2
-        const generatedNozzles: NozzleData[] = []
-        for (let i = 1; i <= numberOfNozzles; i++) {
-          const pumpNumber = Math.ceil(i / 2) // Pump1, Pump2, Pump3, etc.
-          const nozzleType = i % 2 === 1 ? 'A1' : 'A2' // Alternates between A1 and A2
-          
-          generatedNozzles.push({
-            id: i,
-            name: `Pump${pumpNumber} ${nozzleType}`,
-            sold: Math.floor(Math.random() * 1500) + 500, // Random data for now
-            percentage: parseFloat((Math.random() * 20 + 5).toFixed(1)), // Random percentage
-            status: Math.random() > 0.15 ? 'active' : 'inactive' // ~85% active, 15% inactive
-          })
-        }
-        
-        setNozzleData(generatedNozzles)
-        console.log(`Generated ${numberOfNozzles} nozzles (Pump1 A1 to Pump${Math.ceil(numberOfNozzles/2)} ${numberOfNozzles % 2 === 1 ? 'A1' : 'A2'})`)
-      } else {
-        throw new Error('Invalid pump data format received from API')
-      }
+			const response = await apiService.getStationPumps()
+
+			if (response.data && Array.isArray(response.data)) {
+				setNozzleData(response.data)
+			} else {
+				throw new Error('Invalid API response structure')
+			}
+
     } catch (err) {
       console.error('Error fetching pump data:', err)
       setPumpsError((err as Error).message)
-      
-      // Fallback to 12 nozzles (default)
-      const numberOfNozzles = 12
-      const fallbackNozzles: NozzleData[] = []
-      for (let i = 1; i <= numberOfNozzles; i++) {
-        const pumpNumber = Math.ceil(i / 2) // Pump1, Pump2, Pump3, etc.
-        const nozzleType = i % 2 === 1 ? 'A1' : 'A2' // Alternates between A1 and A2
-        
-        fallbackNozzles.push({
-          id: i,
-          name: `Pump${pumpNumber} ${nozzleType}`,
-          sold: Math.floor(Math.random() * 1500) + 500,
-          percentage: parseFloat((Math.random() * 20 + 5).toFixed(1)),
-          status: Math.random() > 0.15 ? 'active' : 'inactive'
-        })
-      }
-      setNozzleData(fallbackNozzles)
     } finally {
       setPumpsLoading(false)
     }
@@ -1483,10 +1441,10 @@ export default function StationDashboard() {
                   <span style={styles.nozzleName}>{nozzle.name}</span>
                   <span style={{
                     ...styles.nozzleStatus,
-                    color: nozzle.status === 'active' ? '#166534' : '#dc2626',
-                    backgroundColor: nozzle.status === 'active' ? '#dcfce7' : '#fee2e2'
+                    color: nozzle.status ? '#166534' : '#dc2626',
+                    backgroundColor: nozzle.status ? '#dcfce7' : '#fee2e2'
                   }}>
-                    {nozzle.status === 'active' ? 'Active' : 'Inactive'}
+                    {nozzle.status ? 'Active' : 'Inactive'}
                   </span>
                 </div>
                 <div style={styles.nozzleMetrics}>
@@ -1554,16 +1512,16 @@ export default function StationDashboard() {
                 <Target size={24} color="#9333ea" />
               </div>
               <span style={{...styles.statusBadge, color: '#166534', backgroundColor: '#dcfce7'}}>
-                {pumpsLoading ? 'Loading...' : `${nozzleData.filter(n => n.status === 'active').length}/${nozzleData.length} Online`}
+                {pumpsLoading ? 'Loading...' : `${nozzleData.filter(n => n.status).length}/${nozzleData.length} Online`}
               </span>
             </div>
             <h3 style={styles.statValue}>
-              {pumpsLoading ? '...' : `${nozzleData.filter(n => n.status === 'active').length}/${nozzleData.length}`}
+              {pumpsLoading ? '...' : `${nozzleData.filter(n => n.status).length}/${nozzleData.length}`}
             </h3>
             <p style={styles.statLabel}>Pumps/Nozzles Active</p>
             <div style={styles.statFooter}>
               <TrendingUp size={12} style={{marginRight: '4px'}} />
-              {pumpsLoading ? 'Loading...' : `${Math.round((nozzleData.filter(n => n.status === 'active').length / nozzleData.length) * 100)}% uptime`}
+              {pumpsLoading ? 'Loading...' : `${Math.round((nozzleData.filter(n => n.status).length / nozzleData.length) * 100)}% uptime`}
             </div>
           </div>
 

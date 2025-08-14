@@ -2,6 +2,12 @@
 const express = require('express');
 const router = express.Router();
 const stationService = require('../services/stationService');
+const { PrismaClient } = require('@prisma/client');
+const { withAccelerate } = require('@prisma/extension-accelerate');
+
+const prisma = new PrismaClient()
+  .$extends(withAccelerate());
+
 
 // Middleware to verify JWT token
 const verifyToken = (req, res, next) => {
@@ -50,6 +56,19 @@ router.get('/stats', verifyToken, async (req, res, next) => {
     res.json({
       success: true,
       data: stats,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/pumps', verifyToken, async (req, res, next) => {
+  try {
+		// fetch nozzles
+    res.json({
+      success: true,
+      data:  await prisma.nozzle.findMany(),
       timestamp: new Date().toISOString()
     });
   } catch (error) {

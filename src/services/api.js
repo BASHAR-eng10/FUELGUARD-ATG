@@ -9,10 +9,6 @@ class ApiService {
     }
   }
 
-	getAllStations() {
-		return this.request("/stationinfo/all");
-	}
-
 	getToken() {
 		// fetch token from local storage
 		if (typeof window !== 'undefined') {
@@ -105,13 +101,17 @@ class ApiService {
     return this.request('/stations');
   }
 
+	// getAllStations() {
+	// 	return this.request("/stationinfo/all");
+	// }
+
   async getStationById(id) {
     return this.request(`/stations/${id}`);
   }
 
   // Pump/Nozzle methods
   async getStationPumps() {
-    return this.request('/station/pumps');
+    return this.request('/stations/pumps');
   }
 
   // Dashboard methods
