@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "description": "Backend API for Fuel Station Management System",
   "main": "server.js",
+  "license": "MIT",
   "scripts": {
     "start": "node server.js",
+    "build": "echo 'No build step required'",
     "dev": "nodemon server.js",
     "test": "jest"
   },
