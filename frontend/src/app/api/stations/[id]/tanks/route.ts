@@ -10,7 +10,7 @@ export async function GET(request: NextRequest,
   try {
 		const {id } = await params;
     // Verify user token
-    const user = verifyToken(request);
+    const user = await verifyToken(request);
     console.log(`🔐 Authenticated user: ${user.email} (${user.role})`);
 
     // Make request to external API using user's stored tokens
@@ -54,18 +54,8 @@ export async function GET(request: NextRequest,
 					acc[existingIndex] = tank;
 				}
 			}
-			
 			return acc;
 		}, []) || [];
-
-
-		// const revisedTanks = latestTanks.map((tank: any) => {
-		// 	const station = stations.data.find((s: any) => s.EWURALicenseNo === tank.EWURALicenseNo);
-		// 	return {
-		// 		...tank,
-		// 		station_id: station ? station.id : null
-		// 	};
-		// });
 
 
     return NextResponse.json({

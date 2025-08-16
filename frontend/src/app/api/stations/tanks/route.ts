@@ -7,7 +7,7 @@ import { makeAuthenticatedExternalRequest } from '../../../../lib/auth/tokenMana
 export async function GET(request: NextRequest) {
   try {
     // Verify user token
-    const user = verifyToken(request);
+    const user = await verifyToken(request);
     console.log(`🔐 Authenticated user: ${user.email} (${user.role})`);
 
     // Make request to external API using user's stored tokens

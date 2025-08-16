@@ -5,8 +5,8 @@ import stationService from '../../../../lib/services/stationService';
 // GET /api/dashboard/overview - General manager dashboard data
 export async function GET(request: NextRequest) {
   try {
-    // Verify token
-    const user = verifyToken(request);
+    // Verify token with NextAuth
+    const user = await verifyToken(request);
 
     const stations = await stationService.getAllStations();
     

@@ -1,6 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { signIn, getSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 import { Shield, Mail, ArrowRight, CheckCircle, AlertCircle, Loader2, Lock, Eye, EyeOff } from 'lucide-react'
 import apiService from "@/lib/services/api"
 
@@ -24,6 +26,7 @@ export default function SignInPage() {
   const [isSuccess, setIsSuccess] = useState(false)
   const [stationAccounts, setStationAccounts] = useState<Record<string, Account>>({})
   const [loadingStations, setLoadingStations] = useState(true)
+  const router = useRouter()
 
   // Fetch station data and build dynamic accounts
   const fetchStationAccounts = async () => {
@@ -53,7 +56,7 @@ export default function SignInPage() {
             accounts[station.automation_server_username] = {
               password: station.automation_server_pass,
               role: station.RetailStationName,
-              redirect: `/dashboard/station?id=${station.id}`,
+              redirect: `/dashboard/station/${station.id}`,
               canAccessAll: false,
               stationId: station.id,
               displayName: `${station.RetailStationName} Manager`,
@@ -82,7 +85,7 @@ export default function SignInPage() {
         'ungaltd@manager.com': { 
           password: 'unga1441', 
           role: 'UNGA LTD STATION', 
-          redirect: '/dashboard/station?id=1',
+          redirect: '/dashboard/station/1',
           canAccessAll: false,
           stationId: 1,
           displayName: 'UNGA LTD STATION Manager',
@@ -106,25 +109,32 @@ export default function SignInPage() {
   setMessage('')
 
   try {
-    // Use correct import path
-    const apiService = (await import('../../lib/services/api')).default
-    
-    const response = await apiService.login(email, password)
-    
-    if (response.success) {
+    const result = await signIn('credentials', {
+      email,
+      password,
+      redirect: false
+    })
+
+    if (result?.error) {
+      setMessage('Invalid credentials')
+      setIsSuccess(false)
+    } else {
       setIsSuccess(true)
-      setMessage(response.message || 'Login successful! Redirecting...')
+      setMessage('Login successful! Redirecting...')
+      
+      // Get the session to determine redirect path
+      const session = await getSession()
       
       setTimeout(() => {
-        if (response.data.user.canAccessAll) {
-          window.location.href = '/dashboard/general'
+        if (session?.user.canAccessAll) {
+          router.push('/dashboard/general')
         } else {
-          window.location.href = `/dashboard/station?id=${response.data.user.stationId}`
+          router.push(`/dashboard/station/${session?.user.stationId}`)
         }
       }, 1000)
     }
   } catch (error) {
-    setMessage((error as Error).message || 'Login failed')
+    setMessage('Login failed')
     setIsSuccess(false)
   } finally {
     setIsLoading(false)

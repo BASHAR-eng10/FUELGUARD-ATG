@@ -1,8 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, use } from 'react'
 import { Shield, Gauge, Droplets, DollarSign, AlertTriangle, Settings, LogOut, Bell, TrendingUp, Clock, Thermometer, Target, Edit3, Truck, Loader2, RefreshCw } from 'lucide-react'
-import apiService from "../../../lib/services/api"
+import apiService from "../../../../lib/services/api"
+import { useAuth } from '@/lib/hooks/useAuth'
 
 interface StationData {
   id: number
@@ -685,7 +686,9 @@ const styles = {
   }
 }
 
-export default function StationDashboard() {
+export default function StationDashboard({params}: {params: Promise<{ id: string }>}) {
+  const { id } = use(params)
+	const { logout } = useAuth()
   const [stationData, setStationData] = useState<StationData | null>(null)
   const [nozzleData, setNozzleData] = useState<NozzleData[]>([])
   const [tankData, setTankData] = useState<TankData[]>([])
@@ -722,15 +725,6 @@ export default function StationDashboard() {
     },
     eTotalCash: 14629
   })
-  
-  // Get station ID from URL
-  const getStationId = (): string => {
-    if (typeof window !== 'undefined') {
-      const urlParams = new URLSearchParams(window.location.search)
-      return urlParams.get('id') || '1'
-    }
-    return '1'
-  }
 
   // Fetch pump data from API
   const fetchPumpData = async () => {
@@ -758,8 +752,7 @@ export default function StationDashboard() {
     try {
       setTanksLoading(true)
       setTanksError(null)
-      const stationId = getStationId()
-			const response = await apiService.getStationTanks(stationId)
+			const response = await apiService.getStationTanks(id)
 
 			if (response.data && Array.isArray(response.data)) {
 				setTankData(response.data)
@@ -780,12 +773,11 @@ export default function StationDashboard() {
     try {
       setLoading(true)
       setError(null)
-      const stationId = getStationId()
       
-      console.log('Fetching station data for ID:', stationId)
+      console.log('Fetching station data for ID:', id)
       
       // Fetch station info
-      const station = await apiService.getStation(stationId)
+      const station = await apiService.getStation(id)
       console.log('Station API Response:', station)
 
       if (station && station.data) {
@@ -805,16 +797,15 @@ export default function StationDashboard() {
           })
         } else {
         	console.error('Invalid API response structure:', station)
-          throw new Error(`Station with ID ${stationId} not found. Available stations: ${station.id}`)
+          throw new Error(`Station with ID ${id} not found. Available stations: ${station.id}`)
         }
     } catch (err) {
       console.error('Error fetching station data:', err)
       setError((err as Error).message)
       // Enhanced fallback data
-      const stationId = getStationId()
       setStationData({
-        id: parseInt(stationId),
-        name: `Station ${stationId} (Fallback)`,
+        id: parseInt(id),
+        name: `Station ${id} (Fallback)`,
         location: 'Location unavailable',
         operatorName: 'LAKE OIL',
         tanks: 2,
@@ -833,8 +824,8 @@ export default function StationDashboard() {
     refreshAllData()
   }, [])
 
-  const handleSignOut = () => {
-    window.location.href = '/signin'
+  const handleSignOut = async () => {
+		await logout()
   }
 
   const handleChecklistItemChange = (item: keyof typeof checklistItems) => {

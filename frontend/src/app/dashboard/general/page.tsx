@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { Shield, TrendingUp, AlertTriangle, Building2, Settings, LogOut, Bell, X, MapPin, Activity, Loader2, RefreshCw } from 'lucide-react'
 //  const apiService = (await import('../../services/api')).default
 import apiService from "../../../lib/services/api"
+import { useAuth } from '@/lib/hooks/useAuth'
 interface Station {
   id: number
   name: string
@@ -390,6 +391,7 @@ const styles = {
 }
 
 export default function GeneralDashboard() {
+	const {logout} = useAuth()
   const [showStationsModal, setShowStationsModal] = useState(false)
   const [stations, setStations] = useState<Station[]>([])
   const [loading, setLoading] = useState(true)
@@ -400,10 +402,6 @@ export default function GeneralDashboard() {
     try {
       setLoading(true)
       setError(null)
-			// to make this request Authorization with token is required
-      const token = apiService.getToken()
-			console.log(token)
-			// fix CORS error here
       const result = await apiService.getAllStations()
 			console.log(result.data)
 
@@ -470,12 +468,13 @@ export default function GeneralDashboard() {
     { type: 'Tank Level Low', station: 'Airport Road', severity: 'low', time: '6 hours ago', color: '#3b82f6' }
   ]
 
-  const handleSignOut = () => {
-    window.location.href = '/signin'
+  const handleSignOut = async () => {
+		await logout()
+    // window.location.href = '/signin'
   }
 
   const handleStationClick = (stationId: number) => {
-    window.location.href = `/dashboard/station?id=${stationId}`
+    window.location.href = `/dashboard/station/${stationId}`
   }
 
   const openStationsModal = () => {

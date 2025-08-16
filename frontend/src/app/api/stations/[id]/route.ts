@@ -9,7 +9,7 @@ export async function GET(request: NextRequest,
   try {
 		const { id } = await params;
     // Verify user token
-    const user = verifyToken(request);
+    const user = await verifyToken(request);
 
     // Make request to external API using user's stored tokens
     const stations = await makeAuthenticatedExternalRequest(

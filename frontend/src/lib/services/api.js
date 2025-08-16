@@ -1,98 +1,72 @@
 // src/services/api.js - Frontend API service
+import { getSession } from 'next-auth/react'
+
 class ApiService {
   constructor() {
-    this.token = null;
-    
-    if (typeof window !== 'undefined') {
-      this.token = localStorage.getItem('auth_token');
-    }
+    // NextAuth handles tokens via sessions, no need for manual token storage
   }
 
-	getToken() {
-		// fetch token from local storage
-		if (typeof window !== 'undefined') {
-			this.token = localStorage.getItem('auth_token');
-		}
-		return this.token;
-	}
-
-  setToken(token) {
-    this.token = token;
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('auth_token', token);
+  async getAuthHeaders() {
+    const session = await getSession()
+    if (session?.accessToken) {
+      return {
+        'Authorization': `Bearer ${session.accessToken}`,
+        'Content-Type': 'application/json'
+      }
     }
-  }
-
-  clearToken() {
-    this.token = null;
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('auth_token');
+    return {
+      'Content-Type': 'application/json'
     }
   }
 
   async request(endpoint, options = {}) {
-    const url = `/api${endpoint}`;
+    const url = `/api${endpoint}`
+    
+    // Get auth headers with NextAuth session
+    const authHeaders = await this.getAuthHeaders()
     
     const config = {
       headers: {
-        'Content-Type': 'application/json',
+        ...authHeaders,
         ...options.headers
       },
       ...options
-    };
-
-    if (this.token) {
-      config.headers.Authorization = `Bearer ${this.token}`;
     }
 
     try {
-      console.log(`🌐 API Request: ${options.method || 'GET'} ${url}`);
+      console.log(`🌐 API Request: ${options.method || 'GET'} ${url}`)
       
-      const response = await fetch(url, config);
-      const data = await response.json();
+      const response = await fetch(url, config)
+      const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || `HTTP error! status: ${response.status}`);
+        throw new Error(data.error || `HTTP error! status: ${response.status}`)
       }
 
-      console.log(`✅ API Response: ${response.status} ${url}`);
-      return data;
+      console.log(`✅ API Response: ${response.status} ${url}`)
+      return data
     } catch (error) {
-      console.error(`❌ API Error: ${error.message}`);
+      console.error(`❌ API Error: ${error.message}`)
       
-      // Handle token expiration
+      // Handle auth errors - redirect handled by NextAuth middleware
       if (error.message.includes('Invalid token') || error.message.includes('Token expired')) {
-        this.clearToken();
-        window.location.href = '/signin';
-        return;
+        // NextAuth will handle redirection via middleware
+        window.location.href = '/signin'
+        return
       }
       
-      throw error;
+      throw error
     }
   }
 
-  // Authentication methods
-  async login(email, password) {
-    const response = await this.request('/auth/login', {
-      method: 'POST',
-      body: JSON.stringify({ email, password })
-    });
-    
-    if (response.success) {
-      this.setToken(response.data.token);
-    }
-    
-    return response;
+  async getCurrentUser() {
+    const session = await getSession()
+    return session?.user || null
   }
 
-  async logout() {
-    try {
-      await this.request('/auth/logout', { method: 'POST' });
-    } catch (error) {
-      console.error('Logout error:', error);
-    } finally {
-      this.clearToken();
-    }
+  async isAuthenticated() {
+    const session = await getSession()
+    return !!session
   }
 
   // Station methods
