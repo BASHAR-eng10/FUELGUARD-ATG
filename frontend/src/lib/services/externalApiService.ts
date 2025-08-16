@@ -323,6 +323,3 @@ const externalApiService = {
 };
 
 export default externalApiService;
-
-// CommonJS compatibility
-module.exports = externalApiService;

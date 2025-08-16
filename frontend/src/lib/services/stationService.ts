@@ -93,6 +93,3 @@ class StationService {
 // Export singleton instance
 const stationService = new StationService();
 export default stationService;
-
-// Also export for CommonJS compatibility
-module.exports = stationService;
