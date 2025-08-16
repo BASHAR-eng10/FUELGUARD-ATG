@@ -7,14 +7,14 @@ export async function GET(request: NextRequest) {
   try {
     // Verify user token
     const user = await verifyToken(request);
-    console.log(`🔐 Authenticated user: ${user.email} (${user.role})`);
+    // console.log(`🔐 Authenticated user: ${user.email} (${user.role})`);
 
     // Make request to external API using user's stored tokens
     const stations = await makeAuthenticatedExternalRequest(
       user.userId.toString(),
       '/station/pumps'
     );
-		console.log(stations)
+		// console.log(stations)
 
 		const data = stations.data.page_records.map((pump: any, i:number) => ({
 			id: i + 1,

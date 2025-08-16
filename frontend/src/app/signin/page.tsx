@@ -24,63 +24,15 @@ export default function SignInPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [message, setMessage] = useState('')
   const [isSuccess, setIsSuccess] = useState(false)
-  const [stationAccounts, setStationAccounts] = useState<Record<string, Account>>({})
-  const [loadingStations, setLoadingStations] = useState(true)
-  const router = useRouter()
-
-  // Fetch station data and build dynamic accounts
-  const fetchStationAccounts = async () => {
-    try {
-      setLoadingStations(true)
-      console.log('Fetching station accounts...')
-      
-      const result = await apiService.getAllStations()
-      
-      const accounts: Record<string, Account> = {
-        // General Manager account (static)
+  const stationAccounts = {
         'manager@fuelstation.com': { 
           password: 'manager123', 
           role: 'General Manager', 
           redirect: '/dashboard/general',
           canAccessAll: true,
-          displayName: 'General Manager - Access to all stations'
-        }
-      }
-
-      // Add dynamic station accounts from API
-      if (result.data && Array.isArray(result.data)) {
-        console.log('Processing station data:', result.data)
-        result.data.forEach((station: any) => {
-          console.log('Processing station:', station.RetailStationName, station.automation_server_username)
-          if (station.automation_server_username && station.automation_server_pass) {
-            accounts[station.automation_server_username] = {
-              password: station.automation_server_pass,
-              role: station.RetailStationName,
-              redirect: `/dashboard/station/${station.id}`,
-              canAccessAll: false,
-              stationId: station.id,
-              displayName: `${station.RetailStationName} Manager`,
-              location: `${station.WardName}, ${station.DistrictName}`,
-              operator: station.OperatorName
-            }
-          }
-        })
-      } else {
-        console.warn('Invalid API response format:', result)
-      }
-
-      console.log('Final accounts:', accounts)
-      setStationAccounts(accounts)
-    } catch (error) {
-      console.error('Error fetching station accounts:', error)
-      // Enhanced fallback to static accounts if API fails
-      const fallbackAccounts: Record<string, Account> = {
-        'manager@fuelstation.com': { 
-          password: 'manager123', 
-          role: 'General Manager', 
-          redirect: '/dashboard/general',
-          canAccessAll: true,
-          displayName: 'General Manager - Access to all stations'
+          displayName: 'General Manager - Access to all stations',
+          location: 'Ilala, Dar es Salaam',
+          operator: 'LAKE OIL'
         },
         'ungaltd@manager.com': { 
           password: 'unga1441', 
@@ -92,16 +44,8 @@ export default function SignInPage() {
           location: 'Kipunguni, Ilala MC Kipawa',
           operator: 'LAKE OIL'
         }
-      }
-      setStationAccounts(fallbackAccounts)
-    } finally {
-      setLoadingStations(false)
-    }
-  }
-
-  useEffect(() => {
-    fetchStationAccounts()
-  }, [])
+      } as const
+  const router = useRouter()
 
  const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault()
@@ -402,6 +346,8 @@ export default function SignInPage() {
           )}
 
           {/* Demo Accounts */}
+					{
+						process.env.NODE_ENV === 'development' ? (
           <div style={{ marginTop: '32px' }}>
             <div style={{
               background: 'linear-gradient(135deg, #f9fafb 0%, #dbeafe 100%)',
@@ -418,21 +364,9 @@ export default function SignInPage() {
                 alignItems: 'center'
               }}>
                 <Shield size={16} color="#2563eb" style={{ marginRight: '8px' }} />
-                Available Accounts {loadingStations && '(Loading...)'}
+                Available Accounts
               </h3>
               
-              {loadingStations ? (
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  padding: '20px',
-                  color: '#6b7280'
-                }}>
-                  <Loader2 size={20} style={{marginRight: '8px', animation: 'spin 1s linear infinite'}} />
-                  Loading station accounts...
-                </div>
-              ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   {Object.entries(stationAccounts).map(([emailKey, account]) => (
                     <button
@@ -515,9 +449,9 @@ export default function SignInPage() {
                     </button>
                   ))}
                 </div>
-              )}
             </div>
           </div>
+      ) : null}
         </div>
 
         {/* Footer */}
