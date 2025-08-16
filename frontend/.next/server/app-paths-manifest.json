@@ -1,0 +1,12 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/auth/login/route": "app/api/auth/login/route.js",
+  "/api/stations/[id]/route": "app/api/stations/[id]/route.js",
+  "/api/stations/[id]/tanks/route": "app/api/stations/[id]/tanks/route.js",
+  "/api/stations/pumps/route": "app/api/stations/pumps/route.js",
+  "/api/stations/route": "app/api/stations/route.js",
+  "/api/stations/tanks/route": "app/api/stations/tanks/route.js",
+  "/dashboard/general/page": "app/dashboard/general/page.js",
+  "/dashboard/station/page": "app/dashboard/station/page.js",
+  "/signin/page": "app/signin/page.js"
+}

@@ -42,17 +42,17 @@ export interface StationsTable {
 }
 
 export interface TanksTable {
-  id: string
-  station_id: string
-  tank_number: number
-  fuel_type: 'unleaded' | 'diesel' | 'premium'
-  capacity: number
-  current_level: number
-  water_level: number
-  temperature: number
-  last_atg_reading: string
-  created_at: string
-  updated_at: string
+  id: string // tank_id
+  station_id: string // determined from EWURALicenseNO
+  tank_number: number // determined from physical_id
+  fuel_type: 'unleaded' | 'diesel' // determined from tank_name
+  capacity: number // tank_capacity
+  current_level: number // fuel_lvl_mm
+  water_level: number // water_lvl_mm
+  temperature: number // average_temp
+  last_atg_reading: string  // ???
+  created_at: string // date
+  updated_at: string // updated_at
 }
 
 export interface DailyInventoryTable {

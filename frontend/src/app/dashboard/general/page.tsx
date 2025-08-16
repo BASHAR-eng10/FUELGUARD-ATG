@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Shield, TrendingUp, AlertTriangle, Building2, Settings, LogOut, Bell, X, MapPin, Activity, Loader2, RefreshCw } from 'lucide-react'
 //  const apiService = (await import('../../services/api')).default
-import apiService from "../../../services/api"
+import apiService from "../../../lib/services/api"
 interface Station {
   id: number
   name: string
@@ -412,15 +412,15 @@ export default function GeneralDashboard() {
         // Transform API data to match our component structure
         const transformedStations: Station[] = result.data.map((station: any, index: number) => ({
           id: station.id,
-          name: station.name,
-          location: `${station.location.ward}, ${station.location.district}`,
-          region: station.location.region,
+          name: station.RetailStationName,
+          location: `${station.WardName}, ${station.DistrictName}`,
+          region: station.RegionName,
           zone: station.Zone,
           operatorName: station.OperatorName,
           contactEmail: station.ContactPersonEmailAddress,
           contactPhone: station.ContactPersonPhone,
           ewuraLicense: station.EWURALicenseNo,
-          tanks: station.technical.totalTanks,
+          tanks: station.TotalNoTanks,
           username: station.automation_server_username,
           password: station.automation_server_pass,
           // Mock data for demo - in production these would come from separate endpoints

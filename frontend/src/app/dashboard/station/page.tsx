@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Shield, Gauge, Droplets, DollarSign, AlertTriangle, Settings, LogOut, Bell, TrendingUp, Clock, Thermometer, Target, Edit3, Truck, Loader2, RefreshCw } from 'lucide-react'
-import apiService from "../../../services/api"
+import apiService from "../../../lib/services/api"
 
 interface StationData {
   id: number
@@ -19,8 +19,28 @@ interface StationData {
   password?: string
 }
 
-interface PumpData {
-  name: string
+interface TankData {
+  id: number
+  probe_id: string
+  date: string
+  updated_at: string
+  tank_id: string
+  tank_name: string
+  physical_id: string
+  identification_code: string
+  product_name: string
+  tank_capacity: number
+  fuel_lvl_mm: number
+  fuel_offset: number
+  fuel_volume: number
+  fuel_volume_15: number
+  water_lvl_mm: number
+  water_offset: number
+  water_volume: number
+  water_volume_15: number
+  average_temp: number
+  EWURALicenseNo: string
+  LicenseeTraSerialNo: string
 }
 
 interface NozzleData {
@@ -667,12 +687,14 @@ const styles = {
 
 export default function StationDashboard() {
   const [stationData, setStationData] = useState<StationData | null>(null)
-  // const [pumpData, setPumpData] = useState<PumpData[]>([])
   const [nozzleData, setNozzleData] = useState<NozzleData[]>([])
+  const [tankData, setTankData] = useState<TankData[]>([])
   const [loading, setLoading] = useState(true)
   const [pumpsLoading, setPumpsLoading] = useState(true)
+  const [tanksLoading, setTanksLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [pumpsError, setPumpsError] = useState<string | null>(null)
+  const [tanksError, setTanksError] = useState<string | null>(null)
   const [showChecklistModal, setShowChecklistModal] = useState(false)
   const [showSalesModal, setShowSalesModal] = useState(false)
   const [showIssueModal, setShowIssueModal] = useState(false)
@@ -731,6 +753,28 @@ export default function StationDashboard() {
     }
   }
 
+  // Fetch tank data from API
+  const fetchTankData = async () => {
+    try {
+      setTanksLoading(true)
+      setTanksError(null)
+      const stationId = getStationId()
+			const response = await apiService.getStationTanks(stationId)
+
+			if (response.data && Array.isArray(response.data)) {
+				setTankData(response.data)
+				console.log(response.data)
+			} else {
+				throw new Error('Invalid API response structure')
+			}
+
+    } catch (err) {
+      console.error('Error fetching tank data:', err)
+      setTanksError((err as Error).message)
+    } finally {
+      setTanksLoading(false)
+    }
+  }
   // Fetch station data from API
   const fetchStationData = async () => {
     try {
@@ -741,37 +785,28 @@ export default function StationDashboard() {
       console.log('Fetching station data for ID:', stationId)
       
       // Fetch station info
-      const result = await apiService.getAllStations()
-      console.log('Station API Response:', result)
-      
-      if (result.data && Array.isArray(result.data)) {
-        console.log('Available stations:', result.data.map((s: any) => ({ id: s.id, name: s.RetailStationName })))
-        
-        const station = result.data.find((s: any) => s.id.toString() === stationId)
-        console.log('Found station:', station)
-        
-        if (station) {
-          setStationData({
-            id: station.id,
-            name: station.name,
-            location: `${station.location.ward}, ${station.location.district}`,
-            region: station.location.region,
-            zone: station.zone,
-            operatorName: station.operator.name,
-            contactEmail: station.contact.email,
-            contactPhone: station.contact.phone,
-            ewuraLicense: station.ewuraLicense,
-            tanks: station.technical.totalTanks,
-            username: station.automation.username,
-            password: station.automation.password
+      const station = await apiService.getStation(stationId)
+      console.log('Station API Response:', station)
+
+      if (station && station.data) {
+        setStationData({
+          id: station.data.id,
+          name: station.data.RetailStationName,
+          location: `${station.data.WardName}, ${station.data.DistrictName}`,
+          region: station.data.RegionName,
+          zone: station.data.Zone,
+          operatorName: station.data.OperatorName,
+          contactEmail: station.data.ContactPersonEmailAddress,
+          contactPhone: station.data.ContactPersonPhone,
+          ewuraLicense: station.data.EWURALicenseNo,
+          tanks: station.data.TotalNoTanks,
+          username: station.data.automation_server_username,
+          password: station.data.automation_server_pass,
           })
         } else {
-          throw new Error(`Station with ID ${stationId} not found. Available stations: ${result.data.map((s: any) => s.id).join(', ')}`)
+        	console.error('Invalid API response structure:', station)
+          throw new Error(`Station with ID ${stationId} not found. Available stations: ${station.id}`)
         }
-      } else {
-        console.error('Invalid API response structure:', result)
-        throw new Error('Invalid data format received from API')
-      }
     } catch (err) {
       console.error('Error fetching station data:', err)
       setError((err as Error).message)
@@ -791,7 +826,7 @@ export default function StationDashboard() {
   }
 
   const refreshAllData = async () => {
-    await Promise.all([fetchStationData(), fetchPumpData()])
+    await Promise.all([fetchStationData(), fetchPumpData(), fetchTankData()])
   }
 
   useEffect(() => {
@@ -946,11 +981,11 @@ export default function StationDashboard() {
                 <div>📍 <strong>Location:</strong> {stationData.location}</div>
                 <div>🏢 <strong>Operator:</strong> {stationData.operatorName}</div>
                 <div>📋 <strong>License:</strong> {stationData.ewuraLicense}</div>
-                <div>⛽ <strong>Tanks:</strong> {stationData.tanks}</div>
+                <div>⛽ <strong>Tanks:</strong> {tanksLoading ? 'Loading...' : tankData.length || stationData.tanks}</div>
                 <div>🚰 <strong>Pumps/Nozzles:</strong> {pumpsLoading ? 'Loading...' : nozzleData.length}</div>
               </div>
               
-              {pumpsError && (
+              {(pumpsError || tanksError) && (
                 <div style={{
                   marginTop: '8px',
                   padding: '8px',
@@ -959,7 +994,9 @@ export default function StationDashboard() {
                   fontSize: '12px',
                   color: '#dc2626'
                 }}>
-                  ⚠️ Pump data error: {pumpsError} (Using fallback data)
+                  {pumpsError && <div>⚠️ Pump data error: {pumpsError}</div>}
+                  {tanksError && <div>⚠️ Tank data error: {tanksError}</div>}
+                  <div style={{marginTop: '4px', fontSize: '11px'}}>Using fallback data where available</div>
                 </div>
               )}
               
@@ -987,38 +1024,141 @@ export default function StationDashboard() {
         </div>
 
         {/* Tank Monitoring */}
-        <div style={styles.tankGrid}>
-          {/* Tank 1 - Unleaded */}
-          <div style={styles.tankCard}>
+        <div>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: '24px'
+          }}>
+            <h3 style={{
+              fontSize: '18px',
+              fontWeight: '600',
+              color: '#111827',
+              margin: 0,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}>
+              <Gauge size={20} color="#2563eb" />
+              Tank Monitoring
+              {tanksLoading && (
+                <div style={styles.loadingState}>
+                  <Loader2 size={16} className="animate-spin" />
+                  Loading tank data...
+                </div>
+              )}
+            </h3>
+            {tanksError && (
+              <div style={{
+                padding: '8px 12px',
+                backgroundColor: '#fee2e2',
+                borderRadius: '6px',
+                fontSize: '12px',
+                color: '#dc2626',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px'
+              }}>
+                <AlertTriangle size={12} />
+                Tank data error: {tanksError}
+              </div>
+            )}
+          </div>
+          
+          {tanksLoading ? (
+            <div style={styles.tankGrid}>
+              {[1, 2].map((index) => (
+                <div key={index} style={{
+                  ...styles.tankCard,
+                  opacity: 0.6
+                }}>
+                  <div style={styles.tankHeader}>
+                    <div style={styles.tankInfo}>
+                      <div style={{...styles.tankIcon, backgroundColor: '#f3f4f6'}}>
+                        <Loader2 size={24} color="#9ca3af" className="animate-spin" />
+                      </div>
+                      <div style={styles.tankDetails}>
+                        <h4 style={{...styles.tankName, color: '#9ca3af'}}>Loading Tank {index}...</h4>
+                        <p style={{...styles.tankCapacity, color: '#9ca3af'}}>Fetching capacity...</p>
+                      </div>
+                    </div>
+                    <span style={{...styles.statusBadge, color: '#9ca3af', backgroundColor: '#f3f4f6'}}>Loading</span>
+                  </div>
+                  
+                  <div style={styles.levelSection}>
+                    <div style={styles.levelHeader}>
+                      <span style={styles.levelLabel}>Current Level</span>
+                      <span style={{...styles.levelPercentage, color: '#9ca3af'}}>---%</span>
+                    </div>
+                    <div style={styles.progressBar}>
+                      <div style={{
+                        ...styles.progressFill,
+                        width: '50%',
+                        background: 'linear-gradient(90deg, #e5e7eb 0%, #d1d5db 100%)',
+                        animation: 'pulse 2s infinite'
+                      }}></div>
+                    </div>
+                    <div style={styles.levelDetails}>
+                      <span>Loading...</span>
+                      <span style={{fontWeight: '500', color: '#9ca3af'}}>--- liters</span>
+                      <span>---</span>
+                    </div>
+                  </div>
+                  
+                  <div style={styles.metricsGrid}>
+                    <div style={styles.metricBox}>
+                      <div style={styles.metricHeader}>
+                        <Thermometer size={16} color="#d1d5db" />
+                        <span style={styles.metricLabel}>Temperature</span>
+                      </div>
+                      <p style={{...styles.metricValue, color: '#9ca3af'}}>---°C</p>
+                    </div>
+                    <div style={styles.metricBox}>
+                      <div style={styles.metricHeader}>
+                        <Droplets size={16} color="#d1d5db" />
+                        <span style={styles.metricLabel}>Water Level</span>
+                      </div>
+                      <p style={{...styles.metricValue, color: '#9ca3af'}}>--- mm</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div style={styles.tankGrid}>
+              {tankData.length > 0 ? (
+                tankData.map((tank: TankData) => (
+          <div key={tank.id} style={styles.tankCard}>
             <div style={styles.tankHeader}>
               <div style={styles.tankInfo}>
                 <div style={{...styles.tankIcon, backgroundColor: '#dbeafe'}}>
                   <Gauge size={24} color="#2563eb" />
                 </div>
                 <div style={styles.tankDetails}>
-                  <h3 style={styles.tankName}>Tank 1 - Unleaded</h3>
-                  <p style={styles.tankCapacity}>95,000 L capacity</p>
+                  <h3 style={styles.tankName}>Tank {tank.tank_id} - {tank.tank_name}</h3>
+                  <p style={styles.tankCapacity}>{tank.tank_capacity} L capacity</p>
                 </div>
               </div>
-              <span style={{...styles.statusBadge, color: '#166534', backgroundColor: '#dcfce7'}}>Normal</span>
+              <span style={{...styles.statusBadge, color: '#166534', backgroundColor: '#dcfce7'}}>{tank.product_name}</span>
             </div>
 
             <div style={styles.levelSection}>
               <div style={styles.levelHeader}>
                 <span style={styles.levelLabel}>Current Level</span>
-                <span style={{...styles.levelPercentage, color: '#2563eb'}}>75%</span>
+                <span style={{...styles.levelPercentage, color: '#2563eb'}}>{(tank.fuel_volume / tank.tank_capacity * 100).toFixed(2)}%</span>
               </div>
               <div style={styles.progressBar}>
                 <div style={{
                   ...styles.progressFill,
-                  width: '75%',
+                  width: `${(tank.fuel_volume / tank.tank_capacity * 100).toFixed(2)}%`,
                   background: 'linear-gradient(90deg, #3b82f6 0%, #2563eb 100%)'
                 }}></div>
               </div>
               <div style={styles.levelDetails}>
                 <span>0 L</span>
-                <span style={{fontWeight: '500', color: '#374151'}}>71,250 liters</span>
-                <span>95,000 L</span>
+                <span style={{fontWeight: '500', color: '#374151'}}>{tank.fuel_volume} liters</span>
+                <span>{tank.tank_capacity} L</span>
               </div>
             </div>
 
@@ -1028,14 +1168,14 @@ export default function StationDashboard() {
                   <Thermometer size={16} color="#f59e0b" />
                   <span style={styles.metricLabel}>Temperature</span>
                 </div>
-                <p style={styles.metricValue}>20°C</p>
+                <p style={styles.metricValue}>{tank.average_temp}°C</p>
               </div>
               <div style={styles.metricBox}>
                 <div style={styles.metricHeader}>
                   <Droplets size={16} color="#3b82f6" />
                   <span style={styles.metricLabel}>Water Level</span>
                 </div>
-                <p style={styles.metricValue}>0.5cm</p>
+                <p style={styles.metricValue}>{tank.water_lvl_mm}mm / {tank.water_volume} L </p>
               </div>
             </div>
 
@@ -1126,145 +1266,20 @@ export default function StationDashboard() {
               </div>
             </div>
           </div>
-
-          {/* Tank 2 - Diesel */}
-          <div style={styles.tankCard}>
-            <div style={styles.tankHeader}>
-              <div style={styles.tankInfo}>
-                <div style={{...styles.tankIcon, backgroundColor: '#dcfce7'}}>
-                  <Gauge size={24} color="#16a34a" />
-                </div>
-                <div style={styles.tankDetails}>
-                  <h3 style={styles.tankName}>Tank 2 - Diesel</h3>
-                  <p style={styles.tankCapacity}>95,000 L capacity</p>
-                </div>
-              </div>
-              <span style={{...styles.statusBadge, color: '#ca8a04', backgroundColor: '#fef3c7'}}>Monitor</span>
-            </div>
-
-            <div style={styles.levelSection}>
-              <div style={styles.levelHeader}>
-                <span style={styles.levelLabel}>Current Level</span>
-                <span style={{...styles.levelPercentage, color: '#16a34a'}}>60%</span>
-              </div>
-              <div style={styles.progressBar}>
+                ))
+              ) : (
                 <div style={{
-                  ...styles.progressFill,
-                  width: '60%',
-                  background: 'linear-gradient(90deg, #22c55e 0%, #16a34a 100%)'
-                }}></div>
-              </div>
-              <div style={styles.levelDetails}>
-                <span>0 L</span>
-                <span style={{fontWeight: '500', color: '#374151'}}>57,000 liters</span>
-                <span>95,000 L</span>
-              </div>
+                  ...styles.tankCard,
+                  textAlign: 'center',
+                  padding: '48px 24px'
+                }}>
+                  <AlertTriangle size={48} color="#f59e0b" style={{marginBottom: '16px'}} />
+                  <h3 style={{color: '#374151', marginBottom: '8px'}}>No Tank Data Available</h3>
+                  <p style={{color: '#6b7280'}}>Unable to load tank information. Please check your connection or try again later.</p>
+                </div>
+              )}
             </div>
-
-            <div style={styles.metricsGrid}>
-              <div style={styles.metricBox}>
-                <div style={styles.metricHeader}>
-                  <Thermometer size={16} color="#f59e0b" />
-                  <span style={styles.metricLabel}>Temperature</span>
-                </div>
-                <p style={styles.metricValue}>22°C</p>
-              </div>
-              <div style={styles.metricBox}>
-                <div style={styles.metricHeader}>
-                  <Droplets size={16} color="#eab308" />
-                  <span style={styles.metricLabel}>Water Level</span>
-                </div>
-                <p style={{...styles.metricValue, color: '#ca8a04'}}>2.0cm</p>
-              </div>
-            </div>
-
-            {/* Daily Quantity Section */}
-            <div style={styles.quantitySection}>
-              <div style={styles.quantityTitle}>
-                <Target size={16} color="#6366f1" />
-                Daily Quantities
-              </div>
-              <div style={styles.quantityGrid}>
-                <div style={styles.quantityItem}>
-                  <div style={styles.quantityLabel}>Opening (Endpoint)</div>
-                  <p style={styles.quantityValue}>62,800 L</p>
-                </div>
-                <div style={styles.quantityItem}>
-                  <div style={styles.quantityLabel}>Closing (Endpoint)</div>
-                  <p style={styles.quantityValue}>57,000 L</p>
-                </div>
-                <div style={styles.quantityItem}>
-                  <div style={{...styles.quantityLabel, display: 'flex', alignItems: 'center', gap: '4px'}}>
-                    Opening (Manual)
-                    <button style={styles.editButton} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f1f5f9'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}>
-                      <Edit3 size={12} color="#64748b" />
-                    </button>
-                  </div>
-                  <p style={styles.quantityValue}>62,750 L</p>
-                </div>
-                <div style={styles.quantityItem}>
-                  <div style={{...styles.quantityLabel, display: 'flex', alignItems: 'center', gap: '4px'}}>
-                    Closing (Manual)
-                    <button style={styles.editButton} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f1f5f9'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}>
-                      <Edit3 size={12} color="#64748b" />
-                    </button>
-                  </div>
-                  <p style={styles.quantityValue}>56,920 L</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Daily Filling Section */}
-            <div style={styles.quantitySection}>
-              <div style={styles.quantityTitle}>
-                <Truck size={16} color="#dc2626" />
-                Daily Filling
-              </div>
-              <div style={{...styles.quantityGrid, gridTemplateColumns: '1fr'}}>
-                <div style={styles.quantityItem}>
-                  <div style={styles.quantityLabel}>Tanker Name</div>
-                  <input 
-                    type="text" 
-                    placeholder="Enter tanker name"
-                    style={styles.inputField}
-                    onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
-                    onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
-                  />
-                </div>
-                <div style={styles.quantityItem}>
-                  <div style={styles.quantityLabel}>Truck Number</div>
-                  <input 
-                    type="text" 
-                    placeholder="Enter truck number"
-                    style={styles.inputField}
-                    onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
-                    onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
-                  />
-                </div>
-                <div style={styles.quantityItem}>
-                  <div style={styles.quantityLabel}>Filling Value (Manual)</div>
-                  <input 
-                    type="number" 
-                    placeholder="Enter filling amount"
-                    style={styles.inputField}
-                    onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
-                    onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
-                  />
-                </div>
-                <div style={styles.quantityItem}>
-                  <div style={styles.quantityLabel}>ATG Value (Endpoint)</div>
-                  <p style={{...styles.quantityValue, color: '#6366f1'}}>12,800 L</p>
-                </div>
-                <div style={styles.quantityItem}>
-                  <div style={styles.quantityLabel}>Difference (Manual - ATG)</div>
-                  <p style={{...styles.quantityValue, color: '#16a34a'}}>+80 L</p>
-                  <div style={{fontSize: '11px', color: '#16a34a', marginTop: '2px'}}>
-                    Manual value higher than ATG
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          )}
         </div>
 
         {/* Fuel Pricing Section */}

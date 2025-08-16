@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Shield, Mail, ArrowRight, CheckCircle, AlertCircle, Loader2, Lock, Eye, EyeOff } from 'lucide-react'
-import apiService from "../../services/api"
+import apiService from "@/lib/services/api"
 
 interface Account {
   password: string
@@ -107,7 +107,7 @@ export default function SignInPage() {
 
   try {
     // Use correct import path
-    const apiService = (await import('../../services/api')).default
+    const apiService = (await import('../../lib/services/api')).default
     
     const response = await apiService.login(email, password)
     
