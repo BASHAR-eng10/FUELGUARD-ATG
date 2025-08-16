@@ -403,7 +403,7 @@ export default function GeneralDashboard() {
       setLoading(true)
       setError(null)
       const result = await apiService.getAllStations()
-			console.log(result.data)
+			// console.log(result.data)
 
       
       if (result.data && Array.isArray(result.data)) {

@@ -756,7 +756,7 @@ export default function StationDashboard({params}: {params: Promise<{ id: string
 
 			if (response.data && Array.isArray(response.data)) {
 				setTankData(response.data)
-				console.log(response.data)
+				// console.log(response.data)
 			} else {
 				throw new Error('Invalid API response structure')
 			}

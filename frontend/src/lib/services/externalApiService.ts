@@ -88,7 +88,7 @@ async function login(): Promise<string> {
   }
 
   const data: AuthData = await response.json();
-  console.log('🔍 Auth response structure:', JSON.stringify(data, null, 2));
+  // console.log('🔍 Auth response structure:', JSON.stringify(data, null, 2));
 
   let token: string | null = null;
   
@@ -254,7 +254,7 @@ export async function getTankInfo() {
       method: 'GET'
     }, { revalidate: 300 });
 
-    console.log('🔍 Tank info response structure:', JSON.stringify(data, null, 2));
+    // console.log('🔍 Tank info response structure:', JSON.stringify(data, null, 2));
 
     if (data?.data) {
       return data.data;
@@ -276,7 +276,7 @@ export async function getStationInfo() {
       method: 'GET'
     }, { revalidate: 300 });
 
-    console.log('🔍 Station info response structure:', JSON.stringify(data, null, 2));
+    // console.log('🔍 Station info response structure:', JSON.stringify(data, null, 2));
 
     if (data?.data) {
       return data.data;

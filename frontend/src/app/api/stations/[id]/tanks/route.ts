@@ -11,7 +11,7 @@ export async function GET(request: NextRequest,
 		const {id } = await params;
     // Verify user token
     const user = await verifyToken(request);
-    console.log(`🔐 Authenticated user: ${user.email} (${user.role})`);
+    // console.log(`🔐 Authenticated user: ${user.email} (${user.role})`);
 
     // Make request to external API using user's stored tokens
     const tanks = await makeAuthenticatedExternalRequest(

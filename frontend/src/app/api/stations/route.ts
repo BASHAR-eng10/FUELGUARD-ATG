@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
       user.userId.toString(),
       '/stationinfo/all'
     );
-		console.log(stations)
+		// console.log(stations)
     
     return NextResponse.json({
       success: true,

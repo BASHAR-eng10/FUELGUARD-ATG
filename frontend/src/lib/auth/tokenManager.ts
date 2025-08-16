@@ -24,7 +24,7 @@ export async function getUserTokens(userId: string): Promise<StoredSession | nul
     
     if (session && session.expires_at && session.expires_at > new Date()) {
       const tokens: StoredSession = JSON.parse(session.value);
-      console.log(`🔑 Retrieved tokens for user ${userId}`);
+      // console.log(`🔑 Retrieved tokens for user ${userId}`);
       return tokens;
     }
     
@@ -63,7 +63,7 @@ export async function makeAuthenticatedExternalRequest(
   }
   
   const url = `${process.env.EXTERNAL_API_URL || 'http://78.189.54.28:3800'}${endpoint}`;
-	console.log(`Making request to ${url} with token: ${tokens.access_token}`);
+	// console.log(`Making request to ${url} with token: ${tokens.access_token}`);
 
 	options.headers = {
 		'Content-Type': 'application/json',

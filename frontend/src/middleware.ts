@@ -6,6 +6,11 @@ export default auth((req) => {
   const isLoggedIn = !!req.auth
   const user = req.auth?.user
 
+  // Skip middleware for API routes
+  if (nextUrl.pathname.startsWith('/api')) {
+    return NextResponse.next()
+  }
+
   // Define protected routes
   const isProtectedRoute = nextUrl.pathname.startsWith('/dashboard')
   const isAuthPage = nextUrl.pathname === '/signin'
@@ -75,8 +80,13 @@ function getDashboardUrlForUser(user: any): string {
 
 export const config = {
   matcher: [
-    '/',
-    '/signin',
-    '/dashboard/:path*'
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
   ]
 }
