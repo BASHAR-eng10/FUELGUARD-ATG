@@ -38,27 +38,27 @@ const styles = {
     boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)'
   },
   headerContent: {
-    maxWidth: '1280px',
-    margin: '0 auto',
-    padding: '0 24px',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    height: '64px'
-  },
+  maxWidth: '1280px',
+  margin: '0 auto',
+  padding: '0 24px',
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  height: '80px'  // 64px'den 80px'e çıkar
+},
   logoSection: {
     display: 'flex',
     alignItems: 'center',
     gap: '12px'
   },
   logoTitle: {
-    fontSize: '20px',
+    fontSize: '24px',
     fontWeight: '600',
     color: '#111827',
     margin: 0
   },
   logoSubtitle: {
-    fontSize: '14px',
+    fontSize: '16px',
     color: '#6b7280',
     margin: 0
   },
@@ -491,12 +491,20 @@ export default function GeneralDashboard() {
       <header style={styles.header}>
         <div style={styles.headerContent}>
           <div style={styles.logoSection}>
-            <Shield size={32} color="#2563eb" />
-            <div>
-              <h1 style={styles.logoTitle}>Lake Oil Group</h1>
-              <p style={styles.logoSubtitle}>General Manager</p>
-            </div>
-          </div>
+  <img 
+  src="/logo.png"  // veya mevcut dosya adınız
+  alt="Lake Oil Group Logo"
+  style={{
+    width: '60px',      // 40px'den 60px'e çıkar
+    height: '60px',     // 40px'den 60px'e çıkar
+    objectFit: 'contain'
+    }}
+  />
+  <div>
+    <h1 style={styles.logoTitle}>Lake Oil Group</h1>
+    <p style={styles.logoSubtitle}>General Manager</p>
+  </div>
+</div>
           
           <div style={styles.headerActions}>
             <button 
@@ -531,8 +539,8 @@ export default function GeneralDashboard() {
       <main style={styles.main}>
         {/* Welcome Section */}
         <div style={styles.welcomeSection}>
-          <h2 style={styles.welcomeTitle}>Good Morning! 👋</h2>
-          <p style={styles.welcomeText}>Here's what's happening across your fuel stations today.</p>
+          <h2 style={styles.welcomeTitle}></h2>
+          <h2 style={{...styles.welcomeTitle, fontSize: '50px'}}> FuelGuard</h2>
         </div>
 
         {/* Key Metrics - Only Total Stations and Active Alerts */}
@@ -629,19 +637,7 @@ export default function GeneralDashboard() {
         </div>
 
         {/* Success Message */}
-        <div style={styles.successMessage}>
-          <div style={styles.messageContent}>
-            <div style={styles.messageIcon}>
-              <Shield size={24} color="#16a34a" />
-            </div>
-            <div>
-              <h3 style={styles.messageTitle}>🎉 System Operational</h3>
-              <p style={styles.messageText}>
-                Your fuel station monitoring system is running perfectly! All authentication, database connections, and monitoring tools are active.
-              </p>
-            </div>
-          </div>
-        </div>
+        
       </main>
 
       {/* Stations Modal */}

@@ -5,6 +5,7 @@ import { signIn, getSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { Shield, Mail, ArrowRight, CheckCircle, AlertCircle, Loader2, Lock, Eye, EyeOff } from 'lucide-react'
 import apiService from "@/lib/services/api"
+import Image from 'next/image'
 
 interface Account {
   password: string
@@ -96,14 +97,14 @@ export default function SignInPage() {
 
   return (
     <div style={{
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #dbeafe 0%, #ffffff 50%, #f9fafb 100%)',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      padding: '48px 24px',
-      fontFamily: 'system-ui, -apple-system, sans-serif'
-    }}>
+  minHeight: '100vh',
+  background: '#ffffff',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  padding: '48px 24px',
+  fontFamily: 'system-ui, -apple-system, sans-serif'
+}}>
       <div style={{
         position: 'relative',
         margin: '0 auto',
@@ -112,33 +113,38 @@ export default function SignInPage() {
       }}>
         
         {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <div style={{
-            margin: '0 auto 24px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '64px',
-            height: '64px',
-            background: '#2563eb',
-            borderRadius: '16px',
-            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
-          }}>
-            <Shield size={32} color="white" />
-          </div>
-          <h2 style={{
-            fontSize: '30px',
-            fontWeight: 'bold',
-            color: '#111827',
-            marginBottom: '8px'
-          }}>
-            Welcome Back
-          </h2>
-          <p style={{ color: '#6b7280', marginBottom: '8px' }}>Lake Oil Group</p>
-          <p style={{ fontSize: '14px', color: '#9ca3af' }}>
-            Fuel Station Monitoring System
-          </p>
-        </div>
+<div style={{ textAlign: 'center', marginBottom: '32px' }}>
+  {/* Company Logo */}
+  <div style={{
+    margin: '0 auto 24px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  }}>
+    <Image
+      src="/Guardlogo.png"
+      alt="FuelGuard Logo"
+      width={250}
+      height={150}
+      style={{
+        objectFit: 'contain'
+      }}
+    />
+  </div>
+  
+  <h2 style={{
+    fontSize: '30px',
+    fontWeight: 'bold',
+    color: '#111827',
+    marginBottom: '8px'
+  }}>
+    Welcome Back
+  </h2>
+  <p style={{ color: '#6b7280', marginBottom: '8px' }}>Lake Oil Group</p>
+  <p style={{ fontSize: '14px', color: '#9ca3af' }}>
+    Fuel Station Monitoring System
+  </p>
+</div>
 
         {/* Sign In Form */}
         <div style={{
