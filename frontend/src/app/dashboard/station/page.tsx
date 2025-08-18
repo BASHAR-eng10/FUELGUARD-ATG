@@ -707,6 +707,7 @@ export default function StationDashboard() {
     tankLeak: false,
     safetyEquipment: false
   })
+  const [managerCash, setManagerCash] = useState('')
   
   // Sales data - normally would come from API
   const [salesData] = useState({
@@ -957,7 +958,7 @@ export default function StationDashboard() {
       <main style={styles.main}>
         {/* Welcome Section */}
         <div style={styles.welcomeSection}>
-          <h2 style={styles.welcomeTitle}>Station Overview 🛸</h2>
+          <h2 style={styles.welcomeTitle}>Station Overview </h2>
           <p style={styles.welcomeText}>
             {loading ? 'Loading station information...' : 
              error ? `Error: ${error}` :
@@ -981,8 +982,8 @@ export default function StationDashboard() {
                 <div>📍 <strong>Location:</strong> {stationData.location}</div>
                 <div>🏢 <strong>Operator:</strong> {stationData.operatorName}</div>
                 <div>📋 <strong>License:</strong> {stationData.ewuraLicense}</div>
-                <div>⛽ <strong>Tanks:</strong> {tanksLoading ? 'Loading...' : tankData.length || stationData.tanks}</div>
-                <div>🚰 <strong>Pumps/Nozzles:</strong> {pumpsLoading ? 'Loading...' : nozzleData.length}</div>
+                <div>🛢️ <strong>Tanks:</strong> {tanksLoading ? 'Loading...' : tankData.length || stationData.tanks}</div>
+                <div>⛽ <strong>Pumps/Nozzles:</strong> {pumpsLoading ? 'Loading...' : nozzleData.length}</div>
               </div>
               
               {(pumpsError || tanksError) && (
@@ -1302,7 +1303,7 @@ export default function StationDashboard() {
               </div>
               <div style={styles.nozzleMetrics}>
                 <div style={styles.nozzleMetric}>
-                  <p style={{...styles.nozzleMetricValue, fontSize: '20px'}}>$1.45</p>
+                  <p style={{...styles.nozzleMetricValue, fontSize: '20px'}}>1.45 TSH</p>
                   <p style={styles.nozzleMetricLabel}>Per Liter</p>
                 </div>
                 <div style={styles.nozzleMetric}>
@@ -1324,7 +1325,7 @@ export default function StationDashboard() {
               </div>
               <div style={styles.nozzleMetrics}>
                 <div style={styles.nozzleMetric}>
-                  <p style={{...styles.nozzleMetricValue, fontSize: '20px'}}>$1.52</p>
+                  <p style={{...styles.nozzleMetricValue, fontSize: '20px'}}>1.52 TSH</p>
                   <p style={styles.nozzleMetricLabel}>Per Liter</p>
                 </div>
                 <div style={styles.nozzleMetric}>
@@ -1336,148 +1337,162 @@ export default function StationDashboard() {
           </div>
         </div>
 
-        {/* Sales Metrics */}
-        <div style={styles.nozzleSection}>
-          <h3 style={styles.nozzleTitle}>
-            <TrendingUp size={20} color="#059669" />
-            Sales Analysis
-          </h3>
-          <div style={styles.nozzleGrid}>
-            <div style={styles.nozzleCard}>
-              <div style={styles.nozzleHeader}>
-                <span style={styles.nozzleName}>E_Total Sales</span>
-                <span style={{
-                  ...styles.nozzleStatus,
-                  color: '#1d4ed8',
-                  backgroundColor: '#dbeafe'
-                }}>
-                  System
-                </span>
-              </div>
-              <div style={styles.nozzleMetrics}>
-                <div style={styles.nozzleMetric}>
-                  <p style={styles.nozzleMetricValue}>10,020 L</p>
-                  <p style={styles.nozzleMetricLabel}>Total Liters</p>
-                </div>
-                <div style={styles.nozzleMetric}>
-                  <p style={{...styles.nozzleMetricValue, color: '#16a34a'}}>$14,629</p>
-                  <p style={styles.nozzleMetricLabel}>Cash Value</p>
-                </div>
-              </div>
-            </div>
+        {/* Sales Analysis - Separated by Fuel Type */}
 
-            <div style={styles.nozzleCard}>
-              <div style={styles.nozzleHeader}>
-                <span style={styles.nozzleName}>V_Total Sales</span>
-                <span style={{
-                  ...styles.nozzleStatus,
-                  color: '#7c3aed',
-                  backgroundColor: '#f3e8ff'
-                }}>
-                  Volume
-                </span>
-              </div>
-              <div style={styles.nozzleMetrics}>
-                <div style={styles.nozzleMetric}>
-                  <p style={styles.nozzleMetricValue}>9,950 L</p>
-                  <p style={styles.nozzleMetricLabel}>Total Liters</p>
-                </div>
-                <div style={styles.nozzleMetric}>
-                  <p style={{...styles.nozzleMetricValue, color: '#7c3aed'}}>Volume Only</p>
-                  <p style={styles.nozzleMetricLabel}>No Price</p>
-                </div>
-              </div>
-            </div>
-
-            <div style={styles.nozzleCard}>
-              <div style={styles.nozzleHeader}>
-                <span style={styles.nozzleName}>E_Total vs V_Total</span>
-                <span style={{
-                  ...styles.nozzleStatus,
-                  color: '#ca8a04',
-                  backgroundColor: '#fef3c7'
-                }}>
-                  Variance
-                </span>
-              </div>
-              <div style={styles.nozzleMetrics}>
-                <div style={styles.nozzleMetric}>
-                  <p style={{...styles.nozzleMetricValue, color: '#ca8a04'}}>+70 L</p>
-                  <p style={styles.nozzleMetricLabel}>Difference</p>
-                </div>
-                <div style={styles.nozzleMetric}>
-                  <p style={{...styles.nozzleMetricValue, color: '#ca8a04'}}>+0.7%</p>
-                  <p style={styles.nozzleMetricLabel}>Variance</p>
-                </div>
-              </div>
-            </div>
-
-            <div style={styles.nozzleCard}>
-              <div style={styles.nozzleHeader}>
-                <span style={styles.nozzleName}>M_Total Sales</span>
-                <span style={{
-                  ...styles.nozzleStatus,
-                  color: '#dc2626',
-                  backgroundColor: '#fee2e2'
-                }}>
-                  Manual
-                </span>
-              </div>
-              <div style={styles.nozzleMetrics}>
-                <div style={styles.nozzleMetric}>
-                  <p style={styles.nozzleMetricValue}>9,980 L</p>
-                  <p style={styles.nozzleMetricLabel}>Total Liters</p>
-                </div>
-                <div style={styles.nozzleMetric}>
-                  <p style={{...styles.nozzleMetricValue, color: '#dc2626'}}>Manual Entry</p>
-                  <p style={styles.nozzleMetricLabel}>User Input</p>
-                </div>
-              </div>
-            </div>
-          </div>
+{/* Unleaded Sales Analysis */}
+<div style={styles.nozzleSection}>
+  <h3 style={styles.nozzleTitle}>
+    <TrendingUp size={20} color="#2563eb" />
+    ⛽ Unleaded Sales Analysis
+  </h3>
+  <div style={styles.nozzleGrid}>
+    <div style={styles.nozzleCard}>
+      <div style={styles.nozzleHeader}>
+        <span style={styles.nozzleName}>E_Total Sales</span>
+        
+      </div>
+      <div style={styles.nozzleMetrics}>
+        <div style={styles.nozzleMetric}>
+          <p style={styles.nozzleMetricValue}>4,220 L</p>
+          <p style={styles.nozzleMetricLabel}>Total Liters</p>
         </div>
-
-        {/* Nozzle Performance */}
-        <div style={styles.nozzleSection}>
-          <h3 style={styles.nozzleTitle}>
-            <Target size={20} color="#6366f1" />
-            Pump/Nozzle Performance
-            {pumpsLoading && (
-              <div style={styles.loadingState}>
-                <Loader2 size={16} className="animate-spin" />
-                Loading pump data...
-              </div>
-            )}
-          </h3>
-          <div style={styles.nozzleGrid}>
-            {nozzleData.map((nozzle) => (
-              <div key={nozzle.id} style={styles.nozzleCard}>
-                <div style={styles.nozzleHeader}>
-                  <span style={styles.nozzleName}>{nozzle.name}</span>
-                  <span style={{
-                    ...styles.nozzleStatus,
-                    color: nozzle.status ? '#166534' : '#dc2626',
-                    backgroundColor: nozzle.status ? '#dcfce7' : '#fee2e2'
-                  }}>
-                    {nozzle.status ? 'Active' : 'Inactive'}
-                  </span>
-                </div>
-                <div style={styles.nozzleMetrics}>
-                  <div style={styles.nozzleMetric}>
-                    <p style={styles.nozzleMetricValue}>{nozzle.sold.toLocaleString()} L</p>
-                    <p style={styles.nozzleMetricLabel}>Sold Today</p>
-                  </div>
-                  <div style={styles.nozzleMetric}>
-                    <p style={styles.nozzleMetricValue}>{nozzle.percentage}%</p>
-                    <p style={styles.nozzleMetricLabel}>of Total</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+        <div style={styles.nozzleMetric}>
+          <p style={{...styles.nozzleMetricValue, color: '#16a34a'}}> 6,119 TSH</p>
+          <p style={styles.nozzleMetricLabel}>Cash Value</p>
         </div>
+      </div>
+    </div>
 
-        {/* Performance Metrics */}
+    <div style={styles.nozzleCard}>
+      <div style={styles.nozzleHeader}>
+        <span style={styles.nozzleName}>V_Total Sales</span>
+        
+      </div>
+      <div style={styles.nozzleMetrics}>
+        <div style={styles.nozzleMetric}>
+          <p style={styles.nozzleMetricValue}>4,150 L</p>
+          <p style={styles.nozzleMetricLabel}>Total Liters</p>
+        </div>
+        <div style={styles.nozzleMetric}>
+          <p style={{...styles.nozzleMetricValue, color: '#7c3aed'}}>Volume Only</p>
+          <p style={styles.nozzleMetricLabel}>No Price</p>
+        </div>
+      </div>
+    </div>
+
+    <div style={styles.nozzleCard}>
+      <div style={styles.nozzleHeader}>
+        <span style={styles.nozzleName}>E_Total vs V_Total</span>
+        
+      </div>
+      <div style={styles.nozzleMetrics}>
+        <div style={styles.nozzleMetric}>
+          <p style={{...styles.nozzleMetricValue, color: '#ca8a04'}}>+70 L</p>
+          <p style={styles.nozzleMetricLabel}>Difference</p>
+        </div>
+        <div style={styles.nozzleMetric}>
+          <p style={{...styles.nozzleMetricValue, color: '#ca8a04'}}>+1.7%</p>
+          <p style={styles.nozzleMetricLabel}>Variance</p>
+        </div>
+      </div>
+    </div>
+
+    <div style={styles.nozzleCard}>
+      <div style={styles.nozzleHeader}>
+        <span style={styles.nozzleName}>M_Total Sales</span>
+        
+      </div>
+      <div style={styles.nozzleMetrics}>
+        <div style={styles.nozzleMetric}>
+          <p style={styles.nozzleMetricValue}>4,200 L</p>
+          <p style={styles.nozzleMetricLabel}>Total Liters</p>
+        </div>
+        <div style={styles.nozzleMetric}>
+          <p style={{...styles.nozzleMetricValue, color: '#dc2626'}}>Manual Entry</p>
+          <p style={styles.nozzleMetricLabel}>User Input</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{/* Diesel Sales Analysis */}
+<div style={styles.nozzleSection}>
+  <h3 style={styles.nozzleTitle}>
+    <TrendingUp size={20} color="#16a34a" />
+    🚛 Diesel Sales Analysis
+  </h3>
+  <div style={styles.nozzleGrid}>
+    <div style={styles.nozzleCard}>
+      <div style={styles.nozzleHeader}>
+        <span style={styles.nozzleName}>E_Total Sales</span>
+        
+      </div>
+      <div style={styles.nozzleMetrics}>
+        <div style={styles.nozzleMetric}>
+          <p style={styles.nozzleMetricValue}>5,800 L</p>
+          <p style={styles.nozzleMetricLabel}>Total Liters</p>
+        </div>
+        <div style={styles.nozzleMetric}>
+          <p style={{...styles.nozzleMetricValue, color: '#16a34a'}}> 8,816 TSH</p>
+          <p style={styles.nozzleMetricLabel}>Cash Value</p>
+        </div>
+      </div>
+    </div>
+
+    <div style={styles.nozzleCard}>
+      <div style={styles.nozzleHeader}>
+        <span style={styles.nozzleName}>V_Total Sales</span>
+        
+      </div>
+      <div style={styles.nozzleMetrics}>
+        <div style={styles.nozzleMetric}>
+          <p style={styles.nozzleMetricValue}>5,750 L</p>
+          <p style={styles.nozzleMetricLabel}>Total Liters</p>
+        </div>
+        <div style={styles.nozzleMetric}>
+          <p style={{...styles.nozzleMetricValue, color: '#7c3aed'}}>Volume Only</p>
+          <p style={styles.nozzleMetricLabel}>No Price</p>
+        </div>
+      </div>
+    </div>
+
+    <div style={styles.nozzleCard}>
+      <div style={styles.nozzleHeader}>
+        <span style={styles.nozzleName}>E_Total vs V_Total</span>
+        
+      </div>
+      <div style={styles.nozzleMetrics}>
+        <div style={styles.nozzleMetric}>
+          <p style={{...styles.nozzleMetricValue, color: '#ca8a04'}}>+50 L</p>
+          <p style={styles.nozzleMetricLabel}>Difference</p>
+        </div>
+        <div style={styles.nozzleMetric}>
+          <p style={{...styles.nozzleMetricValue, color: '#ca8a04'}}>+0.9%</p>
+          <p style={styles.nozzleMetricLabel}>Variance</p>
+        </div>
+      </div>
+    </div>
+
+    <div style={styles.nozzleCard}>
+      <div style={styles.nozzleHeader}>
+        <span style={styles.nozzleName}>M_Total Sales</span>
+       
+      </div>
+      <div style={styles.nozzleMetrics}>
+        <div style={styles.nozzleMetric}>
+          <p style={styles.nozzleMetricValue}>5,780 L</p>
+          <p style={styles.nozzleMetricLabel}>Total Liters</p>
+        </div>
+        <div style={styles.nozzleMetric}>
+          <p style={{...styles.nozzleMetricValue, color: '#dc2626'}}>Manual Entry</p>
+          <p style={styles.nozzleMetricLabel}>User Input</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{/* Performance Metrics */}
         <div style={styles.statsGrid}>
           <div 
             style={styles.statCard}
@@ -1486,11 +1501,11 @@ export default function StationDashboard() {
           >
             <div style={styles.statHeader}>
               <div style={{...styles.statIcon, backgroundColor: '#dcfce7'}}>
-                <DollarSign size={24} color="#16a34a" />
-              </div>
+  <span style={{fontSize: '18px', fontWeight: 'bold', color: '#16a34a'}}>TSH</span>
+</div>
               <span style={{...styles.statusBadge, color: '#166534', backgroundColor: '#dcfce7'}}>+15%</span>
             </div>
-            <h3 style={styles.statValue}>$14,629</h3>
+            <h3 style={styles.statValue}>14,629 TSH</h3>
             <p style={styles.statLabel}>E_Total Revenue</p>
             <div style={styles.statFooter}>
               <TrendingUp size={12} style={{marginRight: '4px'}} />
@@ -1498,24 +1513,26 @@ export default function StationDashboard() {
             </div>
           </div>
 
-          <div 
-            style={styles.statCard}
-            onMouseEnter={(e) => e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1)'}
-            onMouseLeave={(e) => e.currentTarget.style.boxShadow = '0 1px 3px 0 rgba(0, 0, 0, 0.1)'}
-          >
-            <div style={styles.statHeader}>
-              <div style={{...styles.statIcon, backgroundColor: '#dbeafe'}}>
-                <Droplets size={24} color="#2563eb" />
-              </div>
-              <span style={{...styles.statusBadge, color: '#1d4ed8', backgroundColor: '#dbeafe'}}>Normal</span>
+                  <div 
+          style={styles.statCard}
+          onMouseEnter={(e) => e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1)'}
+          onMouseLeave={(e) => e.currentTarget.style.boxShadow = '0 1px 3px 0 rgba(0, 0, 0, 0.1)'}
+        >
+          <div style={styles.statHeader}>
+            <div style={{...styles.statIcon, backgroundColor: '#f0fdf4'}}>
+              <span style={{fontSize: '18px', fontWeight: 'bold', color: '#16a34a'}}>💰</span>
             </div>
-            <h3 style={styles.statValue}>10,020</h3>
-            <p style={styles.statLabel}>Liters Sold (E_Total)</p>
-            <div style={styles.statFooter}>
-              <Clock size={12} style={{marginRight: '4px'}} />
-              Since 6:00 AM
-            </div>
+            <span style={{...styles.statusBadge, color: '#166534', backgroundColor: '#dcfce7'}}>Manual</span>
           </div>
+          <h3 style={styles.statValue}>
+            {managerCash ? `${parseFloat(managerCash).toLocaleString()} TSH` : 'No Entry'}
+          </h3>
+          <p style={styles.statLabel}>Manager's Cash</p>
+          <div style={styles.statFooter}>
+            <Clock size={12} style={{marginRight: '4px'}} />
+            Manual count
+          </div>
+        </div>
 
           <div 
             style={styles.statCard}
@@ -1559,6 +1576,334 @@ export default function StationDashboard() {
             </div>
           </div>
         </div>
+       {/* Nozzle Performance - Separated by Fuel Type */}
+<div style={styles.nozzleSection}>
+  <h3 style={styles.nozzleTitle}>
+    <Target size={20} color="#6366f1" />
+    Pump/Nozzle Performance
+    {pumpsLoading && (
+      <div style={styles.loadingState}>
+        <Loader2 size={16} className="animate-spin" />
+        Loading pump data...
+      </div>
+    )}
+  </h3>
+  
+  {/* Unleaded Nozzles */}
+  <div style={{marginBottom: '32px'}}>
+    <h4 style={{
+      fontSize: '16px',
+      fontWeight: '600',
+      color: '#2563eb',
+      marginBottom: '16px',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px'
+    }}>
+      ⛽ Unleaded Nozzles
+    </h4>
+    <div style={styles.nozzleGrid}>
+      {nozzleData
+        .filter(nozzle => nozzle.name.toLowerCase().includes('unleaded') || 
+                          nozzle.name.toLowerCase().includes('petrol') || 
+                          nozzle.name.toLowerCase().includes('pms') ||
+                          nozzle.name.includes('A2'))
+        .map((nozzle) => (
+          <div key={nozzle.id} style={{
+            ...styles.nozzleCard,
+            padding: '20px'
+          }}>
+            <div style={styles.nozzleHeader}>
+              <span style={styles.nozzleName}>{nozzle.name}</span>
+              <span style={{
+                ...styles.nozzleStatus,
+                color: nozzle.status ? '#166534' : '#dc2626',
+                backgroundColor: nozzle.status ? '#dcfce7' : '#fee2e2'
+              }}>
+                {nozzle.status ? 'Active' : 'Inactive'}
+              </span>
+            </div>
+            
+            {/* 4 Metrics Grid - All Same Color */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: '12px',
+              marginTop: '16px'
+            }}>
+              {/* 1. Sold Today */}
+              <div style={{
+                background: '#f8fafc',
+                borderRadius: '8px',
+                padding: '12px',
+                border: '1px solid #e2e8f0',
+                textAlign: 'center'
+              }}>
+                <p style={{
+                  fontSize: '14px',
+                  fontWeight: 'bold',
+                  color: '#1e293b',
+                  margin: 0
+                }}>
+                  {nozzle.sold.toLocaleString()} L
+                </p>
+                <p style={{
+                  fontSize: '10px',
+                  color: '#64748b',
+                  margin: '2px 0 0 0'
+                }}>
+                  Sold Today
+                </p>
+              </div>
+
+              {/* 2. E-Total */}
+              <div style={{
+                background: '#f8fafc',
+                borderRadius: '8px',
+                padding: '12px',
+                border: '1px solid #e2e8f0',
+                textAlign: 'center'
+              }}>
+                <p style={{
+                  fontSize: '14px',
+                  fontWeight: 'bold',
+                  color: '#1e293b',
+                  margin: 0
+                }}>
+                  {(nozzle.sold * 0.95).toFixed(0)} L
+                </p>
+                <p style={{
+                  fontSize: '10px',
+                  color: '#64748b',
+                  margin: '2px 0 0 0'
+                }}>
+                  E-Total
+                </p>
+              </div>
+
+              {/* 3. V-Total */}
+              <div style={{
+                background: '#f8fafc',
+                borderRadius: '8px',
+                padding: '12px',
+                border: '1px solid #e2e8f0',
+                textAlign: 'center'
+              }}>
+                <p style={{
+                  fontSize: '14px',
+                  fontWeight: 'bold',
+                  color: '#1e293b',
+                  margin: 0
+                }}>
+                  {(nozzle.sold * 0.92).toFixed(0)} L
+                </p>
+                <p style={{
+                  fontSize: '10px',
+                  color: '#64748b',
+                  margin: '2px 0 0 0'
+                }}>
+                  V-Total
+                </p>
+              </div>
+
+              {/* 4. M-Total (Manual Entry) */}
+              <div style={{
+                background: '#f8fafc',
+                borderRadius: '8px',
+                padding: '8px',
+                border: '1px solid #e2e8f0',
+                textAlign: 'center'
+              }}>
+                <input
+                  type="number"
+                  placeholder="Enter"
+                  style={{
+                    width: '100%',
+                    padding: '4px 6px',
+                    border: '1px solid #cbd5e1',
+                    borderRadius: '4px',
+                    fontSize: '12px',
+                    fontWeight: 'bold',
+                    textAlign: 'center',
+                    color: '#1e293b',
+                    outline: 'none',
+                    background: '#ffffff'
+                  }}
+                  onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                  onBlur={(e) => e.target.style.borderColor = '#cbd5e1'}
+                />
+                <p style={{
+                  fontSize: '10px',
+                  color: '#64748b',
+                  margin: '4px 0 0 0'
+                }}>
+                  M-Total
+                </p>
+              </div>
+            </div>
+          </div>
+        ))}
+    </div>
+  </div>
+
+  {/* Diesel Nozzles */}
+  <div>
+    <h4 style={{
+      fontSize: '16px',
+      fontWeight: '600',
+      color: '#16a34a',
+      marginBottom: '16px',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px'
+    }}>
+      🚛 Diesel Nozzles
+    </h4>
+    <div style={styles.nozzleGrid}>
+      {nozzleData
+        .filter(nozzle => nozzle.name.toLowerCase().includes('diesel') || 
+                          nozzle.name.toLowerCase().includes('ago') ||
+                          nozzle.name.includes('A1'))
+        .map((nozzle) => (
+          <div key={nozzle.id} style={{
+            ...styles.nozzleCard,
+            padding: '20px'
+          }}>
+            <div style={styles.nozzleHeader}>
+              <span style={styles.nozzleName}>{nozzle.name}</span>
+              <span style={{
+                ...styles.nozzleStatus,
+                color: nozzle.status ? '#166534' : '#dc2626',
+                backgroundColor: nozzle.status ? '#dcfce7' : '#fee2e2'
+              }}>
+                {nozzle.status ? 'Active' : 'Inactive'}
+              </span>
+            </div>
+            
+            {/* 4 Metrics Grid - All Same Color */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: '12px',
+              marginTop: '16px'
+            }}>
+              {/* 1. Sold Today */}
+              <div style={{
+                background: '#f8fafc',
+                borderRadius: '8px',
+                padding: '12px',
+                border: '1px solid #e2e8f0',
+                textAlign: 'center'
+              }}>
+                <p style={{
+                  fontSize: '14px',
+                  fontWeight: 'bold',
+                  color: '#1e293b',
+                  margin: 0
+                }}>
+                  {nozzle.sold.toLocaleString()} L
+                </p>
+                <p style={{
+                  fontSize: '10px',
+                  color: '#64748b',
+                  margin: '2px 0 0 0'
+                }}>
+                  Sold Today
+                </p>
+              </div>
+
+              {/* 2. E-Total */}
+              <div style={{
+                background: '#f8fafc',
+                borderRadius: '8px',
+                padding: '12px',
+                border: '1px solid #e2e8f0',
+                textAlign: 'center'
+              }}>
+                <p style={{
+                  fontSize: '14px',
+                  fontWeight: 'bold',
+                  color: '#1e293b',
+                  margin: 0
+                }}>
+                  {(nozzle.sold * 0.95).toFixed(0)} L
+                </p>
+                <p style={{
+                  fontSize: '10px',
+                  color: '#64748b',
+                  margin: '2px 0 0 0'
+                }}>
+                  E-Total
+                </p>
+              </div>
+
+              {/* 3. V-Total */}
+              <div style={{
+                background: '#f8fafc',
+                borderRadius: '8px',
+                padding: '12px',
+                border: '1px solid #e2e8f0',
+                textAlign: 'center'
+              }}>
+                <p style={{
+                  fontSize: '14px',
+                  fontWeight: 'bold',
+                  color: '#1e293b',
+                  margin: 0
+                }}>
+                  {(nozzle.sold * 0.92).toFixed(0)} L
+                </p>
+                <p style={{
+                  fontSize: '10px',
+                  color: '#64748b',
+                  margin: '2px 0 0 0'
+                }}>
+                  V-Total
+                </p>
+              </div>
+
+              {/* 4. M-Total (Manual Entry) */}
+              <div style={{
+                background: '#f8fafc',
+                borderRadius: '8px',
+                padding: '8px',
+                border: '1px solid #e2e8f0',
+                textAlign: 'center'
+              }}>
+                <input
+                  type="number"
+                  placeholder="Enter"
+                  style={{
+                    width: '100%',
+                    padding: '4px 6px',
+                    border: '1px solid #cbd5e1',
+                    borderRadius: '4px',
+                    fontSize: '12px',
+                    fontWeight: 'bold',
+                    textAlign: 'center',
+                    color: '#1e293b',
+                    outline: 'none',
+                    background: '#ffffff'
+                  }}
+                  onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                  onBlur={(e) => e.target.style.borderColor = '#cbd5e1'}
+                />
+                <p style={{
+                  fontSize: '10px',
+                  color: '#64748b',
+                  margin: '4px 0 0 0'
+                }}>
+                  M-Total
+                </p>
+              </div>
+            </div>
+          </div>
+        ))}
+    </div>
+  </div>
+</div>
+
+        
 
         {/* Quick Actions */}
         <div style={styles.actionsCard}>
@@ -1572,15 +1917,15 @@ export default function StationDashboard() {
               <Gauge size={24} style={{marginBottom: '8px'}} />
               <span>Update Levels</span>
             </button>
-            <button 
-              onClick={() => setShowSalesModal(true)}
-              style={{...styles.actionButton, backgroundColor: '#dcfce7', color: '#166534'}}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#bbf7d0')}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#dcfce7')}
-            >
-              <DollarSign size={24} style={{marginBottom: '8px'}} />
-              <span>Record Sales</span>
-            </button>
+           <button 
+  onClick={() => setShowSalesModal(true)}
+  style={{...styles.actionButton, backgroundColor: '#dcfce7', color: '#166534'}}
+  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#bbf7d0')}
+  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#dcfce7')}
+>
+  <div style={{fontSize: '24px', marginBottom: '8px'}}>💰</div>
+  <span>Record Sales</span>
+</button>
             <button 
               onClick={() => setShowChecklistModal(true)}
               style={{...styles.actionButton, backgroundColor: '#f3e8ff', color: '#7c3aed'}}
@@ -1783,11 +2128,11 @@ export default function StationDashboard() {
                       Unleaded Sales
                     </div>
                     <div style={styles.salesDetails}>
-                      {salesData.unleaded.liters.toLocaleString()} L × ${salesData.unleaded.pricePerLiter}
+                      {salesData.unleaded.liters.toLocaleString()} L × TSH {salesData.unleaded.pricePerLiter}
                     </div>
                   </div>
                   <div style={styles.salesValue}>
-                    ${salesData.unleaded.cash.toLocaleString()}
+                    TSH{salesData.unleaded.cash.toLocaleString()}
                   </div>
                 </div>
 
@@ -1799,11 +2144,11 @@ export default function StationDashboard() {
                       Diesel Sales
                     </div>
                     <div style={styles.salesDetails}>
-                      {salesData.diesel.liters.toLocaleString()} L × ${salesData.diesel.pricePerLiter}
+                      {salesData.diesel.liters.toLocaleString()} L × TSH{salesData.diesel.pricePerLiter}
                     </div>
                   </div>
                   <div style={styles.salesValue}>
-                    ${salesData.diesel.cash.toLocaleString()}
+                    TSH{salesData.diesel.cash.toLocaleString()}
                   </div>
                 </div>
 
@@ -1819,7 +2164,7 @@ export default function StationDashboard() {
                     </div>
                   </div>
                   <div style={{...styles.salesValue, color: '#1d4ed8'}}>
-                    ${(salesData.unleaded.cash + salesData.diesel.cash).toLocaleString()}
+                    TSH{(salesData.unleaded.cash + salesData.diesel.cash).toLocaleString()}
                   </div>
                 </div>
 
@@ -1835,7 +2180,46 @@ export default function StationDashboard() {
                     </div>
                   </div>
                   <div style={{...styles.salesValue, ...styles.salesValueHighlight}}>
-                    ${salesData.eTotalCash.toLocaleString()}
+                    TSH{salesData.eTotalCash.toLocaleString()}
+                  </div>
+                </div>
+                {/* Manager's Cash - Manual Entry */}
+                <div style={{
+                  ...styles.salesRow,
+                  backgroundColor: '#f0fdf4',
+                  borderColor: '#22c55e'
+                }}>
+                  <div>
+                    <div style={styles.salesLabel}>
+                      <span style={styles.salesIcon}>💰</span>
+                      Manager's Cash (Manual Entry)
+                    </div>
+                    <div style={styles.salesDetails}>
+                      Cash counted by station manager
+                    </div>
+                  </div>
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}>
+                    <input
+                    type="number"
+                    placeholder="Enter amount"
+                    value={managerCash}
+                    onChange={(e) => setManagerCash(e.target.value)}
+                    style={{
+                      padding: '8px 12px',
+                      border: '1px solid #22c55e',
+                      borderRadius: '6px',
+                      fontSize: '16px',
+                      fontWeight: '600',
+                      width: '140px',
+                      textAlign: 'right',
+                      outline: 'none'
+                    }}
+                  />
+                    <span style={{fontSize: '16px', fontWeight: '600', color: '#16a34a'}}>TSH</span>
                   </div>
                 </div>
 
@@ -1859,10 +2243,12 @@ export default function StationDashboard() {
                     color: salesData.eTotalCash - (salesData.unleaded.cash + salesData.diesel.cash) >= 0 ? '#16a34a' : '#dc2626'
                   }}>
                     {salesData.eTotalCash - (salesData.unleaded.cash + salesData.diesel.cash) >= 0 ? '+' : ''}
-                    ${(salesData.eTotalCash - (salesData.unleaded.cash + salesData.diesel.cash)).toLocaleString()}
+                    {(salesData.eTotalCash - (salesData.unleaded.cash + salesData.diesel.cash)).toLocaleString()}TSH
                   </div>
                 </div>
               </div>
+             
+
 
               <div style={styles.modalFooter}>
                 <button 

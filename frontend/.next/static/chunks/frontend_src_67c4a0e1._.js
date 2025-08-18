@@ -819,6 +819,7 @@ function StationDashboard() {
         tankLeak: false,
         safetyEquipment: false
     });
+    const [managerCash, setManagerCash] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('');
     // Sales data - normally would come from API
     const [salesData] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
         unleaded: {
@@ -1015,7 +1016,7 @@ function StationDashboard() {
                                     color: "#2563eb"
                                 }, void 0, false, {
                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                    lineNumber: 918,
+                                    lineNumber: 919,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1025,7 +1026,7 @@ function StationDashboard() {
                                             children: loading ? 'Loading...' : (stationData === null || stationData === void 0 ? void 0 : stationData.name) || 'Station Dashboard'
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                            lineNumber: 920,
+                                            lineNumber: 921,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1033,19 +1034,19 @@ function StationDashboard() {
                                             children: "Station Manager"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                            lineNumber: 923,
+                                            lineNumber: 924,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                    lineNumber: 919,
+                                    lineNumber: 920,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                            lineNumber: 917,
+                            lineNumber: 918,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1060,7 +1061,7 @@ function StationDashboard() {
                                             size: 20
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                            lineNumber: 933,
+                                            lineNumber: 934,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1068,13 +1069,13 @@ function StationDashboard() {
                                             children: "1"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                            lineNumber: 934,
+                                            lineNumber: 935,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                    lineNumber: 928,
+                                    lineNumber: 929,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1085,12 +1086,12 @@ function StationDashboard() {
                                         size: 20
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 941,
+                                        lineNumber: 942,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                    lineNumber: 936,
+                                    lineNumber: 937,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1103,37 +1104,37 @@ function StationDashboard() {
                                             size: 16
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                            lineNumber: 949,
+                                            lineNumber: 950,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                             children: "Sign Out"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                            lineNumber: 950,
+                                            lineNumber: 951,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                    lineNumber: 943,
+                                    lineNumber: 944,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                            lineNumber: 927,
+                            lineNumber: 928,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                    lineNumber: 916,
+                    lineNumber: 917,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                lineNumber: 915,
+                lineNumber: 916,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
@@ -1144,10 +1145,10 @@ function StationDashboard() {
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
                                 style: styles.welcomeTitle,
-                                children: "Station Overview 🛸"
+                                children: "Station Overview "
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                lineNumber: 960,
+                                lineNumber: 961,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1155,7 +1156,7 @@ function StationDashboard() {
                                 children: loading ? 'Loading station information...' : error ? "Error: ".concat(error) : "Monitor ".concat((stationData === null || stationData === void 0 ? void 0 : stationData.name) || 'your station', "'s operations and performance in real-time.")
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                lineNumber: 961,
+                                lineNumber: 962,
                                 columnNumber: 11
                             }, this),
                             stationData && !loading && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1183,7 +1184,7 @@ function StationDashboard() {
                                                         children: "Location:"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 981,
+                                                        lineNumber: 982,
                                                         columnNumber: 25
                                                     }, this),
                                                     " ",
@@ -1191,7 +1192,7 @@ function StationDashboard() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 981,
+                                                lineNumber: 982,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1201,7 +1202,7 @@ function StationDashboard() {
                                                         children: "Operator:"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 982,
+                                                        lineNumber: 983,
                                                         columnNumber: 25
                                                     }, this),
                                                     " ",
@@ -1209,7 +1210,7 @@ function StationDashboard() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 982,
+                                                lineNumber: 983,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1219,29 +1220,11 @@ function StationDashboard() {
                                                         children: "License:"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 983,
+                                                        lineNumber: 984,
                                                         columnNumber: 25
                                                     }, this),
                                                     " ",
                                                     stationData.ewuraLicense
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 983,
-                                                columnNumber: 17
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                children: [
-                                                    "⛽ ",
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
-                                                        children: "Tanks:"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 984,
-                                                        columnNumber: 24
-                                                    }, this),
-                                                    " ",
-                                                    tanksLoading ? 'Loading...' : tankData.length || stationData.tanks
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
@@ -1250,26 +1233,44 @@ function StationDashboard() {
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 children: [
-                                                    "🚰 ",
+                                                    "🛢️ ",
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                                        children: "Tanks:"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                        lineNumber: 985,
+                                                        columnNumber: 26
+                                                    }, this),
+                                                    " ",
+                                                    tanksLoading ? 'Loading...' : tankData.length || stationData.tanks
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                lineNumber: 985,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                children: [
+                                                    "⛽ ",
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
                                                         children: "Pumps/Nozzles:"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 985,
-                                                        columnNumber: 25
+                                                        lineNumber: 986,
+                                                        columnNumber: 24
                                                     }, this),
                                                     " ",
                                                     pumpsLoading ? 'Loading...' : nozzleData.length
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 985,
+                                                lineNumber: 986,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 974,
+                                        lineNumber: 975,
                                         columnNumber: 15
                                     }, this),
                                     (pumpsError || tanksError) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1289,7 +1290,7 @@ function StationDashboard() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 997,
+                                                lineNumber: 998,
                                                 columnNumber: 34
                                             }, this),
                                             tanksError && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1299,7 +1300,7 @@ function StationDashboard() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 998,
+                                                lineNumber: 999,
                                                 columnNumber: 34
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1310,13 +1311,13 @@ function StationDashboard() {
                                                 children: "Using fallback data where available"
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 999,
+                                                lineNumber: 1000,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 989,
+                                        lineNumber: 990,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1339,26 +1340,26 @@ function StationDashboard() {
                                                 size: 12
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1019,
+                                                lineNumber: 1020,
                                                 columnNumber: 17
                                             }, this),
                                             "Refresh All Data"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 1003,
+                                        lineNumber: 1004,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                lineNumber: 967,
+                                lineNumber: 968,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                        lineNumber: 959,
+                        lineNumber: 960,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1387,7 +1388,7 @@ function StationDashboard() {
                                                 color: "#2563eb"
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1043,
+                                                lineNumber: 1044,
                                                 columnNumber: 15
                                             }, this),
                                             "Tank Monitoring",
@@ -1399,20 +1400,20 @@ function StationDashboard() {
                                                         className: "animate-spin"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1047,
+                                                        lineNumber: 1048,
                                                         columnNumber: 19
                                                     }, this),
                                                     "Loading tank data..."
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1046,
+                                                lineNumber: 1047,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 1034,
+                                        lineNumber: 1035,
                                         columnNumber: 13
                                     }, this),
                                     tanksError && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1431,7 +1432,7 @@ function StationDashboard() {
                                                 size: 12
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1063,
+                                                lineNumber: 1064,
                                                 columnNumber: 17
                                             }, this),
                                             "Tank data error: ",
@@ -1439,13 +1440,13 @@ function StationDashboard() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 1053,
+                                        lineNumber: 1054,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                lineNumber: 1028,
+                                lineNumber: 1029,
                                 columnNumber: 11
                             }, this),
                             tanksLoading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1476,12 +1477,12 @@ function StationDashboard() {
                                                                     className: "animate-spin"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                    lineNumber: 1079,
+                                                                    lineNumber: 1080,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1078,
+                                                                lineNumber: 1079,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1499,7 +1500,7 @@ function StationDashboard() {
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                        lineNumber: 1082,
+                                                                        lineNumber: 1083,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1510,19 +1511,19 @@ function StationDashboard() {
                                                                         children: "Fetching capacity..."
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                        lineNumber: 1083,
+                                                                        lineNumber: 1084,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1081,
+                                                                lineNumber: 1082,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1077,
+                                                        lineNumber: 1078,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1534,13 +1535,13 @@ function StationDashboard() {
                                                         children: "Loading"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1086,
+                                                        lineNumber: 1087,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1076,
+                                                lineNumber: 1077,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1554,7 +1555,7 @@ function StationDashboard() {
                                                                 children: "Current Level"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1091,
+                                                                lineNumber: 1092,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1565,13 +1566,13 @@ function StationDashboard() {
                                                                 children: "---%"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1092,
+                                                                lineNumber: 1093,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1090,
+                                                        lineNumber: 1091,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1585,12 +1586,12 @@ function StationDashboard() {
                                                             }
                                                         }, void 0, false, {
                                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                            lineNumber: 1095,
+                                                            lineNumber: 1096,
                                                             columnNumber: 23
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1094,
+                                                        lineNumber: 1095,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1600,7 +1601,7 @@ function StationDashboard() {
                                                                 children: "Loading..."
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1103,
+                                                                lineNumber: 1104,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1611,26 +1612,26 @@ function StationDashboard() {
                                                                 children: "--- liters"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1104,
+                                                                lineNumber: 1105,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                 children: "---"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1105,
+                                                                lineNumber: 1106,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1102,
+                                                        lineNumber: 1103,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1089,
+                                                lineNumber: 1090,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1647,7 +1648,7 @@ function StationDashboard() {
                                                                         color: "#d1d5db"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                        lineNumber: 1112,
+                                                                        lineNumber: 1113,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1655,13 +1656,13 @@ function StationDashboard() {
                                                                         children: "Temperature"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                        lineNumber: 1113,
+                                                                        lineNumber: 1114,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1111,
+                                                                lineNumber: 1112,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1672,13 +1673,13 @@ function StationDashboard() {
                                                                 children: "---°C"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1115,
+                                                                lineNumber: 1116,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1110,
+                                                        lineNumber: 1111,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1692,7 +1693,7 @@ function StationDashboard() {
                                                                         color: "#d1d5db"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                        lineNumber: 1119,
+                                                                        lineNumber: 1120,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1700,13 +1701,13 @@ function StationDashboard() {
                                                                         children: "Water Level"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                        lineNumber: 1120,
+                                                                        lineNumber: 1121,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1118,
+                                                                lineNumber: 1119,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1717,30 +1718,30 @@ function StationDashboard() {
                                                                 children: "--- mm"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1122,
+                                                                lineNumber: 1123,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1117,
+                                                        lineNumber: 1118,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1109,
+                                                lineNumber: 1110,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, index, true, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 1072,
+                                        lineNumber: 1073,
                                         columnNumber: 17
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                lineNumber: 1070,
+                                lineNumber: 1071,
                                 columnNumber: 13
                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 style: styles.tankGrid,
@@ -1763,12 +1764,12 @@ function StationDashboard() {
                                                                     color: "#2563eb"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                    lineNumber: 1136,
+                                                                    lineNumber: 1137,
                                                                     columnNumber: 19
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1135,
+                                                                lineNumber: 1136,
                                                                 columnNumber: 17
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1784,7 +1785,7 @@ function StationDashboard() {
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                        lineNumber: 1139,
+                                                                        lineNumber: 1140,
                                                                         columnNumber: 19
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1795,19 +1796,19 @@ function StationDashboard() {
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                        lineNumber: 1140,
+                                                                        lineNumber: 1141,
                                                                         columnNumber: 19
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1138,
+                                                                lineNumber: 1139,
                                                                 columnNumber: 17
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1134,
+                                                        lineNumber: 1135,
                                                         columnNumber: 15
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1819,13 +1820,13 @@ function StationDashboard() {
                                                         children: tank.product_name
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1143,
+                                                        lineNumber: 1144,
                                                         columnNumber: 15
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1133,
+                                                lineNumber: 1134,
                                                 columnNumber: 13
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1839,7 +1840,7 @@ function StationDashboard() {
                                                                 children: "Current Level"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1148,
+                                                                lineNumber: 1149,
                                                                 columnNumber: 17
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1853,13 +1854,13 @@ function StationDashboard() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1149,
+                                                                lineNumber: 1150,
                                                                 columnNumber: 17
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1147,
+                                                        lineNumber: 1148,
                                                         columnNumber: 15
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1872,12 +1873,12 @@ function StationDashboard() {
                                                             }
                                                         }, void 0, false, {
                                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                            lineNumber: 1152,
+                                                            lineNumber: 1153,
                                                             columnNumber: 17
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1151,
+                                                        lineNumber: 1152,
                                                         columnNumber: 15
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1887,7 +1888,7 @@ function StationDashboard() {
                                                                 children: "0 L"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1159,
+                                                                lineNumber: 1160,
                                                                 columnNumber: 17
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1901,7 +1902,7 @@ function StationDashboard() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1160,
+                                                                lineNumber: 1161,
                                                                 columnNumber: 17
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1911,19 +1912,19 @@ function StationDashboard() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1161,
+                                                                lineNumber: 1162,
                                                                 columnNumber: 17
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1158,
+                                                        lineNumber: 1159,
                                                         columnNumber: 15
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1146,
+                                                lineNumber: 1147,
                                                 columnNumber: 13
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1940,7 +1941,7 @@ function StationDashboard() {
                                                                         color: "#f59e0b"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                        lineNumber: 1168,
+                                                                        lineNumber: 1169,
                                                                         columnNumber: 19
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1948,13 +1949,13 @@ function StationDashboard() {
                                                                         children: "Temperature"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                        lineNumber: 1169,
+                                                                        lineNumber: 1170,
                                                                         columnNumber: 19
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1167,
+                                                                lineNumber: 1168,
                                                                 columnNumber: 17
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1965,13 +1966,13 @@ function StationDashboard() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1171,
+                                                                lineNumber: 1172,
                                                                 columnNumber: 17
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1166,
+                                                        lineNumber: 1167,
                                                         columnNumber: 15
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1985,7 +1986,7 @@ function StationDashboard() {
                                                                         color: "#3b82f6"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                        lineNumber: 1175,
+                                                                        lineNumber: 1176,
                                                                         columnNumber: 19
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1993,13 +1994,13 @@ function StationDashboard() {
                                                                         children: "Water Level"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                        lineNumber: 1176,
+                                                                        lineNumber: 1177,
                                                                         columnNumber: 19
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1174,
+                                                                lineNumber: 1175,
                                                                 columnNumber: 17
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2012,19 +2013,19 @@ function StationDashboard() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1178,
+                                                                lineNumber: 1179,
                                                                 columnNumber: 17
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1173,
+                                                        lineNumber: 1174,
                                                         columnNumber: 15
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1165,
+                                                lineNumber: 1166,
                                                 columnNumber: 13
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2038,14 +2039,14 @@ function StationDashboard() {
                                                                 color: "#6366f1"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1185,
+                                                                lineNumber: 1186,
                                                                 columnNumber: 17
                                                             }, this),
                                                             "Daily Quantities"
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1184,
+                                                        lineNumber: 1185,
                                                         columnNumber: 15
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2059,7 +2060,7 @@ function StationDashboard() {
                                                                         children: "Opening (Endpoint)"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                        lineNumber: 1190,
+                                                                        lineNumber: 1191,
                                                                         columnNumber: 19
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2067,13 +2068,13 @@ function StationDashboard() {
                                                                         children: "75,450 L"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                        lineNumber: 1191,
+                                                                        lineNumber: 1192,
                                                                         columnNumber: 19
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1189,
+                                                                lineNumber: 1190,
                                                                 columnNumber: 17
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2084,7 +2085,7 @@ function StationDashboard() {
                                                                         children: "Closing (Endpoint)"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                        lineNumber: 1194,
+                                                                        lineNumber: 1195,
                                                                         columnNumber: 19
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2092,13 +2093,13 @@ function StationDashboard() {
                                                                         children: "71,250 L"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                        lineNumber: 1195,
+                                                                        lineNumber: 1196,
                                                                         columnNumber: 19
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1193,
+                                                                lineNumber: 1194,
                                                                 columnNumber: 17
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2122,18 +2123,18 @@ function StationDashboard() {
                                                                                     color: "#64748b"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                                    lineNumber: 1201,
+                                                                                    lineNumber: 1202,
                                                                                     columnNumber: 23
                                                                                 }, this)
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                                lineNumber: 1200,
+                                                                                lineNumber: 1201,
                                                                                 columnNumber: 21
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                        lineNumber: 1198,
+                                                                        lineNumber: 1199,
                                                                         columnNumber: 19
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2141,13 +2142,13 @@ function StationDashboard() {
                                                                         children: "75,400 L"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                        lineNumber: 1204,
+                                                                        lineNumber: 1205,
                                                                         columnNumber: 19
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1197,
+                                                                lineNumber: 1198,
                                                                 columnNumber: 17
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2171,18 +2172,18 @@ function StationDashboard() {
                                                                                     color: "#64748b"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                                    lineNumber: 1210,
+                                                                                    lineNumber: 1211,
                                                                                     columnNumber: 23
                                                                                 }, this)
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                                lineNumber: 1209,
+                                                                                lineNumber: 1210,
                                                                                 columnNumber: 21
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                        lineNumber: 1207,
+                                                                        lineNumber: 1208,
                                                                         columnNumber: 19
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2190,25 +2191,25 @@ function StationDashboard() {
                                                                         children: "71,180 L"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                        lineNumber: 1213,
+                                                                        lineNumber: 1214,
                                                                         columnNumber: 19
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1206,
+                                                                lineNumber: 1207,
                                                                 columnNumber: 17
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1188,
+                                                        lineNumber: 1189,
                                                         columnNumber: 15
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1183,
+                                                lineNumber: 1184,
                                                 columnNumber: 13
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2222,14 +2223,14 @@ function StationDashboard() {
                                                                 color: "#dc2626"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1221,
+                                                                lineNumber: 1222,
                                                                 columnNumber: 17
                                                             }, this),
                                                             "Daily Filling"
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1220,
+                                                        lineNumber: 1221,
                                                         columnNumber: 15
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2246,7 +2247,7 @@ function StationDashboard() {
                                                                         children: "Tanker Name"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                        lineNumber: 1226,
+                                                                        lineNumber: 1227,
                                                                         columnNumber: 19
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2257,13 +2258,13 @@ function StationDashboard() {
                                                                         onBlur: (e)=>e.target.style.borderColor = '#e2e8f0'
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                        lineNumber: 1227,
+                                                                        lineNumber: 1228,
                                                                         columnNumber: 19
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1225,
+                                                                lineNumber: 1226,
                                                                 columnNumber: 17
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2274,7 +2275,7 @@ function StationDashboard() {
                                                                         children: "Truck Number"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                        lineNumber: 1236,
+                                                                        lineNumber: 1237,
                                                                         columnNumber: 19
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2285,13 +2286,13 @@ function StationDashboard() {
                                                                         onBlur: (e)=>e.target.style.borderColor = '#e2e8f0'
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                        lineNumber: 1237,
+                                                                        lineNumber: 1238,
                                                                         columnNumber: 19
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1235,
+                                                                lineNumber: 1236,
                                                                 columnNumber: 17
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2302,7 +2303,7 @@ function StationDashboard() {
                                                                         children: "Filling Value (Manual)"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                        lineNumber: 1246,
+                                                                        lineNumber: 1247,
                                                                         columnNumber: 19
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2313,13 +2314,13 @@ function StationDashboard() {
                                                                         onBlur: (e)=>e.target.style.borderColor = '#e2e8f0'
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                        lineNumber: 1247,
+                                                                        lineNumber: 1248,
                                                                         columnNumber: 19
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1245,
+                                                                lineNumber: 1246,
                                                                 columnNumber: 17
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2330,7 +2331,7 @@ function StationDashboard() {
                                                                         children: "ATG Value (Endpoint)"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                        lineNumber: 1256,
+                                                                        lineNumber: 1257,
                                                                         columnNumber: 19
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2341,13 +2342,13 @@ function StationDashboard() {
                                                                         children: "15,250 L"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                        lineNumber: 1257,
+                                                                        lineNumber: 1258,
                                                                         columnNumber: 19
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1255,
+                                                                lineNumber: 1256,
                                                                 columnNumber: 17
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2358,7 +2359,7 @@ function StationDashboard() {
                                                                         children: "Difference (Manual - ATG)"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                        lineNumber: 1260,
+                                                                        lineNumber: 1261,
                                                                         columnNumber: 19
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2369,7 +2370,7 @@ function StationDashboard() {
                                                                         children: "-150 L"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                        lineNumber: 1261,
+                                                                        lineNumber: 1262,
                                                                         columnNumber: 19
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2381,31 +2382,31 @@ function StationDashboard() {
                                                                         children: "Manual value lower than ATG"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                        lineNumber: 1262,
+                                                                        lineNumber: 1263,
                                                                         columnNumber: 19
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1259,
+                                                                lineNumber: 1260,
                                                                 columnNumber: 17
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1224,
+                                                        lineNumber: 1225,
                                                         columnNumber: 15
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1219,
+                                                lineNumber: 1220,
                                                 columnNumber: 13
                                             }, this)
                                         ]
                                     }, tank.id, true, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 1132,
+                                        lineNumber: 1133,
                                         columnNumber: 11
                                     }, this)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     style: {
@@ -2422,7 +2423,7 @@ function StationDashboard() {
                                             }
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                            lineNumber: 1276,
+                                            lineNumber: 1277,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -2433,7 +2434,7 @@ function StationDashboard() {
                                             children: "No Tank Data Available"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                            lineNumber: 1277,
+                                            lineNumber: 1278,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2443,24 +2444,24 @@ function StationDashboard() {
                                             children: "Unable to load tank information. Please check your connection or try again later."
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                            lineNumber: 1278,
+                                            lineNumber: 1279,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                    lineNumber: 1271,
+                                    lineNumber: 1272,
                                     columnNumber: 17
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                lineNumber: 1129,
+                                lineNumber: 1130,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                        lineNumber: 1027,
+                        lineNumber: 1028,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2474,14 +2475,14 @@ function StationDashboard() {
                                         color: "#16a34a"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 1288,
+                                        lineNumber: 1289,
                                         columnNumber: 13
                                     }, this),
                                     "Fuel Pricing & Sales"
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                lineNumber: 1287,
+                                lineNumber: 1288,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2498,7 +2499,7 @@ function StationDashboard() {
                                                         children: "Unleaded Price"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1294,
+                                                        lineNumber: 1295,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2510,13 +2511,13 @@ function StationDashboard() {
                                                         children: "Active"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1295,
+                                                        lineNumber: 1296,
                                                         columnNumber: 17
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1293,
+                                                lineNumber: 1294,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2530,10 +2531,10 @@ function StationDashboard() {
                                                                     ...styles.nozzleMetricValue,
                                                                     fontSize: '20px'
                                                                 },
-                                                                children: "$1.45"
+                                                                children: "1.45 TSH"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1305,
+                                                                lineNumber: 1306,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2541,13 +2542,13 @@ function StationDashboard() {
                                                                 children: "Per Liter"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1306,
+                                                                lineNumber: 1307,
                                                                 columnNumber: 19
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1304,
+                                                        lineNumber: 1305,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2558,7 +2559,7 @@ function StationDashboard() {
                                                                 children: "4,220 L"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1309,
+                                                                lineNumber: 1310,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2566,25 +2567,25 @@ function StationDashboard() {
                                                                 children: "Sold Today"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1310,
+                                                                lineNumber: 1311,
                                                                 columnNumber: 19
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1308,
+                                                        lineNumber: 1309,
                                                         columnNumber: 17
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1303,
+                                                lineNumber: 1304,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 1292,
+                                        lineNumber: 1293,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2598,7 +2599,7 @@ function StationDashboard() {
                                                         children: "Diesel Price"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1316,
+                                                        lineNumber: 1317,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2610,13 +2611,13 @@ function StationDashboard() {
                                                         children: "Active"
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1317,
+                                                        lineNumber: 1318,
                                                         columnNumber: 17
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1315,
+                                                lineNumber: 1316,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2630,10 +2631,10 @@ function StationDashboard() {
                                                                     ...styles.nozzleMetricValue,
                                                                     fontSize: '20px'
                                                                 },
-                                                                children: "$1.52"
+                                                                children: "1.52 TSH"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1327,
+                                                                lineNumber: 1328,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2641,13 +2642,13 @@ function StationDashboard() {
                                                                 children: "Per Liter"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1328,
+                                                                lineNumber: 1329,
                                                                 columnNumber: 19
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1326,
+                                                        lineNumber: 1327,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2658,7 +2659,7 @@ function StationDashboard() {
                                                                 children: "5,800 L"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1331,
+                                                                lineNumber: 1332,
                                                                 columnNumber: 19
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2666,37 +2667,37 @@ function StationDashboard() {
                                                                 children: "Sold Today"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1332,
+                                                                lineNumber: 1333,
                                                                 columnNumber: 19
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1330,
+                                                        lineNumber: 1331,
                                                         columnNumber: 17
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1325,
+                                                lineNumber: 1326,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 1314,
+                                        lineNumber: 1315,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                lineNumber: 1291,
+                                lineNumber: 1292,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                        lineNumber: 1286,
+                        lineNumber: 1287,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2707,18 +2708,18 @@ function StationDashboard() {
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$trending$2d$up$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__TrendingUp$3e$__["TrendingUp"], {
                                         size: 20,
-                                        color: "#059669"
+                                        color: "#2563eb"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 1342,
-                                        columnNumber: 13
+                                        lineNumber: 1345,
+                                        columnNumber: 5
                                     }, this),
-                                    "Sales Analysis"
+                                    "⛽ Unleaded Sales Analysis"
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                lineNumber: 1341,
-                                columnNumber: 11
+                                lineNumber: 1344,
+                                columnNumber: 3
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 style: styles.nozzleGrid,
@@ -2728,32 +2729,18 @@ function StationDashboard() {
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 style: styles.nozzleHeader,
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                        style: styles.nozzleName,
-                                                        children: "E_Total Sales"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1348,
-                                                        columnNumber: 17
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                        style: {
-                                                            ...styles.nozzleStatus,
-                                                            color: '#1d4ed8',
-                                                            backgroundColor: '#dbeafe'
-                                                        },
-                                                        children: "System"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1349,
-                                                        columnNumber: 17
-                                                    }, this)
-                                                ]
-                                            }, void 0, true, {
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    style: styles.nozzleName,
+                                                    children: "E_Total Sales"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                    lineNumber: 1351,
+                                                    columnNumber: 9
+                                                }, this)
+                                            }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1347,
-                                                columnNumber: 15
+                                                lineNumber: 1350,
+                                                columnNumber: 7
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 style: styles.nozzleMetrics,
@@ -2763,25 +2750,25 @@ function StationDashboard() {
                                                         children: [
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                 style: styles.nozzleMetricValue,
-                                                                children: "10,020 L"
+                                                                children: "4,220 L"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1359,
-                                                                columnNumber: 19
+                                                                lineNumber: 1356,
+                                                                columnNumber: 11
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                 style: styles.nozzleMetricLabel,
                                                                 children: "Total Liters"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1360,
-                                                                columnNumber: 19
+                                                                lineNumber: 1357,
+                                                                columnNumber: 11
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1358,
-                                                        columnNumber: 17
+                                                        lineNumber: 1355,
+                                                        columnNumber: 9
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         style: styles.nozzleMetric,
@@ -2791,69 +2778,55 @@ function StationDashboard() {
                                                                     ...styles.nozzleMetricValue,
                                                                     color: '#16a34a'
                                                                 },
-                                                                children: "$14,629"
+                                                                children: " 6,119 TSH"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1363,
-                                                                columnNumber: 19
+                                                                lineNumber: 1360,
+                                                                columnNumber: 11
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                 style: styles.nozzleMetricLabel,
                                                                 children: "Cash Value"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1364,
-                                                                columnNumber: 19
+                                                                lineNumber: 1361,
+                                                                columnNumber: 11
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1362,
-                                                        columnNumber: 17
+                                                        lineNumber: 1359,
+                                                        columnNumber: 9
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1357,
-                                                columnNumber: 15
+                                                lineNumber: 1354,
+                                                columnNumber: 7
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 1346,
-                                        columnNumber: 13
+                                        lineNumber: 1349,
+                                        columnNumber: 5
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         style: styles.nozzleCard,
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 style: styles.nozzleHeader,
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                        style: styles.nozzleName,
-                                                        children: "V_Total Sales"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1371,
-                                                        columnNumber: 17
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                        style: {
-                                                            ...styles.nozzleStatus,
-                                                            color: '#7c3aed',
-                                                            backgroundColor: '#f3e8ff'
-                                                        },
-                                                        children: "Volume"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1372,
-                                                        columnNumber: 17
-                                                    }, this)
-                                                ]
-                                            }, void 0, true, {
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    style: styles.nozzleName,
+                                                    children: "V_Total Sales"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                    lineNumber: 1368,
+                                                    columnNumber: 9
+                                                }, this)
+                                            }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1370,
-                                                columnNumber: 15
+                                                lineNumber: 1367,
+                                                columnNumber: 7
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 style: styles.nozzleMetrics,
@@ -2863,25 +2836,25 @@ function StationDashboard() {
                                                         children: [
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                 style: styles.nozzleMetricValue,
-                                                                children: "9,950 L"
+                                                                children: "4,150 L"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1382,
-                                                                columnNumber: 19
+                                                                lineNumber: 1373,
+                                                                columnNumber: 11
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                 style: styles.nozzleMetricLabel,
                                                                 children: "Total Liters"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1383,
-                                                                columnNumber: 19
+                                                                lineNumber: 1374,
+                                                                columnNumber: 11
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1381,
-                                                        columnNumber: 17
+                                                        lineNumber: 1372,
+                                                        columnNumber: 9
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         style: styles.nozzleMetric,
@@ -2894,66 +2867,52 @@ function StationDashboard() {
                                                                 children: "Volume Only"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1386,
-                                                                columnNumber: 19
+                                                                lineNumber: 1377,
+                                                                columnNumber: 11
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                 style: styles.nozzleMetricLabel,
                                                                 children: "No Price"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1387,
-                                                                columnNumber: 19
+                                                                lineNumber: 1378,
+                                                                columnNumber: 11
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1385,
-                                                        columnNumber: 17
+                                                        lineNumber: 1376,
+                                                        columnNumber: 9
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1380,
-                                                columnNumber: 15
+                                                lineNumber: 1371,
+                                                columnNumber: 7
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 1369,
-                                        columnNumber: 13
+                                        lineNumber: 1366,
+                                        columnNumber: 5
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         style: styles.nozzleCard,
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 style: styles.nozzleHeader,
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                        style: styles.nozzleName,
-                                                        children: "E_Total vs V_Total"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1394,
-                                                        columnNumber: 17
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                        style: {
-                                                            ...styles.nozzleStatus,
-                                                            color: '#ca8a04',
-                                                            backgroundColor: '#fef3c7'
-                                                        },
-                                                        children: "Variance"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1395,
-                                                        columnNumber: 17
-                                                    }, this)
-                                                ]
-                                            }, void 0, true, {
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    style: styles.nozzleName,
+                                                    children: "E_Total vs V_Total"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                    lineNumber: 1385,
+                                                    columnNumber: 9
+                                                }, this)
+                                            }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1393,
-                                                columnNumber: 15
+                                                lineNumber: 1384,
+                                                columnNumber: 7
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 style: styles.nozzleMetrics,
@@ -2969,22 +2928,22 @@ function StationDashboard() {
                                                                 children: "+70 L"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1405,
-                                                                columnNumber: 19
+                                                                lineNumber: 1390,
+                                                                columnNumber: 11
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                 style: styles.nozzleMetricLabel,
                                                                 children: "Difference"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1406,
-                                                                columnNumber: 19
+                                                                lineNumber: 1391,
+                                                                columnNumber: 11
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1404,
-                                                        columnNumber: 17
+                                                        lineNumber: 1389,
+                                                        columnNumber: 9
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         style: styles.nozzleMetric,
@@ -2994,69 +2953,55 @@ function StationDashboard() {
                                                                     ...styles.nozzleMetricValue,
                                                                     color: '#ca8a04'
                                                                 },
-                                                                children: "+0.7%"
+                                                                children: "+1.7%"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1409,
-                                                                columnNumber: 19
+                                                                lineNumber: 1394,
+                                                                columnNumber: 11
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                 style: styles.nozzleMetricLabel,
                                                                 children: "Variance"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1410,
-                                                                columnNumber: 19
+                                                                lineNumber: 1395,
+                                                                columnNumber: 11
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1408,
-                                                        columnNumber: 17
+                                                        lineNumber: 1393,
+                                                        columnNumber: 9
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1403,
-                                                columnNumber: 15
+                                                lineNumber: 1388,
+                                                columnNumber: 7
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 1392,
-                                        columnNumber: 13
+                                        lineNumber: 1383,
+                                        columnNumber: 5
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         style: styles.nozzleCard,
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 style: styles.nozzleHeader,
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                        style: styles.nozzleName,
-                                                        children: "M_Total Sales"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1417,
-                                                        columnNumber: 17
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                        style: {
-                                                            ...styles.nozzleStatus,
-                                                            color: '#dc2626',
-                                                            backgroundColor: '#fee2e2'
-                                                        },
-                                                        children: "Manual"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1418,
-                                                        columnNumber: 17
-                                                    }, this)
-                                                ]
-                                            }, void 0, true, {
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    style: styles.nozzleName,
+                                                    children: "M_Total Sales"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                    lineNumber: 1402,
+                                                    columnNumber: 9
+                                                }, this)
+                                            }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1416,
-                                                columnNumber: 15
+                                                lineNumber: 1401,
+                                                columnNumber: 7
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 style: styles.nozzleMetrics,
@@ -3066,25 +3011,25 @@ function StationDashboard() {
                                                         children: [
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                 style: styles.nozzleMetricValue,
-                                                                children: "9,980 L"
+                                                                children: "4,200 L"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1428,
-                                                                columnNumber: 19
+                                                                lineNumber: 1407,
+                                                                columnNumber: 11
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                 style: styles.nozzleMetricLabel,
                                                                 children: "Total Liters"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1429,
-                                                                columnNumber: 19
+                                                                lineNumber: 1408,
+                                                                columnNumber: 11
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1427,
-                                                        columnNumber: 17
+                                                        lineNumber: 1406,
+                                                        columnNumber: 9
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         style: styles.nozzleMetric,
@@ -3097,46 +3042,46 @@ function StationDashboard() {
                                                                 children: "Manual Entry"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1432,
-                                                                columnNumber: 19
+                                                                lineNumber: 1411,
+                                                                columnNumber: 11
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                 style: styles.nozzleMetricLabel,
                                                                 children: "User Input"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1433,
-                                                                columnNumber: 19
+                                                                lineNumber: 1412,
+                                                                columnNumber: 11
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1431,
-                                                        columnNumber: 17
+                                                        lineNumber: 1410,
+                                                        columnNumber: 9
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1426,
-                                                columnNumber: 15
+                                                lineNumber: 1405,
+                                                columnNumber: 7
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 1415,
-                                        columnNumber: 13
+                                        lineNumber: 1400,
+                                        columnNumber: 5
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                lineNumber: 1345,
-                                columnNumber: 11
+                                lineNumber: 1348,
+                                columnNumber: 3
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                        lineNumber: 1340,
-                        columnNumber: 9
+                        lineNumber: 1343,
+                        columnNumber: 1
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         style: styles.nozzleSection,
@@ -3144,72 +3089,41 @@ function StationDashboard() {
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
                                 style: styles.nozzleTitle,
                                 children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$target$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Target$3e$__["Target"], {
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$trending$2d$up$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__TrendingUp$3e$__["TrendingUp"], {
                                         size: 20,
-                                        color: "#6366f1"
+                                        color: "#16a34a"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 1443,
-                                        columnNumber: 13
+                                        lineNumber: 1422,
+                                        columnNumber: 5
                                     }, this),
-                                    "Pump/Nozzle Performance",
-                                    pumpsLoading && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        style: styles.loadingState,
-                                        children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$loader$2d$circle$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Loader2$3e$__["Loader2"], {
-                                                size: 16,
-                                                className: "animate-spin"
-                                            }, void 0, false, {
-                                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1447,
-                                                columnNumber: 17
-                                            }, this),
-                                            "Loading pump data..."
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 1446,
-                                        columnNumber: 15
-                                    }, this)
+                                    "🚛 Diesel Sales Analysis"
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                lineNumber: 1442,
-                                columnNumber: 11
+                                lineNumber: 1421,
+                                columnNumber: 3
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 style: styles.nozzleGrid,
-                                children: nozzleData.map((nozzle)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         style: styles.nozzleCard,
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 style: styles.nozzleHeader,
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                        style: styles.nozzleName,
-                                                        children: nozzle.name
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1456,
-                                                        columnNumber: 19
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                        style: {
-                                                            ...styles.nozzleStatus,
-                                                            color: nozzle.status ? '#166534' : '#dc2626',
-                                                            backgroundColor: nozzle.status ? '#dcfce7' : '#fee2e2'
-                                                        },
-                                                        children: nozzle.status ? 'Active' : 'Inactive'
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1457,
-                                                        columnNumber: 19
-                                                    }, this)
-                                                ]
-                                            }, void 0, true, {
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    style: styles.nozzleName,
+                                                    children: "E_Total Sales"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                    lineNumber: 1428,
+                                                    columnNumber: 9
+                                                }, this)
+                                            }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1455,
-                                                columnNumber: 17
+                                                lineNumber: 1427,
+                                                columnNumber: 7
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 style: styles.nozzleMetrics,
@@ -3219,79 +3133,338 @@ function StationDashboard() {
                                                         children: [
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                 style: styles.nozzleMetricValue,
-                                                                children: [
-                                                                    nozzle.sold.toLocaleString(),
-                                                                    " L"
-                                                                ]
-                                                            }, void 0, true, {
+                                                                children: "5,800 L"
+                                                            }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1467,
-                                                                columnNumber: 21
+                                                                lineNumber: 1433,
+                                                                columnNumber: 11
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                 style: styles.nozzleMetricLabel,
-                                                                children: "Sold Today"
+                                                                children: "Total Liters"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1468,
-                                                                columnNumber: 21
+                                                                lineNumber: 1434,
+                                                                columnNumber: 11
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1466,
-                                                        columnNumber: 19
+                                                        lineNumber: 1432,
+                                                        columnNumber: 9
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         style: styles.nozzleMetric,
                                                         children: [
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                                style: styles.nozzleMetricValue,
-                                                                children: [
-                                                                    nozzle.percentage,
-                                                                    "%"
-                                                                ]
-                                                            }, void 0, true, {
+                                                                style: {
+                                                                    ...styles.nozzleMetricValue,
+                                                                    color: '#16a34a'
+                                                                },
+                                                                children: " 8,816 TSH"
+                                                            }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1471,
-                                                                columnNumber: 21
+                                                                lineNumber: 1437,
+                                                                columnNumber: 11
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                 style: styles.nozzleMetricLabel,
-                                                                children: "of Total"
+                                                                children: "Cash Value"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                lineNumber: 1438,
+                                                                columnNumber: 11
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                        lineNumber: 1436,
+                                                        columnNumber: 9
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                lineNumber: 1431,
+                                                columnNumber: 7
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                        lineNumber: 1426,
+                                        columnNumber: 5
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        style: styles.nozzleCard,
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                style: styles.nozzleHeader,
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    style: styles.nozzleName,
+                                                    children: "V_Total Sales"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                    lineNumber: 1445,
+                                                    columnNumber: 9
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                lineNumber: 1444,
+                                                columnNumber: 7
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                style: styles.nozzleMetrics,
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        style: styles.nozzleMetric,
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                style: styles.nozzleMetricValue,
+                                                                children: "5,750 L"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                lineNumber: 1450,
+                                                                columnNumber: 11
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                style: styles.nozzleMetricLabel,
+                                                                children: "Total Liters"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                lineNumber: 1451,
+                                                                columnNumber: 11
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                        lineNumber: 1449,
+                                                        columnNumber: 9
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        style: styles.nozzleMetric,
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                style: {
+                                                                    ...styles.nozzleMetricValue,
+                                                                    color: '#7c3aed'
+                                                                },
+                                                                children: "Volume Only"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                lineNumber: 1454,
+                                                                columnNumber: 11
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                style: styles.nozzleMetricLabel,
+                                                                children: "No Price"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                lineNumber: 1455,
+                                                                columnNumber: 11
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                        lineNumber: 1453,
+                                                        columnNumber: 9
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                lineNumber: 1448,
+                                                columnNumber: 7
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                        lineNumber: 1443,
+                                        columnNumber: 5
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        style: styles.nozzleCard,
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                style: styles.nozzleHeader,
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    style: styles.nozzleName,
+                                                    children: "E_Total vs V_Total"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                    lineNumber: 1462,
+                                                    columnNumber: 9
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                lineNumber: 1461,
+                                                columnNumber: 7
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                style: styles.nozzleMetrics,
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        style: styles.nozzleMetric,
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                style: {
+                                                                    ...styles.nozzleMetricValue,
+                                                                    color: '#ca8a04'
+                                                                },
+                                                                children: "+50 L"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                lineNumber: 1467,
+                                                                columnNumber: 11
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                style: styles.nozzleMetricLabel,
+                                                                children: "Difference"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                lineNumber: 1468,
+                                                                columnNumber: 11
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                        lineNumber: 1466,
+                                                        columnNumber: 9
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        style: styles.nozzleMetric,
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                style: {
+                                                                    ...styles.nozzleMetricValue,
+                                                                    color: '#ca8a04'
+                                                                },
+                                                                children: "+0.9%"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                lineNumber: 1471,
+                                                                columnNumber: 11
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                style: styles.nozzleMetricLabel,
+                                                                children: "Variance"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
                                                                 lineNumber: 1472,
-                                                                columnNumber: 21
+                                                                columnNumber: 11
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
                                                         lineNumber: 1470,
-                                                        columnNumber: 19
+                                                        columnNumber: 9
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
                                                 lineNumber: 1465,
-                                                columnNumber: 17
+                                                columnNumber: 7
                                             }, this)
                                         ]
-                                    }, nozzle.id, true, {
+                                    }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 1454,
-                                        columnNumber: 15
-                                    }, this))
-                            }, void 0, false, {
+                                        lineNumber: 1460,
+                                        columnNumber: 5
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        style: styles.nozzleCard,
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                style: styles.nozzleHeader,
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    style: styles.nozzleName,
+                                                    children: "M_Total Sales"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                    lineNumber: 1479,
+                                                    columnNumber: 9
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                lineNumber: 1478,
+                                                columnNumber: 7
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                style: styles.nozzleMetrics,
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        style: styles.nozzleMetric,
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                style: styles.nozzleMetricValue,
+                                                                children: "5,780 L"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                lineNumber: 1484,
+                                                                columnNumber: 11
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                style: styles.nozzleMetricLabel,
+                                                                children: "Total Liters"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                lineNumber: 1485,
+                                                                columnNumber: 11
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                        lineNumber: 1483,
+                                                        columnNumber: 9
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        style: styles.nozzleMetric,
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                style: {
+                                                                    ...styles.nozzleMetricValue,
+                                                                    color: '#dc2626'
+                                                                },
+                                                                children: "Manual Entry"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                lineNumber: 1488,
+                                                                columnNumber: 11
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                style: styles.nozzleMetricLabel,
+                                                                children: "User Input"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                lineNumber: 1489,
+                                                                columnNumber: 11
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                        lineNumber: 1487,
+                                                        columnNumber: 9
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                lineNumber: 1482,
+                                                columnNumber: 7
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                        lineNumber: 1477,
+                                        columnNumber: 5
+                                    }, this)
+                                ]
+                            }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                lineNumber: 1452,
-                                columnNumber: 11
+                                lineNumber: 1425,
+                                columnNumber: 3
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                        lineNumber: 1441,
-                        columnNumber: 9
+                        lineNumber: 1420,
+                        columnNumber: 1
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         style: styles.statsGrid,
@@ -3309,17 +3482,21 @@ function StationDashboard() {
                                                     ...styles.statIcon,
                                                     backgroundColor: '#dcfce7'
                                                 },
-                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$dollar$2d$sign$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__DollarSign$3e$__["DollarSign"], {
-                                                    size: 24,
-                                                    color: "#16a34a"
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    style: {
+                                                        fontSize: '18px',
+                                                        fontWeight: 'bold',
+                                                        color: '#16a34a'
+                                                    },
+                                                    children: "TSH"
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                    lineNumber: 1489,
-                                                    columnNumber: 17
+                                                    lineNumber: 1504,
+                                                    columnNumber: 3
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1488,
+                                                lineNumber: 1503,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3331,21 +3508,21 @@ function StationDashboard() {
                                                 children: "+15%"
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1491,
+                                                lineNumber: 1506,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 1487,
+                                        lineNumber: 1502,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
                                         style: styles.statValue,
-                                        children: "$14,629"
+                                        children: "14,629 TSH"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 1493,
+                                        lineNumber: 1508,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3353,7 +3530,7 @@ function StationDashboard() {
                                         children: "E_Total Revenue"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 1494,
+                                        lineNumber: 1509,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3366,20 +3543,20 @@ function StationDashboard() {
                                                 }
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1496,
+                                                lineNumber: 1511,
                                                 columnNumber: 15
                                             }, this),
                                             "vs yesterday"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 1495,
+                                        lineNumber: 1510,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                lineNumber: 1482,
+                                lineNumber: 1497,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3393,54 +3570,58 @@ function StationDashboard() {
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 style: {
                                                     ...styles.statIcon,
-                                                    backgroundColor: '#dbeafe'
+                                                    backgroundColor: '#f0fdf4'
                                                 },
-                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$droplets$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Droplets$3e$__["Droplets"], {
-                                                    size: 24,
-                                                    color: "#2563eb"
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    style: {
+                                                        fontSize: '18px',
+                                                        fontWeight: 'bold',
+                                                        color: '#16a34a'
+                                                    },
+                                                    children: "💰"
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                    lineNumber: 1508,
-                                                    columnNumber: 17
+                                                    lineNumber: 1523,
+                                                    columnNumber: 15
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1507,
-                                                columnNumber: 15
+                                                lineNumber: 1522,
+                                                columnNumber: 13
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                 style: {
                                                     ...styles.statusBadge,
-                                                    color: '#1d4ed8',
-                                                    backgroundColor: '#dbeafe'
+                                                    color: '#166534',
+                                                    backgroundColor: '#dcfce7'
                                                 },
-                                                children: "Normal"
+                                                children: "Manual"
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1510,
-                                                columnNumber: 15
+                                                lineNumber: 1525,
+                                                columnNumber: 13
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 1506,
-                                        columnNumber: 13
+                                        lineNumber: 1521,
+                                        columnNumber: 11
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
                                         style: styles.statValue,
-                                        children: "10,020"
+                                        children: managerCash ? "".concat(parseFloat(managerCash).toLocaleString(), " TSH") : 'No Entry'
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 1512,
-                                        columnNumber: 13
+                                        lineNumber: 1527,
+                                        columnNumber: 11
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                         style: styles.statLabel,
-                                        children: "Liters Sold (E_Total)"
+                                        children: "Manager's Cash"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 1513,
-                                        columnNumber: 13
+                                        lineNumber: 1530,
+                                        columnNumber: 11
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         style: styles.statFooter,
@@ -3452,21 +3633,21 @@ function StationDashboard() {
                                                 }
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1515,
-                                                columnNumber: 15
+                                                lineNumber: 1532,
+                                                columnNumber: 13
                                             }, this),
-                                            "Since 6:00 AM"
+                                            "Manual count"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 1514,
-                                        columnNumber: 13
+                                        lineNumber: 1531,
+                                        columnNumber: 11
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                lineNumber: 1501,
-                                columnNumber: 11
+                                lineNumber: 1516,
+                                columnNumber: 19
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 style: styles.statCard,
@@ -3486,12 +3667,12 @@ function StationDashboard() {
                                                     color: "#9333ea"
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                    lineNumber: 1527,
+                                                    lineNumber: 1544,
                                                     columnNumber: 17
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1526,
+                                                lineNumber: 1543,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3503,13 +3684,13 @@ function StationDashboard() {
                                                 children: pumpsLoading ? 'Loading...' : "".concat(nozzleData.filter((n)=>n.status).length, "/").concat(nozzleData.length, " Online")
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1529,
+                                                lineNumber: 1546,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 1525,
+                                        lineNumber: 1542,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -3517,7 +3698,7 @@ function StationDashboard() {
                                         children: pumpsLoading ? '...' : "".concat(nozzleData.filter((n)=>n.status).length, "/").concat(nozzleData.length)
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 1533,
+                                        lineNumber: 1550,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3525,7 +3706,7 @@ function StationDashboard() {
                                         children: "Pumps/Nozzles Active"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 1536,
+                                        lineNumber: 1553,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3538,20 +3719,20 @@ function StationDashboard() {
                                                 }
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1538,
+                                                lineNumber: 1555,
                                                 columnNumber: 15
                                             }, this),
                                             pumpsLoading ? 'Loading...' : "".concat(Math.round(nozzleData.filter((n)=>n.status).length / nozzleData.length * 100), "% uptime")
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 1537,
+                                        lineNumber: 1554,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                lineNumber: 1520,
+                                lineNumber: 1537,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3572,12 +3753,12 @@ function StationDashboard() {
                                                     color: "#d97706"
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                    lineNumber: 1550,
+                                                    lineNumber: 1567,
                                                     columnNumber: 17
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1549,
+                                                lineNumber: 1566,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3589,13 +3770,13 @@ function StationDashboard() {
                                                 children: "Monitor"
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1552,
+                                                lineNumber: 1569,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 1548,
+                                        lineNumber: 1565,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -3603,7 +3784,7 @@ function StationDashboard() {
                                         children: "+70 L"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 1554,
+                                        lineNumber: 1571,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3611,7 +3792,7 @@ function StationDashboard() {
                                         children: "E vs V Difference"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 1555,
+                                        lineNumber: 1572,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3625,27 +3806,603 @@ function StationDashboard() {
                                                 }
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1557,
+                                                lineNumber: 1574,
                                                 columnNumber: 15
                                             }, this),
                                             "Check variance"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 1556,
+                                        lineNumber: 1573,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                lineNumber: 1543,
+                                lineNumber: 1560,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                        lineNumber: 1481,
+                        lineNumber: 1496,
                         columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        style: styles.nozzleSection,
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                style: styles.nozzleTitle,
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$target$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Target$3e$__["Target"], {
+                                        size: 20,
+                                        color: "#6366f1"
+                                    }, void 0, false, {
+                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                        lineNumber: 1582,
+                                        columnNumber: 5
+                                    }, this),
+                                    "Pump/Nozzle Performance",
+                                    pumpsLoading && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        style: styles.loadingState,
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$loader$2d$circle$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Loader2$3e$__["Loader2"], {
+                                                size: 16,
+                                                className: "animate-spin"
+                                            }, void 0, false, {
+                                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                lineNumber: 1586,
+                                                columnNumber: 9
+                                            }, this),
+                                            "Loading pump data..."
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                        lineNumber: 1585,
+                                        columnNumber: 7
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                lineNumber: 1581,
+                                columnNumber: 3
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                style: {
+                                    marginBottom: '32px'
+                                },
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
+                                        style: {
+                                            fontSize: '16px',
+                                            fontWeight: '600',
+                                            color: '#2563eb',
+                                            marginBottom: '16px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '8px'
+                                        },
+                                        children: "⛽ Unleaded Nozzles"
+                                    }, void 0, false, {
+                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                        lineNumber: 1594,
+                                        columnNumber: 5
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        style: styles.nozzleGrid,
+                                        children: nozzleData.filter((nozzle)=>nozzle.name.toLowerCase().includes('unleaded') || nozzle.name.toLowerCase().includes('petrol') || nozzle.name.toLowerCase().includes('pms') || nozzle.name.includes('A2')).map((nozzle)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                style: {
+                                                    ...styles.nozzleCard,
+                                                    padding: '20px'
+                                                },
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        style: styles.nozzleHeader,
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                style: styles.nozzleName,
+                                                                children: nozzle.name
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                lineNumber: 1617,
+                                                                columnNumber: 15
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                style: {
+                                                                    ...styles.nozzleStatus,
+                                                                    color: nozzle.status ? '#166534' : '#dc2626',
+                                                                    backgroundColor: nozzle.status ? '#dcfce7' : '#fee2e2'
+                                                                },
+                                                                children: nozzle.status ? 'Active' : 'Inactive'
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                lineNumber: 1618,
+                                                                columnNumber: 15
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                        lineNumber: 1616,
+                                                        columnNumber: 13
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        style: {
+                                                            display: 'grid',
+                                                            gridTemplateColumns: '1fr 1fr',
+                                                            gap: '12px',
+                                                            marginTop: '16px'
+                                                        },
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                style: {
+                                                                    background: '#f8fafc',
+                                                                    borderRadius: '8px',
+                                                                    padding: '12px',
+                                                                    border: '1px solid #e2e8f0',
+                                                                    textAlign: 'center'
+                                                                },
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                        style: {
+                                                                            fontSize: '14px',
+                                                                            fontWeight: 'bold',
+                                                                            color: '#1e293b',
+                                                                            margin: 0
+                                                                        },
+                                                                        children: [
+                                                                            nozzle.sold.toLocaleString(),
+                                                                            " L"
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                        lineNumber: 1642,
+                                                                        columnNumber: 17
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                        style: {
+                                                                            fontSize: '10px',
+                                                                            color: '#64748b',
+                                                                            margin: '2px 0 0 0'
+                                                                        },
+                                                                        children: "Sold Today"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                        lineNumber: 1650,
+                                                                        columnNumber: 17
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                lineNumber: 1635,
+                                                                columnNumber: 15
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                style: {
+                                                                    background: '#f8fafc',
+                                                                    borderRadius: '8px',
+                                                                    padding: '12px',
+                                                                    border: '1px solid #e2e8f0',
+                                                                    textAlign: 'center'
+                                                                },
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                        style: {
+                                                                            fontSize: '14px',
+                                                                            fontWeight: 'bold',
+                                                                            color: '#1e293b',
+                                                                            margin: 0
+                                                                        },
+                                                                        children: [
+                                                                            (nozzle.sold * 0.95).toFixed(0),
+                                                                            " L"
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                        lineNumber: 1667,
+                                                                        columnNumber: 17
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                        style: {
+                                                                            fontSize: '10px',
+                                                                            color: '#64748b',
+                                                                            margin: '2px 0 0 0'
+                                                                        },
+                                                                        children: "E-Total"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                        lineNumber: 1675,
+                                                                        columnNumber: 17
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                lineNumber: 1660,
+                                                                columnNumber: 15
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                style: {
+                                                                    background: '#f8fafc',
+                                                                    borderRadius: '8px',
+                                                                    padding: '12px',
+                                                                    border: '1px solid #e2e8f0',
+                                                                    textAlign: 'center'
+                                                                },
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                        style: {
+                                                                            fontSize: '14px',
+                                                                            fontWeight: 'bold',
+                                                                            color: '#1e293b',
+                                                                            margin: 0
+                                                                        },
+                                                                        children: [
+                                                                            (nozzle.sold * 0.92).toFixed(0),
+                                                                            " L"
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                        lineNumber: 1692,
+                                                                        columnNumber: 17
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                        style: {
+                                                                            fontSize: '10px',
+                                                                            color: '#64748b',
+                                                                            margin: '2px 0 0 0'
+                                                                        },
+                                                                        children: "V-Total"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                        lineNumber: 1700,
+                                                                        columnNumber: 17
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                lineNumber: 1685,
+                                                                columnNumber: 15
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                style: {
+                                                                    background: '#f8fafc',
+                                                                    borderRadius: '8px',
+                                                                    padding: '8px',
+                                                                    border: '1px solid #e2e8f0',
+                                                                    textAlign: 'center'
+                                                                },
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                                        type: "number",
+                                                                        placeholder: "Enter",
+                                                                        style: {
+                                                                            width: '100%',
+                                                                            padding: '4px 6px',
+                                                                            border: '1px solid #cbd5e1',
+                                                                            borderRadius: '4px',
+                                                                            fontSize: '12px',
+                                                                            fontWeight: 'bold',
+                                                                            textAlign: 'center',
+                                                                            color: '#1e293b',
+                                                                            outline: 'none',
+                                                                            background: '#ffffff'
+                                                                        },
+                                                                        onFocus: (e)=>e.target.style.borderColor = '#3b82f6',
+                                                                        onBlur: (e)=>e.target.style.borderColor = '#cbd5e1'
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                        lineNumber: 1717,
+                                                                        columnNumber: 17
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                        style: {
+                                                                            fontSize: '10px',
+                                                                            color: '#64748b',
+                                                                            margin: '4px 0 0 0'
+                                                                        },
+                                                                        children: "M-Total"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                        lineNumber: 1735,
+                                                                        columnNumber: 17
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                lineNumber: 1710,
+                                                                columnNumber: 15
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                        lineNumber: 1628,
+                                                        columnNumber: 13
+                                                    }, this)
+                                                ]
+                                            }, nozzle.id, true, {
+                                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                lineNumber: 1612,
+                                                columnNumber: 11
+                                            }, this))
+                                    }, void 0, false, {
+                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                        lineNumber: 1605,
+                                        columnNumber: 5
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                lineNumber: 1593,
+                                columnNumber: 3
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
+                                        style: {
+                                            fontSize: '16px',
+                                            fontWeight: '600',
+                                            color: '#16a34a',
+                                            marginBottom: '16px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '8px'
+                                        },
+                                        children: "🚛 Diesel Nozzles"
+                                    }, void 0, false, {
+                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                        lineNumber: 1751,
+                                        columnNumber: 5
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        style: styles.nozzleGrid,
+                                        children: nozzleData.filter((nozzle)=>nozzle.name.toLowerCase().includes('diesel') || nozzle.name.toLowerCase().includes('ago') || nozzle.name.includes('A1')).map((nozzle)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                style: {
+                                                    ...styles.nozzleCard,
+                                                    padding: '20px'
+                                                },
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        style: styles.nozzleHeader,
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                style: styles.nozzleName,
+                                                                children: nozzle.name
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                lineNumber: 1773,
+                                                                columnNumber: 15
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                style: {
+                                                                    ...styles.nozzleStatus,
+                                                                    color: nozzle.status ? '#166534' : '#dc2626',
+                                                                    backgroundColor: nozzle.status ? '#dcfce7' : '#fee2e2'
+                                                                },
+                                                                children: nozzle.status ? 'Active' : 'Inactive'
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                lineNumber: 1774,
+                                                                columnNumber: 15
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                        lineNumber: 1772,
+                                                        columnNumber: 13
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        style: {
+                                                            display: 'grid',
+                                                            gridTemplateColumns: '1fr 1fr',
+                                                            gap: '12px',
+                                                            marginTop: '16px'
+                                                        },
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                style: {
+                                                                    background: '#f8fafc',
+                                                                    borderRadius: '8px',
+                                                                    padding: '12px',
+                                                                    border: '1px solid #e2e8f0',
+                                                                    textAlign: 'center'
+                                                                },
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                        style: {
+                                                                            fontSize: '14px',
+                                                                            fontWeight: 'bold',
+                                                                            color: '#1e293b',
+                                                                            margin: 0
+                                                                        },
+                                                                        children: [
+                                                                            nozzle.sold.toLocaleString(),
+                                                                            " L"
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                        lineNumber: 1798,
+                                                                        columnNumber: 17
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                        style: {
+                                                                            fontSize: '10px',
+                                                                            color: '#64748b',
+                                                                            margin: '2px 0 0 0'
+                                                                        },
+                                                                        children: "Sold Today"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                        lineNumber: 1806,
+                                                                        columnNumber: 17
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                lineNumber: 1791,
+                                                                columnNumber: 15
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                style: {
+                                                                    background: '#f8fafc',
+                                                                    borderRadius: '8px',
+                                                                    padding: '12px',
+                                                                    border: '1px solid #e2e8f0',
+                                                                    textAlign: 'center'
+                                                                },
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                        style: {
+                                                                            fontSize: '14px',
+                                                                            fontWeight: 'bold',
+                                                                            color: '#1e293b',
+                                                                            margin: 0
+                                                                        },
+                                                                        children: [
+                                                                            (nozzle.sold * 0.95).toFixed(0),
+                                                                            " L"
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                        lineNumber: 1823,
+                                                                        columnNumber: 17
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                        style: {
+                                                                            fontSize: '10px',
+                                                                            color: '#64748b',
+                                                                            margin: '2px 0 0 0'
+                                                                        },
+                                                                        children: "E-Total"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                        lineNumber: 1831,
+                                                                        columnNumber: 17
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                lineNumber: 1816,
+                                                                columnNumber: 15
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                style: {
+                                                                    background: '#f8fafc',
+                                                                    borderRadius: '8px',
+                                                                    padding: '12px',
+                                                                    border: '1px solid #e2e8f0',
+                                                                    textAlign: 'center'
+                                                                },
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                        style: {
+                                                                            fontSize: '14px',
+                                                                            fontWeight: 'bold',
+                                                                            color: '#1e293b',
+                                                                            margin: 0
+                                                                        },
+                                                                        children: [
+                                                                            (nozzle.sold * 0.92).toFixed(0),
+                                                                            " L"
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                        lineNumber: 1848,
+                                                                        columnNumber: 17
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                        style: {
+                                                                            fontSize: '10px',
+                                                                            color: '#64748b',
+                                                                            margin: '2px 0 0 0'
+                                                                        },
+                                                                        children: "V-Total"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                        lineNumber: 1856,
+                                                                        columnNumber: 17
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                lineNumber: 1841,
+                                                                columnNumber: 15
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                style: {
+                                                                    background: '#f8fafc',
+                                                                    borderRadius: '8px',
+                                                                    padding: '8px',
+                                                                    border: '1px solid #e2e8f0',
+                                                                    textAlign: 'center'
+                                                                },
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                                        type: "number",
+                                                                        placeholder: "Enter",
+                                                                        style: {
+                                                                            width: '100%',
+                                                                            padding: '4px 6px',
+                                                                            border: '1px solid #cbd5e1',
+                                                                            borderRadius: '4px',
+                                                                            fontSize: '12px',
+                                                                            fontWeight: 'bold',
+                                                                            textAlign: 'center',
+                                                                            color: '#1e293b',
+                                                                            outline: 'none',
+                                                                            background: '#ffffff'
+                                                                        },
+                                                                        onFocus: (e)=>e.target.style.borderColor = '#3b82f6',
+                                                                        onBlur: (e)=>e.target.style.borderColor = '#cbd5e1'
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                        lineNumber: 1873,
+                                                                        columnNumber: 17
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                        style: {
+                                                                            fontSize: '10px',
+                                                                            color: '#64748b',
+                                                                            margin: '4px 0 0 0'
+                                                                        },
+                                                                        children: "M-Total"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                        lineNumber: 1891,
+                                                                        columnNumber: 17
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                lineNumber: 1866,
+                                                                columnNumber: 15
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                        lineNumber: 1784,
+                                                        columnNumber: 13
+                                                    }, this)
+                                                ]
+                                            }, nozzle.id, true, {
+                                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                lineNumber: 1768,
+                                                columnNumber: 11
+                                            }, this))
+                                    }, void 0, false, {
+                                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                        lineNumber: 1762,
+                                        columnNumber: 5
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                lineNumber: 1750,
+                                columnNumber: 3
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                        lineNumber: 1580,
+                        columnNumber: 1
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         style: styles.actionsCard,
@@ -3655,7 +4412,7 @@ function StationDashboard() {
                                 children: "Quick Actions"
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                lineNumber: 1565,
+                                lineNumber: 1910,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3677,20 +4434,20 @@ function StationDashboard() {
                                                 }
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1572,
+                                                lineNumber: 1917,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                 children: "Update Levels"
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1573,
+                                                lineNumber: 1918,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 1567,
+                                        lineNumber: 1912,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3703,28 +4460,29 @@ function StationDashboard() {
                                         onMouseEnter: (e)=>e.currentTarget.style.backgroundColor = '#bbf7d0',
                                         onMouseLeave: (e)=>e.currentTarget.style.backgroundColor = '#dcfce7',
                                         children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$dollar$2d$sign$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__DollarSign$3e$__["DollarSign"], {
-                                                size: 24,
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 style: {
+                                                    fontSize: '24px',
                                                     marginBottom: '8px'
-                                                }
+                                                },
+                                                children: "💰"
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1581,
-                                                columnNumber: 15
+                                                lineNumber: 1926,
+                                                columnNumber: 3
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                 children: "Record Sales"
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1582,
-                                                columnNumber: 15
+                                                lineNumber: 1927,
+                                                columnNumber: 3
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 1575,
-                                        columnNumber: 13
+                                        lineNumber: 1920,
+                                        columnNumber: 12
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                         onClick: ()=>setShowChecklistModal(true),
@@ -3743,20 +4501,20 @@ function StationDashboard() {
                                                 }
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1590,
+                                                lineNumber: 1935,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                 children: "Checklist"
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1591,
+                                                lineNumber: 1936,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 1584,
+                                        lineNumber: 1929,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3776,32 +4534,32 @@ function StationDashboard() {
                                                 }
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1599,
+                                                lineNumber: 1944,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                 children: "Report Issue"
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1600,
+                                                lineNumber: 1945,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 1593,
+                                        lineNumber: 1938,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                lineNumber: 1566,
+                                lineNumber: 1911,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                        lineNumber: 1564,
+                        lineNumber: 1909,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3816,12 +4574,12 @@ function StationDashboard() {
                                         color: "#2563eb"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                        lineNumber: 1609,
+                                        lineNumber: 1954,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                    lineNumber: 1608,
+                                    lineNumber: 1953,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3831,7 +4589,7 @@ function StationDashboard() {
                                             children: "🎉 Station System Active"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                            lineNumber: 1612,
+                                            lineNumber: 1957,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3842,24 +4600,24 @@ function StationDashboard() {
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                            lineNumber: 1613,
+                                            lineNumber: 1958,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                    lineNumber: 1611,
+                                    lineNumber: 1956,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                            lineNumber: 1607,
+                            lineNumber: 1952,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                        lineNumber: 1606,
+                        lineNumber: 1951,
                         columnNumber: 9
                     }, this),
                     showChecklistModal && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3877,7 +4635,7 @@ function StationDashboard() {
                                             children: "Daily Safety Checklist"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                            lineNumber: 1626,
+                                            lineNumber: 1971,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3888,13 +4646,13 @@ function StationDashboard() {
                                             children: "✕"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                            lineNumber: 1627,
+                                            lineNumber: 1972,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                    lineNumber: 1625,
+                                    lineNumber: 1970,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3915,7 +4673,7 @@ function StationDashboard() {
                                                     children: checklistItems.calibration && '✓'
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                    lineNumber: 1645,
+                                                    lineNumber: 1990,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3926,13 +4684,13 @@ function StationDashboard() {
                                                     children: "Calibration completed and verified?"
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                    lineNumber: 1653,
+                                                    lineNumber: 1998,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                            lineNumber: 1638,
+                                            lineNumber: 1983,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3950,7 +4708,7 @@ function StationDashboard() {
                                                     children: checklistItems.pipelineLeak && '✓'
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                    lineNumber: 1670,
+                                                    lineNumber: 2015,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3961,13 +4719,13 @@ function StationDashboard() {
                                                     children: "Pipeline inspected for leaks or damage?"
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                    lineNumber: 1678,
+                                                    lineNumber: 2023,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                            lineNumber: 1663,
+                                            lineNumber: 2008,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3985,7 +4743,7 @@ function StationDashboard() {
                                                     children: checklistItems.tankLeak && '✓'
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                    lineNumber: 1695,
+                                                    lineNumber: 2040,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3996,13 +4754,13 @@ function StationDashboard() {
                                                     children: "Storage tanks checked for leaks or structural issues?"
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                    lineNumber: 1703,
+                                                    lineNumber: 2048,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                            lineNumber: 1688,
+                                            lineNumber: 2033,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4020,7 +4778,7 @@ function StationDashboard() {
                                                     children: checklistItems.safetyEquipment && '✓'
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                    lineNumber: 1720,
+                                                    lineNumber: 2065,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -4031,19 +4789,19 @@ function StationDashboard() {
                                                     children: "Safety equipment functional and accessible?"
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                    lineNumber: 1728,
+                                                    lineNumber: 2073,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                            lineNumber: 1713,
+                                            lineNumber: 2058,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                    lineNumber: 1637,
+                                    lineNumber: 1982,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4060,7 +4818,7 @@ function StationDashboard() {
                                             children: "Cancel"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                            lineNumber: 1740,
+                                            lineNumber: 2085,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -4074,24 +4832,24 @@ function StationDashboard() {
                                             children: "Save Checklist"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                            lineNumber: 1748,
+                                            lineNumber: 2093,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                    lineNumber: 1739,
+                                    lineNumber: 2084,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                            lineNumber: 1624,
+                            lineNumber: 1969,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                        lineNumber: 1623,
+                        lineNumber: 1968,
                         columnNumber: 11
                     }, this),
                     showSalesModal && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4109,7 +4867,7 @@ function StationDashboard() {
                                             children: "Daily Sales Record"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                            lineNumber: 1766,
+                                            lineNumber: 2111,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -4120,13 +4878,13 @@ function StationDashboard() {
                                             children: "✕"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                            lineNumber: 1767,
+                                            lineNumber: 2112,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                    lineNumber: 1765,
+                                    lineNumber: 2110,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4145,49 +4903,49 @@ function StationDashboard() {
                                                                     children: "⛽"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                    lineNumber: 1782,
+                                                                    lineNumber: 2127,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 "Unleaded Sales"
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                            lineNumber: 1781,
+                                                            lineNumber: 2126,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                             style: styles.salesDetails,
                                                             children: [
                                                                 salesData.unleaded.liters.toLocaleString(),
-                                                                " L × $",
+                                                                " L × TSH ",
                                                                 salesData.unleaded.pricePerLiter
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                            lineNumber: 1785,
+                                                            lineNumber: 2130,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                    lineNumber: 1780,
+                                                    lineNumber: 2125,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                     style: styles.salesValue,
                                                     children: [
-                                                        "$",
+                                                        "TSH",
                                                         salesData.unleaded.cash.toLocaleString()
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                    lineNumber: 1789,
+                                                    lineNumber: 2134,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                            lineNumber: 1779,
+                                            lineNumber: 2124,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4203,49 +4961,49 @@ function StationDashboard() {
                                                                     children: "🚛"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                    lineNumber: 1798,
+                                                                    lineNumber: 2143,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 "Diesel Sales"
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                            lineNumber: 1797,
+                                                            lineNumber: 2142,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                             style: styles.salesDetails,
                                                             children: [
                                                                 salesData.diesel.liters.toLocaleString(),
-                                                                " L × $",
+                                                                " L × TSH",
                                                                 salesData.diesel.pricePerLiter
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                            lineNumber: 1801,
+                                                            lineNumber: 2146,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                    lineNumber: 1796,
+                                                    lineNumber: 2141,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                     style: styles.salesValue,
                                                     children: [
-                                                        "$",
+                                                        "TSH",
                                                         salesData.diesel.cash.toLocaleString()
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                    lineNumber: 1805,
+                                                    lineNumber: 2150,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                            lineNumber: 1795,
+                                            lineNumber: 2140,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4264,14 +5022,14 @@ function StationDashboard() {
                                                                     children: "📊"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                    lineNumber: 1814,
+                                                                    lineNumber: 2159,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 "Total Fuel Sales (Unleaded + Diesel)"
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                            lineNumber: 1813,
+                                                            lineNumber: 2158,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4279,13 +5037,13 @@ function StationDashboard() {
                                                             children: "Combined cash from both fuel types"
                                                         }, void 0, false, {
                                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                            lineNumber: 1817,
+                                                            lineNumber: 2162,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                    lineNumber: 1812,
+                                                    lineNumber: 2157,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4294,18 +5052,18 @@ function StationDashboard() {
                                                         color: '#1d4ed8'
                                                     },
                                                     children: [
-                                                        "$",
+                                                        "TSH",
                                                         (salesData.unleaded.cash + salesData.diesel.cash).toLocaleString()
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                    lineNumber: 1821,
+                                                    lineNumber: 2166,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                            lineNumber: 1811,
+                                            lineNumber: 2156,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4324,14 +5082,14 @@ function StationDashboard() {
                                                                     children: "💰"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                    lineNumber: 1830,
+                                                                    lineNumber: 2175,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 "E_Total System Revenue"
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                            lineNumber: 1829,
+                                                            lineNumber: 2174,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4339,13 +5097,13 @@ function StationDashboard() {
                                                             children: "Electronic system total (includes all transactions)"
                                                         }, void 0, false, {
                                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                            lineNumber: 1833,
+                                                            lineNumber: 2178,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                    lineNumber: 1828,
+                                                    lineNumber: 2173,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4354,18 +5112,110 @@ function StationDashboard() {
                                                         ...styles.salesValueHighlight
                                                     },
                                                     children: [
-                                                        "$",
+                                                        "TSH",
                                                         salesData.eTotalCash.toLocaleString()
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                    lineNumber: 1837,
+                                                    lineNumber: 2182,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                            lineNumber: 1827,
+                                            lineNumber: 2172,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            style: {
+                                                ...styles.salesRow,
+                                                backgroundColor: '#f0fdf4',
+                                                borderColor: '#22c55e'
+                                            },
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            style: styles.salesLabel,
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    style: styles.salesIcon,
+                                                                    children: "💰"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                                    lineNumber: 2194,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                "Manager's Cash (Manual Entry)"
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                            lineNumber: 2193,
+                                                            columnNumber: 21
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            style: styles.salesDetails,
+                                                            children: "Cash counted by station manager"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                            lineNumber: 2197,
+                                                            columnNumber: 21
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                    lineNumber: 2192,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    style: {
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: '8px'
+                                                    },
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                            type: "number",
+                                                            placeholder: "Enter amount",
+                                                            value: managerCash,
+                                                            onChange: (e)=>setManagerCash(e.target.value),
+                                                            style: {
+                                                                padding: '8px 12px',
+                                                                border: '1px solid #22c55e',
+                                                                borderRadius: '6px',
+                                                                fontSize: '16px',
+                                                                fontWeight: '600',
+                                                                width: '140px',
+                                                                textAlign: 'right',
+                                                                outline: 'none'
+                                                            }
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                            lineNumber: 2206,
+                                                            columnNumber: 21
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            style: {
+                                                                fontSize: '16px',
+                                                                fontWeight: '600',
+                                                                color: '#16a34a'
+                                                            },
+                                                            children: "TSH"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                            lineNumber: 2222,
+                                                            columnNumber: 21
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                                    lineNumber: 2201,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
+                                            lineNumber: 2187,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4385,14 +5235,14 @@ function StationDashboard() {
                                                                     children: "📈"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                    lineNumber: 1850,
+                                                                    lineNumber: 2234,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 "Variance Analysis"
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                            lineNumber: 1849,
+                                                            lineNumber: 2233,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4400,13 +5250,13 @@ function StationDashboard() {
                                                             children: "Difference between manual calculation and E_Total"
                                                         }, void 0, false, {
                                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                            lineNumber: 1853,
+                                                            lineNumber: 2237,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                    lineNumber: 1848,
+                                                    lineNumber: 2232,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4416,24 +5266,24 @@ function StationDashboard() {
                                                     },
                                                     children: [
                                                         salesData.eTotalCash - (salesData.unleaded.cash + salesData.diesel.cash) >= 0 ? '+' : '',
-                                                        "$",
-                                                        (salesData.eTotalCash - (salesData.unleaded.cash + salesData.diesel.cash)).toLocaleString()
+                                                        (salesData.eTotalCash - (salesData.unleaded.cash + salesData.diesel.cash)).toLocaleString(),
+                                                        "TSH"
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                    lineNumber: 1857,
+                                                    lineNumber: 2241,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                            lineNumber: 1843,
+                                            lineNumber: 2227,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                    lineNumber: 1777,
+                                    lineNumber: 2122,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4450,7 +5300,7 @@ function StationDashboard() {
                                             children: "Close"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                            lineNumber: 1868,
+                                            lineNumber: 2254,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -4464,24 +5314,24 @@ function StationDashboard() {
                                             children: "Record Sales"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                            lineNumber: 1876,
+                                            lineNumber: 2262,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                    lineNumber: 1867,
+                                    lineNumber: 2253,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                            lineNumber: 1764,
+                            lineNumber: 2109,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                        lineNumber: 1763,
+                        lineNumber: 2108,
                         columnNumber: 11
                     }, this),
                     showIssueModal && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4499,7 +5349,7 @@ function StationDashboard() {
                                             children: "🚨 Report Station Issue"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                            lineNumber: 1894,
+                                            lineNumber: 2280,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -4510,13 +5360,13 @@ function StationDashboard() {
                                             children: "✕"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                            lineNumber: 1895,
+                                            lineNumber: 2281,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                    lineNumber: 1893,
+                                    lineNumber: 2279,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4530,7 +5380,7 @@ function StationDashboard() {
                                                     children: "Issue Category"
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                    lineNumber: 1908,
+                                                    lineNumber: 2294,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -4548,7 +5398,7 @@ function StationDashboard() {
                                                             children: "🔧 General Issue"
                                                         }, void 0, false, {
                                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                            lineNumber: 1919,
+                                                            lineNumber: 2305,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -4556,7 +5406,7 @@ function StationDashboard() {
                                                             children: "⚙️ Equipment Malfunction"
                                                         }, void 0, false, {
                                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                            lineNumber: 1920,
+                                                            lineNumber: 2306,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -4564,7 +5414,7 @@ function StationDashboard() {
                                                             children: "⚠️ Safety Concern"
                                                         }, void 0, false, {
                                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                            lineNumber: 1921,
+                                                            lineNumber: 2307,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -4572,7 +5422,7 @@ function StationDashboard() {
                                                             children: "⛽ Fuel System Problem"
                                                         }, void 0, false, {
                                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                            lineNumber: 1922,
+                                                            lineNumber: 2308,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -4580,7 +5430,7 @@ function StationDashboard() {
                                                             children: "🔌 Power/Electrical Issue"
                                                         }, void 0, false, {
                                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                            lineNumber: 1923,
+                                                            lineNumber: 2309,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -4588,19 +5438,19 @@ function StationDashboard() {
                                                             children: "🚨 EMERGENCY"
                                                         }, void 0, false, {
                                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                            lineNumber: 1924,
+                                                            lineNumber: 2310,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                    lineNumber: 1909,
+                                                    lineNumber: 2295,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                            lineNumber: 1907,
+                                            lineNumber: 2293,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4617,13 +5467,13 @@ function StationDashboard() {
                                                             children: " (URGENT)"
                                                         }, void 0, false, {
                                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                            lineNumber: 1932,
+                                                            lineNumber: 2318,
                                                             columnNumber: 55
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                    lineNumber: 1930,
+                                                    lineNumber: 2316,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
@@ -4639,7 +5489,7 @@ function StationDashboard() {
                                                     maxLength: 500
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                    lineNumber: 1934,
+                                                    lineNumber: 2320,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4650,13 +5500,13 @@ function StationDashboard() {
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                    lineNumber: 1946,
+                                                    lineNumber: 2332,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                            lineNumber: 1929,
+                                            lineNumber: 2315,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4675,14 +5525,14 @@ function StationDashboard() {
                                                                 children: "📱"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1959,
+                                                                lineNumber: 2345,
                                                                 columnNumber: 23
                                                             }, this),
                                                             "SMS Preview to General Manager"
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1958,
+                                                        lineNumber: 2344,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4703,19 +5553,19 @@ function StationDashboard() {
                                                             issueCategory.toUpperCase(),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("br", {}, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1972,
+                                                                lineNumber: 2358,
                                                                 columnNumber: 103
                                                             }, this),
                                                             issueMessage || '[Issue description will appear here]',
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("br", {}, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1973,
+                                                                lineNumber: 2359,
                                                                 columnNumber: 79
                                                             }, this),
                                                             "Reported by: Station Manager",
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("br", {}, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                                lineNumber: 1974,
+                                                                lineNumber: 2360,
                                                                 columnNumber: 51
                                                             }, this),
                                                             "Time: ",
@@ -4724,24 +5574,24 @@ function StationDashboard() {
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 1962,
+                                                        lineNumber: 2348,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                lineNumber: 1957,
+                                                lineNumber: 2343,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                            lineNumber: 1952,
+                                            lineNumber: 2338,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                    lineNumber: 1905,
+                                    lineNumber: 2291,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4758,7 +5608,7 @@ function StationDashboard() {
                                             children: "Cancel"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                            lineNumber: 1982,
+                                            lineNumber: 2368,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -4791,7 +5641,7 @@ function StationDashboard() {
                                                         }
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                                        lineNumber: 2011,
+                                                        lineNumber: 2397,
                                                         columnNumber: 23
                                                     }, this),
                                                     "Sending SMS..."
@@ -4804,40 +5654,40 @@ function StationDashboard() {
                                             }, void 0, true)
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                            lineNumber: 1990,
+                                            lineNumber: 2376,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                                    lineNumber: 1981,
+                                    lineNumber: 2367,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                            lineNumber: 1892,
+                            lineNumber: 2278,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                        lineNumber: 1891,
+                        lineNumber: 2277,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-                lineNumber: 957,
+                lineNumber: 958,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/frontend/src/app/dashboard/station/page.tsx",
-        lineNumber: 913,
+        lineNumber: 914,
         columnNumber: 5
     }, this);
 }
-_s(StationDashboard, "ey2fPRxgbLNq5RqHtYKwkNFRF4Y=");
+_s(StationDashboard, "rn+i3R3U7xxQsIbrJECMBSr5Ct4=");
 _c = StationDashboard;
 var _c;
 __turbopack_context__.k.register(_c, "StationDashboard");

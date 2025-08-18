@@ -140,7 +140,6 @@ __turbopack_context__.s({
 });
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$shield$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Shield$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/shield.js [app-client] (ecmascript) <export default as Shield>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$trending$2d$up$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__TrendingUp$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/trending-up.js [app-client] (ecmascript) <export default as TrendingUp>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$triangle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertTriangle$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/triangle-alert.js [app-client] (ecmascript) <export default as AlertTriangle>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$building$2d$2$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Building2$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/building-2.js [app-client] (ecmascript) <export default as Building2>");
@@ -178,7 +177,7 @@ const styles = {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        height: '64px'
+        height: '80px' // 64px'den 80px'e çıkar
     },
     logoSection: {
         display: 'flex',
@@ -186,13 +185,13 @@ const styles = {
         gap: '12px'
     },
     logoTitle: {
-        fontSize: '20px',
+        fontSize: '24px',
         fontWeight: '600',
         color: '#111827',
         margin: 0
     },
     logoSubtitle: {
-        fontSize: '14px',
+        fontSize: '16px',
         color: '#6b7280',
         margin: 0
     },
@@ -641,13 +640,18 @@ function GeneralDashboard() {
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             style: styles.logoSection,
                             children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$shield$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Shield$3e$__["Shield"], {
-                                    size: 32,
-                                    color: "#2563eb"
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
+                                    src: "/logo.png",
+                                    alt: "Lake Oil Group Logo",
+                                    style: {
+                                        width: '60px',
+                                        height: '60px',
+                                        objectFit: 'contain'
+                                    }
                                 }, void 0, false, {
                                     fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
                                     lineNumber: 495,
-                                    columnNumber: 13
+                                    columnNumber: 3
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     children: [
@@ -656,22 +660,22 @@ function GeneralDashboard() {
                                             children: "Lake Oil Group"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                            lineNumber: 497,
-                                            columnNumber: 15
+                                            lineNumber: 505,
+                                            columnNumber: 5
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                             style: styles.logoSubtitle,
                                             children: "General Manager"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                            lineNumber: 498,
-                                            columnNumber: 15
+                                            lineNumber: 506,
+                                            columnNumber: 5
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                    lineNumber: 496,
-                                    columnNumber: 13
+                                    lineNumber: 504,
+                                    columnNumber: 3
                                 }, this)
                             ]
                         }, void 0, true, {
@@ -691,7 +695,7 @@ function GeneralDashboard() {
                                             size: 20
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                            lineNumber: 508,
+                                            lineNumber: 516,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -699,13 +703,13 @@ function GeneralDashboard() {
                                             children: "2"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                            lineNumber: 509,
+                                            lineNumber: 517,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                    lineNumber: 503,
+                                    lineNumber: 511,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -716,12 +720,12 @@ function GeneralDashboard() {
                                         size: 20
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                        lineNumber: 516,
+                                        lineNumber: 524,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                    lineNumber: 511,
+                                    lineNumber: 519,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -734,26 +738,26 @@ function GeneralDashboard() {
                                             size: 16
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                            lineNumber: 524,
+                                            lineNumber: 532,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                             children: "Sign Out"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                            lineNumber: 525,
+                                            lineNumber: 533,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                    lineNumber: 518,
+                                    lineNumber: 526,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                            lineNumber: 502,
+                            lineNumber: 510,
                             columnNumber: 11
                         }, this)
                     ]
@@ -774,25 +778,27 @@ function GeneralDashboard() {
                         style: styles.welcomeSection,
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
-                                style: styles.welcomeTitle,
-                                children: "Good Morning! 👋"
+                                style: styles.welcomeTitle
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                lineNumber: 535,
+                                lineNumber: 543,
                                 columnNumber: 11
                             }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                style: styles.welcomeText,
-                                children: "Here's what's happening across your fuel stations today."
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                                style: {
+                                    ...styles.welcomeTitle,
+                                    fontSize: '50px'
+                                },
+                                children: " FuelGuard"
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                lineNumber: 536,
+                                lineNumber: 544,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                        lineNumber: 534,
+                        lineNumber: 542,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -817,12 +823,12 @@ function GeneralDashboard() {
                                                     color: "#2563eb"
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                                    lineNumber: 549,
+                                                    lineNumber: 557,
                                                     columnNumber: 17
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                                lineNumber: 548,
+                                                lineNumber: 556,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -834,13 +840,13 @@ function GeneralDashboard() {
                                                 children: "Active"
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                                lineNumber: 551,
+                                                lineNumber: 559,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                        lineNumber: 547,
+                                        lineNumber: 555,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -848,7 +854,7 @@ function GeneralDashboard() {
                                         children: loading ? '-' : stations.length
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                        lineNumber: 553,
+                                        lineNumber: 561,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -856,7 +862,7 @@ function GeneralDashboard() {
                                         children: "Total Stations"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                        lineNumber: 554,
+                                        lineNumber: 562,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -871,7 +877,7 @@ function GeneralDashboard() {
                                                     }
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                                    lineNumber: 558,
+                                                    lineNumber: 566,
                                                     columnNumber: 19
                                                 }, this),
                                                 "Loading stations..."
@@ -885,7 +891,7 @@ function GeneralDashboard() {
                                                     }
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                                    lineNumber: 563,
+                                                    lineNumber: 571,
                                                     columnNumber: 19
                                                 }, this),
                                                 "Click to retry"
@@ -899,7 +905,7 @@ function GeneralDashboard() {
                                                     }
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                                    lineNumber: 568,
+                                                    lineNumber: 576,
                                                     columnNumber: 19
                                                 }, this),
                                                 "Click to view all stations"
@@ -907,13 +913,13 @@ function GeneralDashboard() {
                                         }, void 0, true)
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                        lineNumber: 555,
+                                        lineNumber: 563,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                lineNumber: 541,
+                                lineNumber: 549,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -934,12 +940,12 @@ function GeneralDashboard() {
                                                     color: "#dc2626"
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                                    lineNumber: 582,
+                                                    lineNumber: 590,
                                                     columnNumber: 17
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                                lineNumber: 581,
+                                                lineNumber: 589,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -951,13 +957,13 @@ function GeneralDashboard() {
                                                 children: "Urgent"
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                                lineNumber: 584,
+                                                lineNumber: 592,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                        lineNumber: 580,
+                                        lineNumber: 588,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -965,7 +971,7 @@ function GeneralDashboard() {
                                         children: "2"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                        lineNumber: 586,
+                                        lineNumber: 594,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -973,7 +979,7 @@ function GeneralDashboard() {
                                         children: "Active Alerts"
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                        lineNumber: 587,
+                                        lineNumber: 595,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -987,26 +993,26 @@ function GeneralDashboard() {
                                                 }
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                                lineNumber: 589,
+                                                lineNumber: 597,
                                                 columnNumber: 15
                                             }, this),
                                             "Requires attention"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                        lineNumber: 588,
+                                        lineNumber: 596,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                lineNumber: 575,
+                                lineNumber: 583,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                        lineNumber: 540,
+                        lineNumber: 548,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1017,7 +1023,7 @@ function GeneralDashboard() {
                                 children: "Recent Alerts"
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                lineNumber: 597,
+                                lineNumber: 605,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1037,7 +1043,7 @@ function GeneralDashboard() {
                                                         }
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                                        lineNumber: 607,
+                                                        lineNumber: 615,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1048,7 +1054,7 @@ function GeneralDashboard() {
                                                                 children: alert.type
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                                                lineNumber: 609,
+                                                                lineNumber: 617,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1056,19 +1062,19 @@ function GeneralDashboard() {
                                                                 children: alert.station
                                                             }, void 0, false, {
                                                                 fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                                                lineNumber: 610,
+                                                                lineNumber: 618,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                                        lineNumber: 608,
+                                                        lineNumber: 616,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                                lineNumber: 606,
+                                                lineNumber: 614,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1076,18 +1082,18 @@ function GeneralDashboard() {
                                                 children: alert.time
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                                lineNumber: 613,
+                                                lineNumber: 621,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, index, true, {
                                         fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                        lineNumber: 600,
+                                        lineNumber: 608,
                                         columnNumber: 15
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                lineNumber: 598,
+                                lineNumber: 606,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1103,74 +1109,19 @@ function GeneralDashboard() {
                                 children: "View All Alerts"
                             }, void 0, false, {
                                 fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                lineNumber: 617,
+                                lineNumber: 625,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                        lineNumber: 596,
-                        columnNumber: 9
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        style: styles.successMessage,
-                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            style: styles.messageContent,
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    style: styles.messageIcon,
-                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$shield$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Shield$3e$__["Shield"], {
-                                        size: 24,
-                                        color: "#16a34a"
-                                    }, void 0, false, {
-                                        fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                        lineNumber: 636,
-                                        columnNumber: 15
-                                    }, this)
-                                }, void 0, false, {
-                                    fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                    lineNumber: 635,
-                                    columnNumber: 13
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                            style: styles.messageTitle,
-                                            children: "🎉 System Operational"
-                                        }, void 0, false, {
-                                            fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                            lineNumber: 639,
-                                            columnNumber: 15
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                            style: styles.messageText,
-                                            children: "Your fuel station monitoring system is running perfectly! All authentication, database connections, and monitoring tools are active."
-                                        }, void 0, false, {
-                                            fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                            lineNumber: 640,
-                                            columnNumber: 15
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                    lineNumber: 638,
-                                    columnNumber: 13
-                                }, this)
-                            ]
-                        }, void 0, true, {
-                            fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                            lineNumber: 634,
-                            columnNumber: 11
-                        }, this)
-                    }, void 0, false, {
-                        fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                        lineNumber: 633,
+                        lineNumber: 604,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                lineNumber: 532,
+                lineNumber: 540,
                 columnNumber: 7
             }, this),
             showStationsModal && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1191,7 +1142,7 @@ function GeneralDashboard() {
                                             color: "#2563eb"
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                            lineNumber: 654,
+                                            lineNumber: 650,
                                             columnNumber: 17
                                         }, this),
                                         "All Stations ",
@@ -1199,7 +1150,7 @@ function GeneralDashboard() {
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                    lineNumber: 653,
+                                    lineNumber: 649,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1221,12 +1172,12 @@ function GeneralDashboard() {
                                                 size: 16
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                                lineNumber: 665,
+                                                lineNumber: 661,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                            lineNumber: 658,
+                                            lineNumber: 654,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1238,24 +1189,24 @@ function GeneralDashboard() {
                                                 size: 20
                                             }, void 0, false, {
                                                 fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                                lineNumber: 673,
+                                                lineNumber: 669,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                            lineNumber: 667,
+                                            lineNumber: 663,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                    lineNumber: 657,
+                                    lineNumber: 653,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                            lineNumber: 652,
+                            lineNumber: 648,
                             columnNumber: 13
                         }, this),
                         error && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1276,7 +1227,7 @@ function GeneralDashboard() {
                                     size: 16
                                 }, void 0, false, {
                                     fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                    lineNumber: 691,
+                                    lineNumber: 687,
                                     columnNumber: 17
                                 }, this),
                                 "Error loading stations: ",
@@ -1284,7 +1235,7 @@ function GeneralDashboard() {
                             ]
                         }, void 0, true, {
                             fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                            lineNumber: 679,
+                            lineNumber: 675,
                             columnNumber: 15
                         }, this),
                         loading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1304,14 +1255,14 @@ function GeneralDashboard() {
                                     }
                                 }, void 0, false, {
                                     fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                    lineNumber: 704,
+                                    lineNumber: 700,
                                     columnNumber: 17
                                 }, this),
                                 "Loading stations from server..."
                             ]
                         }, void 0, true, {
                             fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                            lineNumber: 697,
+                            lineNumber: 693,
                             columnNumber: 15
                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             style: styles.stationsList,
@@ -1342,12 +1293,12 @@ function GeneralDashboard() {
                                                         color: station.color
                                                     }, void 0, false, {
                                                         fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                                        lineNumber: 727,
+                                                        lineNumber: 723,
                                                         columnNumber: 25
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                                    lineNumber: 726,
+                                                    lineNumber: 722,
                                                     columnNumber: 23
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1358,7 +1309,7 @@ function GeneralDashboard() {
                                                             children: station.name
                                                         }, void 0, false, {
                                                             fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                                            lineNumber: 730,
+                                                            lineNumber: 726,
                                                             columnNumber: 25
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1368,14 +1319,14 @@ function GeneralDashboard() {
                                                                     size: 12
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                                                    lineNumber: 732,
+                                                                    lineNumber: 728,
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 station.location
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                                            lineNumber: 731,
+                                                            lineNumber: 727,
                                                             columnNumber: 25
                                                         }, this),
                                                         station.operatorName && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1390,7 +1341,7 @@ function GeneralDashboard() {
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                                            lineNumber: 736,
+                                                            lineNumber: 732,
                                                             columnNumber: 27
                                                         }, this),
                                                         station.ewuraLicense && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1405,19 +1356,19 @@ function GeneralDashboard() {
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                                            lineNumber: 741,
+                                                            lineNumber: 737,
                                                             columnNumber: 27
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                                    lineNumber: 729,
+                                                    lineNumber: 725,
                                                     columnNumber: 23
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                            lineNumber: 725,
+                                            lineNumber: 721,
                                             columnNumber: 21
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1434,12 +1385,37 @@ function GeneralDashboard() {
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                                            lineNumber: 750,
+                                                            lineNumber: 746,
                                                             columnNumber: 25
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                             style: styles.stationMetricLabel,
                                                             children: "Efficiency"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
+                                                            lineNumber: 747,
+                                                            columnNumber: 25
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
+                                                    lineNumber: 745,
+                                                    columnNumber: 23
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    style: styles.stationMetric,
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                            style: styles.stationMetricValue,
+                                                            children: station.revenue
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
+                                                            lineNumber: 750,
+                                                            columnNumber: 25
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                            style: styles.stationMetricLabel,
+                                                            children: "Today"
                                                         }, void 0, false, {
                                                             fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
                                                             lineNumber: 751,
@@ -1456,7 +1432,7 @@ function GeneralDashboard() {
                                                     children: [
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                             style: styles.stationMetricValue,
-                                                            children: station.revenue
+                                                            children: station.tanks
                                                         }, void 0, false, {
                                                             fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
                                                             lineNumber: 754,
@@ -1464,7 +1440,7 @@ function GeneralDashboard() {
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                             style: styles.stationMetricLabel,
-                                                            children: "Today"
+                                                            children: "Tanks"
                                                         }, void 0, false, {
                                                             fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
                                                             lineNumber: 755,
@@ -1481,7 +1457,7 @@ function GeneralDashboard() {
                                                     children: [
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                             style: styles.stationMetricValue,
-                                                            children: station.tanks
+                                                            children: station.nozzles
                                                         }, void 0, false, {
                                                             fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
                                                             lineNumber: 758,
@@ -1489,7 +1465,7 @@ function GeneralDashboard() {
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                             style: styles.stationMetricLabel,
-                                                            children: "Tanks"
+                                                            children: "Nozzles"
                                                         }, void 0, false, {
                                                             fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
                                                             lineNumber: 759,
@@ -1499,31 +1475,6 @@ function GeneralDashboard() {
                                                 }, void 0, true, {
                                                     fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
                                                     lineNumber: 757,
-                                                    columnNumber: 23
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    style: styles.stationMetric,
-                                                    children: [
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                            style: styles.stationMetricValue,
-                                                            children: station.nozzles
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                                            lineNumber: 762,
-                                                            columnNumber: 25
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                            style: styles.stationMetricLabel,
-                                                            children: "Nozzles"
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                                            lineNumber: 763,
-                                                            columnNumber: 25
-                                                        }, this)
-                                                    ]
-                                                }, void 0, true, {
-                                                    fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                                    lineNumber: 761,
                                                     columnNumber: 23
                                                 }, this),
                                                 station.alerts > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1537,7 +1488,7 @@ function GeneralDashboard() {
                                                             children: station.alerts
                                                         }, void 0, false, {
                                                             fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                                            lineNumber: 767,
+                                                            lineNumber: 763,
                                                             columnNumber: 27
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1545,13 +1496,13 @@ function GeneralDashboard() {
                                                             children: "Alerts"
                                                         }, void 0, false, {
                                                             fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                                            lineNumber: 768,
+                                                            lineNumber: 764,
                                                             columnNumber: 27
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                                    lineNumber: 766,
+                                                    lineNumber: 762,
                                                     columnNumber: 25
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1561,24 +1512,24 @@ function GeneralDashboard() {
                                                     }
                                                 }, void 0, false, {
                                                     fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                                    lineNumber: 771,
+                                                    lineNumber: 767,
                                                     columnNumber: 23
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                            lineNumber: 748,
+                                            lineNumber: 744,
                                             columnNumber: 21
                                         }, this)
                                     ]
                                 }, station.id, true, {
                                     fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                    lineNumber: 710,
+                                    lineNumber: 706,
                                     columnNumber: 19
                                 }, this))
                         }, void 0, false, {
                             fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                            lineNumber: 708,
+                            lineNumber: 704,
                             columnNumber: 15
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1603,30 +1554,30 @@ function GeneralDashboard() {
                                         size: 14
                                     }, void 0, false, {
                                         fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                        lineNumber: 793,
+                                        lineNumber: 789,
                                         columnNumber: 17
                                     }, this),
                                     "Click on any station to access its detailed dashboard and controls."
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                                lineNumber: 785,
+                                lineNumber: 781,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                            lineNumber: 778,
+                            lineNumber: 774,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                    lineNumber: 651,
+                    lineNumber: 647,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/frontend/src/app/dashboard/general/page.tsx",
-                lineNumber: 650,
+                lineNumber: 646,
                 columnNumber: 9
             }, this)
         ]
