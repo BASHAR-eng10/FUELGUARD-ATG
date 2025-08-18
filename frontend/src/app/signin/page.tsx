@@ -1,10 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { signIn, getSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { Shield, Mail, ArrowRight, CheckCircle, AlertCircle, Loader2, Lock, Eye, EyeOff } from 'lucide-react'
-import apiService from "@/lib/services/api"
 import Image from 'next/image'
 
 interface Account {

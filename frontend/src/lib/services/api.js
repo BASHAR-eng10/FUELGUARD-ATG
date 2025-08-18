@@ -81,6 +81,24 @@ class ApiService {
 	// getAllStations() {
 	// 	return this.request("/stationinfo/all");
 	// }
+  async getAlerts(id) {
+    return this.request(`/stations/${id}/alerts`);
+  }
+
+	async getAllAlerts() {
+		return this.request('/general/alerts');
+	}
+
+	async getCurrentCashEntry(id) {
+		return this.request(`/stations/${id}/cash`);
+	}
+
+	async updateCurrentCashEntry(id, actualReading, manualReading) {
+		return this.request(`/stations/${id}/cash`, {
+			method: 'POST', //TODO: set to PUT
+			body: JSON.stringify({ actualReading, manualReading })
+		});
+	}
 
   async getStationById(id) {
     return this.request(`/stations/${id}`);

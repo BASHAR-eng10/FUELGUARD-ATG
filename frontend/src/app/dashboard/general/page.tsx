@@ -5,6 +5,7 @@ import { Shield, TrendingUp, AlertTriangle, Building2, Settings, LogOut, Bell, X
 //  const apiService = (await import('../../services/api')).default
 import apiService from "../../../lib/services/api"
 import { useAuth } from '@/lib/hooks/useAuth'
+import api from '../../../lib/services/api'
 interface Station {
   id: number
   name: string
@@ -393,6 +394,7 @@ const styles = {
 export default function GeneralDashboard() {
 	const {logout} = useAuth()
   const [showStationsModal, setShowStationsModal] = useState(false)
+  const [malerts, setAlerts] = useState([])
   const [stations, setStations] = useState<Station[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -403,8 +405,6 @@ export default function GeneralDashboard() {
       setLoading(true)
       setError(null)
       const result = await apiService.getAllStations()
-			// console.log(result.data)
-
       
       if (result.data && Array.isArray(result.data)) {
         // Transform API data to match our component structure
@@ -431,6 +431,18 @@ export default function GeneralDashboard() {
         }))
         
         setStations(transformedStations)
+
+				const alerts = await api.getAllAlerts()
+					// Handle the alerts data
+					console.log(alerts.data, transformedStations);
+					setAlerts(alerts.data.map(alert => ({
+						message: alert.message,
+						id: alert.id,
+						station: transformedStations.find(station => station.id == alert.stationId)?.name || 'Unknown Station',
+						type: "Cash Discrepancy",
+						severity: alert?.severity ?? "high",
+						time: alert?.timestamp,
+					})));
       } else {
         throw new Error('Invalid data format received from API')
       }
@@ -603,7 +615,7 @@ export default function GeneralDashboard() {
         <div style={styles.overviewCard}>
           <h3 style={styles.cardTitle}>Recent Alerts</h3>
           <div style={styles.alertsList}>
-            {alerts.map((alert, index) => (
+            {malerts.map((alert, index) => (
               <div 
                 key={index} 
                 style={styles.alertItem}
@@ -611,9 +623,9 @@ export default function GeneralDashboard() {
                 onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
               >
                 <div style={styles.alertInfo}>
-                  <div style={{...styles.alertDot, backgroundColor: alert.color}}></div>
+                  <div style={{...styles.alertDot, backgroundColor: alert.type == "high" ? '#dc2626' : '#fbbf24'}}></div>
                   <div style={styles.alertDetails}>
-                    <p style={styles.alertType}>{alert.type}</p>
+                    <p style={styles.alertType}>{alert.type}({alert.message})</p>
                     <p style={styles.alertStation}>{alert.station}</p>
                   </div>
                 </div>

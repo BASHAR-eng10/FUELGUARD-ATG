@@ -4,6 +4,8 @@ import { useState, useEffect, use } from 'react'
 import { Shield, Gauge, Droplets, DollarSign, AlertTriangle, Settings, LogOut, Bell, TrendingUp, Clock, Thermometer, Target, Edit3, Truck, Loader2, RefreshCw } from 'lucide-react'
 import apiService from "../../../../lib/services/api"
 import { useAuth } from '@/lib/hooks/useAuth'
+import { updateCurrentManualCashEntries } from '@/lib/services/externalApiService'
+import api from '../../../../lib/services/api'
 
 interface StationData {
   id: number
@@ -700,6 +702,7 @@ export default function StationDashboard({params}: {params: Promise<{ id: string
   const [tanksError, setTanksError] = useState<string | null>(null)
   const [showChecklistModal, setShowChecklistModal] = useState(false)
   const [showSalesModal, setShowSalesModal] = useState(false)
+  const [loadingSalesModal, setLoadingSalesModal] = useState(false)
   const [showIssueModal, setShowIssueModal] = useState(false)
   const [issueMessage, setIssueMessage] = useState('')
   const [issueCategory, setIssueCategory] = useState('general')
@@ -850,10 +853,22 @@ export default function StationDashboard({params}: {params: Promise<{ id: string
     setShowSalesModal(false)
   }
 
-  const handleSaveSales = () => {
+  const handleSaveSales = async() => {
     console.log('Sales data recorded:', salesData)
+		//TODO: lreajslkjlk HERE I AM
+		managerCash && console.log('stationid:', id)
+		console.log("Total actual cash:", salesData.diesel.cash*salesData.diesel.liters + salesData.unleaded.cash*salesData.unleaded.liters)
+		console.log("Total manual cash:", managerCash)
+		const actualCash = salesData.diesel.cash*salesData.diesel.liters + salesData.unleaded.cash*salesData.unleaded.liters
+		setLoadingSalesModal(true)
+		await api.updateCurrentCashEntry(id,
+			actualCash,
+			parseFloat(managerCash)).then(() => {
+				setLoadingSalesModal(false)
+			}).finally(() => {
+    		setShowSalesModal(false)
+			})
     // Here you would typically save to your API
-    setShowSalesModal(false)
   }
 
   const handleCloseIssueModal = () => {
@@ -2233,8 +2248,9 @@ export default function StationDashboard({params}: {params: Promise<{ id: string
                     ...styles.salesValue,
                     color: salesData.eTotalCash - (salesData.unleaded.cash + salesData.diesel.cash) >= 0 ? '#16a34a' : '#dc2626'
                   }}>
-                    {salesData.eTotalCash - (salesData.unleaded.cash + salesData.diesel.cash) >= 0 ? '+' : ''}
-                    {(salesData.eTotalCash - (salesData.unleaded.cash + salesData.diesel.cash)).toLocaleString()}TSH
+                    TSH{" "}{" "}
+                    {salesData.eTotalCash - (parseFloat(managerCash) || 0) >= 0 ? '+' : ''}
+                    { (salesData.eTotalCash - (parseFloat(managerCash) || 0)).toLocaleString()}
                   </div>
                 </div>
               </div>
@@ -2256,7 +2272,13 @@ export default function StationDashboard({params}: {params: Promise<{ id: string
                   onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#15803d')}
                   onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#16a34a')}
                 >
-                  Record Sales
+									{
+										loadingSalesModal ? (
+											<span>Loading...</span>
+										) : (
+											<span>Record Sales</span>
+										)
+									}
                 </button>
               </div>
             </div>

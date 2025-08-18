@@ -14,6 +14,25 @@ model User {
   posts   Post[]
 }
 
+model Filling {
+	id      Int      @id @default(autoincrement())
+	truckNo String
+	date    DateTime @default(now())
+	fuelType String
+	driverName String
+	requestedQty Float
+	actualQty Float
+}
+
+model ManualCashEntries {
+	id      Int      @id @default(autoincrement())
+	date    DateTime @default(now())
+	stationId String
+	amount  Float // manual cash entry amount
+	hasAlert Boolean @default(false)
+	alert    String?
+}
+
 model Post {
   id        Int     @id @default(autoincrement())
   title     String

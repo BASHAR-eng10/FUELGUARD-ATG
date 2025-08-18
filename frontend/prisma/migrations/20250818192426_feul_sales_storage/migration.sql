@@ -8,6 +8,31 @@ CREATE TABLE "User" (
 );
 
 -- CreateTable
+CREATE TABLE "Filling" (
+    "id" SERIAL NOT NULL,
+    "truckNo" TEXT NOT NULL,
+    "date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "fuelType" TEXT NOT NULL,
+    "driverName" TEXT NOT NULL,
+    "requestedQty" DOUBLE PRECISION NOT NULL,
+    "actualQty" DOUBLE PRECISION NOT NULL,
+
+    CONSTRAINT "Filling_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "ManualCashEntries" (
+    "id" SERIAL NOT NULL,
+    "date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "stationId" TEXT NOT NULL,
+    "amount" DOUBLE PRECISION NOT NULL,
+    "hasAlert" BOOLEAN NOT NULL DEFAULT false,
+    "alert" TEXT,
+
+    CONSTRAINT "ManualCashEntries_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Post" (
     "id" SERIAL NOT NULL,
     "title" TEXT NOT NULL,

@@ -313,6 +313,64 @@ export async function getCacheStats() {
   }
 }
 
+export async function getCurrentManualCashEntries(stationId: string) {
+	//fetch the most recent of manual cash entry for a specific station
+	const currentEntries = await prisma.manualCashEntries.findMany({
+		where: {
+			stationId: stationId,
+		},
+		orderBy: {
+			date: 'desc'
+		},
+		take: 1
+	});
+	if (currentEntries.length > 0) {
+		return currentEntries[0];
+	}
+	throw new Error('No manual cash entry found for the specified station');
+}
+export async function getAllAlerts() {
+	// Fetch alerts for a specific station
+	const alerts = await prisma.manualCashEntries.findMany({
+		where: {
+			hasAlert: true
+		},
+		orderBy: {
+			date: 'desc'
+		}
+	});
+	return alerts;
+}
+
+export async function getAlerts(stationId: string) {
+	// Fetch alerts for a specific station
+	const alerts = await prisma.manualCashEntries.findMany({
+		where: {
+			stationId: stationId,
+			hasAlert: true
+		},
+		orderBy: {
+			date: 'desc'
+		}
+	});
+	return alerts;
+}
+
+export async function updateCurrentManualCashEntries(stationId: string, actualReading: number, manualReading: number) {
+	// validate the stationId
+	if (!stationId) {
+		throw new Error('Invalid station ID');
+	}
+  await prisma.manualCashEntries.create({
+    data: {
+			stationId:stationId,
+      amount: manualReading,
+      hasAlert: (actualReading - manualReading) / actualReading > 0.01,
+      alert: (actualReading - manualReading) / actualReading > 0.01 ? `Manual cash entry for station ${stationId} has changed by ${(actualReading - manualReading).toFixed(2)}` : null
+    }
+  });
+}
+
 // Default export for backward compatibility
 const externalApiService = {
   healthCheck,
