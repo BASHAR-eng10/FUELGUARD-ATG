@@ -715,6 +715,9 @@ export default function StationDashboard({params}: {params: Promise<{ id: string
   })
   const [managerCash, setManagerCash] = useState('')
   
+ 
+  
+  
   // Sales data - normally would come from API
   const [salesData] = useState({
     unleaded: {
@@ -1029,8 +1032,944 @@ export default function StationDashboard({params}: {params: Promise<{ id: string
             </div>
           )}
         </div>
+        {/* Fuel Pricing Section - Enhanced with Colored Backgrounds */}
+<div style={{
+  ...styles.nozzleSection,
+  background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
+  border: '2px solid #e2e8f0',
+  borderRadius: '16px',
+  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+  padding: '24px'
+}}>
+  <h3 style={styles.nozzleTitle}>
+    <DollarSign size={20} color="#16a34a" />
+    Fuel Pricing & Sales
+  </h3>
+  <div style={styles.nozzleGrid}>
+    {/* Unleaded Price Card - Green Background */}
+    <div style={{
+      ...styles.nozzleCard,
+      background: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)',
+      border: '3px solid #16a34a',
+      borderRadius: '16px',
+      boxShadow: '0 6px 20px rgba(22, 163, 74, 0.15)',
+      position: 'relative',
+      overflow: 'hidden'
+    }}>
+      {/* Green accent stripe */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        height: '4px',
+        background: 'linear-gradient(90deg, #16a34a 0%, #22c55e 50%, #16a34a 100%)'
+      }}></div>
+      
+      <div style={styles.nozzleHeader}>
+        <span style={{
+          ...styles.nozzleName,
+          color: '#14532d',
+          fontWeight: '700',
+          fontSize: '16px'
+        }}>Unleaded Price</span>
+        <span style={{
+          ...styles.nozzleStatus,
+          color: '#166534',
+          backgroundColor: '#dcfce7',
+          border: '1px solid #16a34a'
+        }}>
+          Active
+        </span>
+      </div>
+      <div style={styles.nozzleMetrics}>
+        <div style={styles.nozzleMetric}>
+          <p style={{
+            ...styles.nozzleMetricValue, 
+            fontSize: '24px',
+            color: '#14532d',
+            
+          }}>3250 TSH</p>
+          <p style={{...styles.nozzleMetricLabel, color: '#15803d'}}>Per Liter</p>
+        </div>
+        <div style={styles.nozzleMetric}>
+          <p style={{
+            ...styles.nozzleMetricValue,
+            fontSize: '24px',
+            color: '#14532d'
+          }}>4,220 L</p>
+          <p style={{...styles.nozzleMetricLabel, color: '#15803d'}}>Sold Today</p>
+        </div>
+      </div>
+    </div>
 
-        {/* Tank Monitoring */}
+    {/* Diesel Price Card - Blue Background */}
+    <div style={{
+      ...styles.nozzleCard,
+      background: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)',
+      border: '3px solid #3b82f6',
+      borderRadius: '16px',
+      boxShadow: '0 6px 20px rgba(59, 130, 246, 0.15)',
+      position: 'relative',
+      overflow: 'hidden'
+    }}>
+      {/* Blue accent stripe */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        height: '4px',
+        background: 'linear-gradient(90deg, #3b82f6 0%, #60a5fa 50%, #3b82f6 100%)'
+      }}></div>
+      
+      <div style={styles.nozzleHeader}>
+        <span style={{
+          ...styles.nozzleName,
+          color: '#1e3a8a',
+          fontWeight: '700',
+          fontSize: '16px'
+        }}>Diesel Price</span>
+        <span style={{
+          ...styles.nozzleStatus,
+          color: '#1e40af',
+          backgroundColor: '#dbeafe',
+          border: '1px solid #3b82f6'
+        }}>
+          Active
+        </span>
+      </div>
+      <div style={styles.nozzleMetrics}>
+        <div style={styles.nozzleMetric}>
+          <p style={{
+            ...styles.nozzleMetricValue, 
+            fontSize: '24px',
+            color: '#1e3a8a',
+            
+          }}>3100 TSH</p>
+          <p style={{...styles.nozzleMetricLabel, color: '#1d4ed8'}}>Per Liter</p>
+        </div>
+        <div style={styles.nozzleMetric}>
+          <p style={{
+            ...styles.nozzleMetricValue,
+            fontSize: '24px',
+            color: '#1e3a8a'
+          }}>5,800 L</p>
+          <p style={{...styles.nozzleMetricLabel, color: '#1d4ed8'}}>Sold Today</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+        {/* Unleaded Sales Analysis - Enhanced with Green Background */}
+<div style={{
+  ...styles.nozzleSection,
+  background: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%)',
+  border: '3px solid #16a34a',
+  borderRadius: '20px',
+  boxShadow: '0 8px 25px rgba(22, 163, 74, 0.15)',
+  position: 'relative',
+  overflow: 'hidden'
+}}>
+  {/* Green accent border */}
+  <div style={{
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: '4px',
+    background: 'linear-gradient(90deg, #16a34a 0%, #22c55e 50%, #16a34a 100%)'
+  }}></div>
+  
+  <h3 style={{
+    ...styles.nozzleTitle,
+    color: '#14532d',
+    textShadow: '0 1px 2px rgba(0,0,0,0.1)'
+  }}>
+    <TrendingUp size={20} color="#16a34a" />
+    ⛽ Unleaded Sales Analysis
+  </h3>
+  <div style={styles.nozzleGrid}>
+    {/* E_Total Sales - Enhanced */}
+    <div style={{
+      ...styles.nozzleCard,
+      background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)',
+      border: '2px solid #0ea5e9',
+      boxShadow: '0 4px 12px rgba(14, 165, 233, 0.15)'
+    }}>
+      <div style={styles.nozzleHeader}>
+        <span style={{
+          ...styles.nozzleName,
+          fontSize: '16px',
+          fontWeight: '700',
+          color: '#0c4a6e'
+        }}>E_Total Sales</span>
+      </div>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: '16px'
+      }}>
+        <div style={styles.nozzleMetric}>
+          <p style={{
+            ...styles.nozzleMetricValue,
+            fontSize: '20px',
+            color: '#0c4a6e'
+          }}>4,220 L</p>
+          <p style={styles.nozzleMetricLabel}>Total Liters</p>
+        </div>
+      </div>
+    </div>
+
+    {/* V_Total Sales - Enhanced */}
+    <div style={{
+      ...styles.nozzleCard,
+      background: 'linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%)',
+      border: '2px solid #a855f7',
+      boxShadow: '0 4px 12px rgba(168, 85, 247, 0.15)'
+    }}>
+      <div style={styles.nozzleHeader}>
+        <span style={{
+          ...styles.nozzleName,
+          fontSize: '16px',
+          fontWeight: '700',
+          color: '#581c87'
+        }}>V_Total Sales</span>
+      </div>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: '16px'
+      }}>
+        <div style={styles.nozzleMetric}>
+          <p style={{
+            ...styles.nozzleMetricValue,
+            fontSize: '20px',
+            color: '#581c87'
+          }}>4,220 L</p>
+          <p style={styles.nozzleMetricLabel}>Total Liters</p>
+        </div>
+      </div>
+    </div>
+
+    {/* E_Total vs V_Total - Enhanced */}
+    <div style={{
+      ...styles.nozzleCard,
+      background: 'linear-gradient(135deg, #fefce8 0%, #fef3c7 100%)',
+      border: '2px solid #eab308',
+      boxShadow: '0 4px 12px rgba(234, 179, 8, 0.15)'
+    }}>
+      <div style={styles.nozzleHeader}>
+        <span style={{
+          ...styles.nozzleName,
+          fontSize: '16px',
+          fontWeight: '700',
+          color: '#713f12'
+        }}>Difference of E_Total vs V_Total</span>
+      </div>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: '16px'
+      }}>
+        <div style={styles.nozzleMetric}>
+          <p style={{
+            ...styles.nozzleMetricValue,
+            fontSize: '20px',
+            color: '#ca8a04'
+          }}>0 L</p>
+          <p style={styles.nozzleMetricLabel}>Difference</p>
+        </div>
+      </div>
+    </div>
+
+    {/* M_Total Sales - Enhanced with Input */}
+    
+<div style={{
+  ...styles.nozzleCard,
+  background: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)',
+  border: '2px solid #22c55e',
+  boxShadow: '0 4px 12px rgba(34, 197, 94, 0.15)'
+}}>
+  <div style={styles.nozzleHeader}>
+    <span style={{
+      ...styles.nozzleName,
+      fontSize: '16px',
+      fontWeight: '700',
+      color: '#14532d'
+    }}>M_Total Sales</span>
+  </div>
+  <div style={{
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: '16px'
+  }}>
+    <div style={styles.nozzleMetric}>
+      <input
+        type="number"
+        placeholder="29,800"
+        style={{
+          width: '120px',
+          padding: '8px 12px',
+          border: '2px solid #bbf7d0',
+          borderRadius: '8px',
+          fontSize: '16px',
+          fontWeight: '700',
+          color: '#14532d',
+          background: '#ffffff',
+          textAlign: 'center',
+          outline: 'none',
+          transition: 'all 0.2s'
+        }}
+        onFocus={(e) => {
+          e.target.style.borderColor = '#22c55e'
+          e.target.style.boxShadow = '0 0 0 3px rgba(34, 197, 94, 0.1)'
+        }}
+        onBlur={(e) => {
+          e.target.style.borderColor = '#bbf7d0'
+          e.target.style.boxShadow = 'none'
+        }}
+      />
+      <p style={styles.nozzleMetricLabel}>Manual Reading</p>
+    </div>
+  </div>
+</div>
+  </div>
+</div>
+{/* Unleaded Order Analysis - Enhanced with Green Background */}
+<div style={{
+  ...styles.nozzleSection,
+  background: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%)',
+  border: '3px solid #16a34a',
+  borderRadius: '20px',
+  boxShadow: '0 8px 25px rgba(22, 163, 74, 0.15)',
+  position: 'relative',
+  overflow: 'hidden'
+}}>
+  {/* Green accent border */}
+  <div style={{
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: '4px',
+    background: 'linear-gradient(90deg, #16a34a 0%, #22c55e 50%, #16a34a 100%)'
+  }}></div>
+  
+  <h3 style={{
+    ...styles.nozzleTitle,
+    color: '#14532d',
+    textShadow: '0 1px 2px rgba(0,0,0,0.1)'
+  }}>
+    <TrendingUp size={20} color="#16a34a" />
+    ⛽ Unleaded Order Analysis
+  </h3>
+  <div style={styles.nozzleGrid}>
+    {/* Order Qty */}
+    <div style={{
+      ...styles.nozzleCard,
+      background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)',
+      border: '2px solid #0ea5e9',
+      boxShadow: '0 4px 12px rgba(14, 165, 233, 0.15)'
+    }}>
+      <div style={styles.nozzleHeader}>
+        <span style={{
+          ...styles.nozzleName,
+          fontSize: '16px',
+          fontWeight: '700',
+          color: '#0c4a6e'
+        }}>Order Qty</span>
+      </div>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: '16px'
+      }}>
+        <div style={styles.nozzleMetric}>
+          <p style={{
+            ...styles.nozzleMetricValue,
+            fontSize: '20px',
+            color: '#0c4a6e'
+          }}>30,000 L</p>
+          <p style={styles.nozzleMetricLabel}>Order Quantity</p>
+        </div>
+      </div>
+    </div>
+
+    {/* Order (ATG) */}
+    <div style={{
+      ...styles.nozzleCard,
+      background: 'linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%)',
+      border: '2px solid #a855f7',
+      boxShadow: '0 4px 12px rgba(168, 85, 247, 0.15)'
+    }}>
+      <div style={styles.nozzleHeader}>
+        <span style={{
+          ...styles.nozzleName,
+          fontSize: '16px',
+          fontWeight: '700',
+          color: '#581c87'
+        }}>Order (ATG)</span>
+      </div>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: '16px'
+      }}>
+        <div style={styles.nozzleMetric}>
+          <p style={{
+            ...styles.nozzleMetricValue,
+            fontSize: '20px',
+            color: '#581c87'
+          }}>30,000 L</p>
+          <p style={styles.nozzleMetricLabel}>ATG Reading</p>
+        </div>
+      </div>
+    </div>
+
+    {/* Difference of ATG and Order Qty */}
+    <div style={{
+      ...styles.nozzleCard,
+      background: 'linear-gradient(135deg, #fefce8 0%, #fef3c7 100%)',
+      border: '2px solid #eab308',
+      boxShadow: '0 4px 12px rgba(234, 179, 8, 0.15)'
+    }}>
+      <div style={styles.nozzleHeader}>
+        <span style={{
+          ...styles.nozzleName,
+          fontSize: '16px',
+          fontWeight: '700',
+          color: '#713f12'
+        }}>Difference of ATG and Order Qty</span>
+      </div>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: '16px'
+      }}>
+        <div style={styles.nozzleMetric}>
+          <p style={{
+            ...styles.nozzleMetricValue,
+            fontSize: '20px',
+            color: '#ca8a04'
+          }}>0 L</p>
+          <p style={styles.nozzleMetricLabel}>Difference</p>
+        </div>
+      </div>
+    </div>
+
+    {/* Order (Manual) - Enhanced with Input */}
+<div style={{
+  ...styles.nozzleCard,
+  background: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)',
+  border: '2px solid #22c55e',
+  boxShadow: '0 4px 12px rgba(34, 197, 94, 0.15)'
+}}>
+  <div style={styles.nozzleHeader}>
+    <span style={{
+      ...styles.nozzleName,
+      fontSize: '16px',
+      fontWeight: '700',
+      color: '#14532d'
+    }}>Order (Dipstick)</span>
+  </div>
+  <div style={{
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: '16px'
+  }}>
+    <div style={styles.nozzleMetric}>
+      <input
+        type="number"
+        placeholder="29,800"
+        style={{
+          width: '120px',
+          padding: '8px 12px',
+          border: '2px solid #bbf7d0',
+          borderRadius: '8px',
+          fontSize: '16px',
+          fontWeight: '700',
+          color: '#14532d',
+          background: '#ffffff',
+          textAlign: 'center',
+          outline: 'none',
+          transition: 'all 0.2s'
+        }}
+        onFocus={(e) => {
+          e.target.style.borderColor = '#22c55e'
+          e.target.style.boxShadow = '0 0 0 3px rgba(34, 197, 94, 0.1)'
+        }}
+        onBlur={(e) => {
+          e.target.style.borderColor = '#bbf7d0'
+          e.target.style.boxShadow = 'none'
+        }}
+      />
+      <p style={styles.nozzleMetricLabel}>Manual Reading</p>
+    </div>
+  </div>
+</div>
+  </div>
+</div>
+
+{/* Diesel Sales Analysis - Enhanced with Blue Background */}
+<div style={{
+  ...styles.nozzleSection,
+  background: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 50%, #bfdbfe 100%)',
+  border: '3px solid #3b82f6',
+  borderRadius: '20px',
+  boxShadow: '0 8px 25px rgba(59, 130, 246, 0.15)',
+  position: 'relative',
+  overflow: 'hidden'
+}}>
+  {/* Blue accent border */}
+  <div style={{
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: '4px',
+    background: 'linear-gradient(90deg, #3b82f6 0%, #60a5fa 50%, #3b82f6 100%)'
+  }}></div>
+  
+  <h3 style={{
+    ...styles.nozzleTitle,
+    color: '#1e3a8a',
+    textShadow: '0 1px 2px rgba(0,0,0,0.1)'
+  }}>
+    <TrendingUp size={20} color="#3b82f6" />
+    🚛 Diesel Sales Analysis
+  </h3>
+  <div style={styles.nozzleGrid}>
+    {/* E_Total Sales - Enhanced */}
+    <div style={{
+      ...styles.nozzleCard,
+      background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)',
+      border: '2px solid #0ea5e9',
+      boxShadow: '0 4px 12px rgba(14, 165, 233, 0.15)'
+    }}>
+      <div style={styles.nozzleHeader}>
+        <span style={{
+          ...styles.nozzleName,
+          fontSize: '16px',
+          fontWeight: '700',
+          color: '#0c4a6e'
+        }}>E_Total Sales</span>
+      </div>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: '16px'
+      }}>
+        <div style={styles.nozzleMetric}>
+          <p style={{
+            ...styles.nozzleMetricValue,
+            fontSize: '20px',
+            color: '#0c4a6e'
+          }}>5,800 L</p>
+          <p style={styles.nozzleMetricLabel}>Total Liters</p>
+        </div>
+      </div>
+    </div>
+
+    {/* V_Total Sales - Enhanced */}
+    <div style={{
+      ...styles.nozzleCard,
+      background: 'linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%)',
+      border: '2px solid #a855f7',
+      boxShadow: '0 4px 12px rgba(168, 85, 247, 0.15)'
+    }}>
+      <div style={styles.nozzleHeader}>
+        <span style={{
+          ...styles.nozzleName,
+          fontSize: '16px',
+          fontWeight: '700',
+          color: '#581c87'
+        }}>V_Total Sales</span>
+      </div>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: '16px'
+      }}>
+        <div style={styles.nozzleMetric}>
+          <p style={{
+            ...styles.nozzleMetricValue,
+            fontSize: '20px',
+            color: '#581c87'
+          }}>5,800 L</p>
+          <p style={styles.nozzleMetricLabel}>Total Liters</p>
+        </div>
+      </div>
+    </div>
+
+    {/* E_Total vs V_Total - Enhanced */}
+    <div style={{
+      ...styles.nozzleCard,
+      background: 'linear-gradient(135deg, #fefce8 0%, #fef3c7 100%)',
+      border: '2px solid #eab308',
+      boxShadow: '0 4px 12px rgba(234, 179, 8, 0.15)'
+    }}>
+      <div style={styles.nozzleHeader}>
+        <span style={{
+          ...styles.nozzleName,
+          fontSize: '16px',
+          fontWeight: '700',
+          color: '#713f12'
+        }}>Difference of E_Total vs V_Total</span>
+      </div>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: '16px'
+      }}>
+        <div style={styles.nozzleMetric}>
+          <p style={{
+            ...styles.nozzleMetricValue,
+            fontSize: '20px',
+            color: '#ca8a04'
+          }}>0 L</p>
+          <p style={styles.nozzleMetricLabel}>Difference</p>
+        </div>
+      </div>
+    </div>
+
+    {/* M_Total Sales - Enhanced with Input */}
+    
+<div style={{
+  ...styles.nozzleCard,
+  background: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)',
+  border: '2px solid #22c55e',
+  boxShadow: '0 4px 12px rgba(34, 197, 94, 0.15)'
+}}>
+  <div style={styles.nozzleHeader}>
+    <span style={{
+      ...styles.nozzleName,
+      fontSize: '16px',
+      fontWeight: '700',
+      color: '#14532d'
+    }}>M_Total Sales</span>
+  </div>
+  <div style={{
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: '16px'
+  }}>
+    <div style={styles.nozzleMetric}>
+      <input
+        type="number"
+        placeholder="29,800"
+        style={{
+          width: '120px',
+          padding: '8px 12px',
+          border: '2px solid #bbf7d0',
+          borderRadius: '8px',
+          fontSize: '16px',
+          fontWeight: '700',
+          color: '#14532d',
+          background: '#ffffff',
+          textAlign: 'center',
+          outline: 'none',
+          transition: 'all 0.2s'
+        }}
+        onFocus={(e) => {
+          e.target.style.borderColor = '#22c55e'
+          e.target.style.boxShadow = '0 0 0 3px rgba(34, 197, 94, 0.1)'
+        }}
+        onBlur={(e) => {
+          e.target.style.borderColor = '#bbf7d0'
+          e.target.style.boxShadow = 'none'
+        }}
+      />
+      <p style={styles.nozzleMetricLabel}>Manual Reading</p>
+    </div>
+  </div>
+</div>
+  </div>
+</div>
+{/* Diesel Order Analysis - Enhanced with Blue Background */}
+<div style={{
+  ...styles.nozzleSection,
+  background: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 50%, #bfdbfe 100%)',
+  border: '3px solid #3b82f6',
+  borderRadius: '20px',
+  boxShadow: '0 8px 25px rgba(59, 130, 246, 0.15)',
+  position: 'relative',
+  overflow: 'hidden'
+}}>
+  {/* Blue accent border */}
+  <div style={{
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: '4px',
+    background: 'linear-gradient(90deg, #3b82f6 0%, #60a5fa 50%, #3b82f6 100%)'
+  }}></div>
+  
+  <h3 style={{
+    ...styles.nozzleTitle,
+    color: '#1e3a8a',
+    textShadow: '0 1px 2px rgba(0,0,0,0.1)'
+  }}>
+    <TrendingUp size={20} color="#3b82f6" />
+    🚛 Diesel Order Analysis
+  </h3>
+  <div style={styles.nozzleGrid}>
+    {/* Order Qty */}
+    <div style={{
+      ...styles.nozzleCard,
+      background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)',
+      border: '2px solid #0ea5e9',
+      boxShadow: '0 4px 12px rgba(14, 165, 233, 0.15)'
+    }}>
+      <div style={styles.nozzleHeader}>
+        <span style={{
+          ...styles.nozzleName,
+          fontSize: '16px',
+          fontWeight: '700',
+          color: '#0c4a6e'
+        }}>Order Qty</span>
+      </div>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: '16px'
+      }}>
+        <div style={styles.nozzleMetric}>
+          <p style={{
+            ...styles.nozzleMetricValue,
+            fontSize: '20px',
+            color: '#0c4a6e'
+          }}>25,000 L</p>
+          <p style={styles.nozzleMetricLabel}>Order Quantity</p>
+        </div>
+      </div>
+    </div>
+
+    {/* Order (ATG) */}
+    <div style={{
+      ...styles.nozzleCard,
+      background: 'linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%)',
+      border: '2px solid #a855f7',
+      boxShadow: '0 4px 12px rgba(168, 85, 247, 0.15)'
+    }}>
+      <div style={styles.nozzleHeader}>
+        <span style={{
+          ...styles.nozzleName,
+          fontSize: '16px',
+          fontWeight: '700',
+          color: '#581c87'
+        }}>Order (ATG)</span>
+      </div>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: '16px'
+      }}>
+        <div style={styles.nozzleMetric}>
+          <p style={{
+            ...styles.nozzleMetricValue,
+            fontSize: '20px',
+            color: '#581c87'
+          }}>25,000 L</p>
+          <p style={styles.nozzleMetricLabel}>ATG Reading</p>
+        </div>
+      </div>
+    </div>
+
+    {/* Difference of ATG and Order Qty */}
+    <div style={{
+      ...styles.nozzleCard,
+      background: 'linear-gradient(135deg, #fefce8 0%, #fef3c7 100%)',
+      border: '2px solid #eab308',
+      boxShadow: '0 4px 12px rgba(234, 179, 8, 0.15)'
+    }}>
+      <div style={styles.nozzleHeader}>
+        <span style={{
+          ...styles.nozzleName,
+          fontSize: '16px',
+          fontWeight: '700',
+          color: '#713f12'
+        }}>Difference of ATG and Order Qty</span>
+      </div>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: '16px'
+      }}>
+        <div style={styles.nozzleMetric}>
+          <p style={{
+            ...styles.nozzleMetricValue,
+            fontSize: '20px',
+            color: '#ca8a04'
+          }}>0 L</p>
+          <p style={styles.nozzleMetricLabel}>Difference</p>
+        </div>
+      </div>
+    </div>
+
+    {/* Order (Manual) - Enhanced with Input */}
+<div style={{
+  ...styles.nozzleCard,
+  background: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)',
+  border: '2px solid #22c55e',
+  boxShadow: '0 4px 12px rgba(34, 197, 94, 0.15)'
+}}>
+  <div style={styles.nozzleHeader}>
+    <span style={{
+      ...styles.nozzleName,
+      fontSize: '16px',
+      fontWeight: '700',
+      color: '#14532d'
+    }}>Order (Dipstick)</span>
+  </div>
+  <div style={{
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: '16px'
+  }}>
+    <div style={styles.nozzleMetric}>
+      <input
+        type="number"
+        placeholder="29,800"
+        style={{
+          width: '120px',
+          padding: '8px 12px',
+          border: '2px solid #bbf7d0',
+          borderRadius: '8px',
+          fontSize: '16px',
+          fontWeight: '700',
+          color: '#14532d',
+          background: '#ffffff',
+          textAlign: 'center',
+          outline: 'none',
+          transition: 'all 0.2s'
+        }}
+        onFocus={(e) => {
+          e.target.style.borderColor = '#22c55e'
+          e.target.style.boxShadow = '0 0 0 3px rgba(34, 197, 94, 0.1)'
+        }}
+        onBlur={(e) => {
+          e.target.style.borderColor = '#bbf7d0'
+          e.target.style.boxShadow = 'none'
+        }}
+      />
+      <p style={styles.nozzleMetricLabel}>Manual Reading</p>
+    </div>
+  </div>
+</div>
+  </div>
+</div>
+
+{/* Performance Metrics */}
+<div style={styles.statsGrid}>
+  <div 
+    style={styles.statCard}
+    onMouseEnter={(e) => e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1)'}
+    onMouseLeave={(e) => e.currentTarget.style.boxShadow = '0 1px 3px 0 rgba(0, 0, 0, 0.1)'}
+  >
+    <div style={styles.statHeader}>
+      <div style={{...styles.statIcon, backgroundColor: '#dcfce7'}}>
+        <span style={{fontSize: '18px', fontWeight: 'bold', color: '#16a34a'}}>TSH</span>
+      </div>
+      <span style={{...styles.statusBadge, color: '#166534', backgroundColor: '#dcfce7'}}>E_total</span>
+    </div>
+    <h3 style={styles.statValue}>31,695,000 TSH</h3>
+    <p style={styles.statLabel}>E_Total Revenue</p>
+    <div style={styles.statFooter}>
+      <TrendingUp size={12} style={{marginRight: '4px'}} />
+      vs yesterday
+    </div>
+  </div>
+
+  <div 
+    style={styles.statCard}
+    onMouseEnter={(e) => e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1)'}
+    onMouseLeave={(e) => e.currentTarget.style.boxShadow = '0 1px 3px 0 rgba(0, 0, 0, 0.1)'}
+  >
+    <div style={styles.statHeader}>
+      <div style={{...styles.statIcon, backgroundColor: '#f0fdf4'}}>
+        <span style={{fontSize: '18px', fontWeight: 'bold', color: '#16a34a'}}>💰</span>
+      </div>
+      <span style={{...styles.statusBadge, color: '#166534', backgroundColor: '#dcfce7'}}>Manual</span>
+    </div>
+    <h3 style={styles.statValue}>
+      {managerCash ? `${parseFloat(managerCash).toLocaleString()} TSH` : 'No Entry'}
+    </h3>
+    <p style={styles.statLabel}>Manager's Cash</p>
+    <div style={styles.statFooter}>
+      <Clock size={12} style={{marginRight: '4px'}} />
+      Manual count
+    </div>
+  </div>
+
+  {/* UNLEADED CASH CARD - Green themed */}
+  <div 
+    style={{
+      ...styles.statCard,
+      background: 'linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)',
+      border: '2px solid #16a34a'
+    }}
+    onMouseEnter={(e) => e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(22, 163, 74, 0.2)'}
+    onMouseLeave={(e) => e.currentTarget.style.boxShadow = '0 1px 3px 0 rgba(0, 0, 0, 0.1)'}
+  >
+    <div style={styles.statHeader}>
+      <div style={{...styles.statIcon, backgroundColor: '#dbeafe'}}>
+        <span style={{fontSize: '18px', fontWeight: 'bold', color: '#2563eb'}}>⛽</span>
+      </div>
+      <span style={{...styles.statusBadge, color: '#166534', backgroundColor: '#dcfce7'}}>Unleaded</span>
+    </div>
+    <h3 style={{...styles.statValue, color: '#16a34a'}}>13,715,000 TSH</h3>
+    <p style={styles.statLabel}>Unleaded Cash</p>
+    <div style={styles.statFooter}>
+      <TrendingUp size={12} style={{marginRight: '4px'}} />
+      4,220 L sold
+    </div>
+  </div>
+
+  {/* DIESEL CASH CARD - Blue themed */}
+  <div 
+    style={{
+      ...styles.statCard,
+      background: 'linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)',
+      border: '2px solid #3b82f6'
+    }}
+    onMouseEnter={(e) => e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(59, 130, 246, 0.2)'}
+    onMouseLeave={(e) => e.currentTarget.style.boxShadow = '0 1px 3px 0 rgba(0, 0, 0, 0.1)'}
+  >
+    <div style={styles.statHeader}>
+      <div style={{...styles.statIcon, backgroundColor: '#f3e8ff'}}>
+        <span style={{fontSize: '18px', fontWeight: 'bold', color: '#3b82f6'}}>🚛</span>
+      </div>
+      <span style={{...styles.statusBadge, color: '#1e40af', backgroundColor: '#dbeafe'}}>Diesel</span>
+    </div>
+    <h3 style={{...styles.statValue, color: '#1d4ed8'}}>17,980,000 TSH</h3>
+    <p style={styles.statLabel}>Diesel Cash</p>
+    <div style={styles.statFooter}>
+      <TrendingUp size={12} style={{marginRight: '4px'}} />
+      5,800 L sold
+    </div>
+  </div>
+</div>
+
+         {/* Tank Monitoring */}
         <div>
           <div style={{
             display: 'flex',
@@ -1222,53 +2161,103 @@ export default function StationDashboard({params}: {params: Promise<{ id: string
               </div>
             </div>
 
-            {/* Daily Filling Section */}
-            <div style={styles.quantitySection}>
-              <div style={styles.quantityTitle}>
-                <Truck size={16} color="#dc2626" />
-                Daily Filling
-              </div>
-              <div style={{...styles.quantityGrid, gridTemplateColumns: '1fr'}}>
+            
+
+                      {/* Loading Information Section */}
+          <div style={styles.quantitySection}>
+            <div style={styles.quantityTitle}>
+              <Truck size={16} color="#10b981" />
+              Loading Information
+            </div>
+              <div style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px'}}>
                 <div style={styles.quantityItem}>
-                  <div style={styles.quantityLabel}>Tanker Name</div>
+                  <div style={styles.quantityLabel}>Date</div>
                   <input 
-                    type="text" 
-                    placeholder="Enter tanker name"
-                    style={styles.inputField}
+                    type="date" 
+                    style={{...styles.inputField, fontSize: '12px', padding: '6px 8px'}}
                     onFocus={(e) => (e.target.style.borderColor = '#3b82f6')}
                     onBlur={(e) => (e.target.style.borderColor = '#e2e8f0')}
                   />
                 </div>
                 <div style={styles.quantityItem}>
-                  <div style={styles.quantityLabel}>Truck Number</div>
+                  <div style={styles.quantityLabel}>Loading Order No</div>
                   <input 
                     type="text" 
-                    placeholder="Enter truck number"
-                    style={styles.inputField}
-                    onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
-                    onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
+                    placeholder="Order No"
+                    style={{...styles.inputField, fontSize: '12px', padding: '6px 8px'}}
+                    onFocus={(e) => (e.target.style.borderColor = '#3b82f6')}
+                    onBlur={(e) => (e.target.style.borderColor = '#e2e8f0')}
                   />
                 </div>
                 <div style={styles.quantityItem}>
-                  <div style={styles.quantityLabel}>Filling Value (Manual)</div>
+                  <div style={styles.quantityLabel}>Truck No</div>
+                  <input 
+                    type="text" 
+                    placeholder="Truck No"
+                    style={{...styles.inputField, fontSize: '12px', padding: '6px 8px'}}
+                    onFocus={(e) => (e.target.style.borderColor = '#3b82f6')}
+                    onBlur={(e) => (e.target.style.borderColor = '#e2e8f0')}
+                  />
+                </div>
+                <div style={styles.quantityItem}>
+                  <div style={styles.quantityLabel}>Driver Name</div>
+                  <input 
+                    type="text" 
+                    placeholder="Driver Name"
+                    style={{...styles.inputField, fontSize: '12px', padding: '6px 8px'}}
+                    onFocus={(e) => (e.target.style.borderColor = '#3b82f6')}
+                    onBlur={(e) => (e.target.style.borderColor = '#e2e8f0')}
+                  />
+                </div>
+                <div style={styles.quantityItem}>
+                  <div style={styles.quantityLabel}>Product</div>
+                  <input 
+                    type="text" 
+                    placeholder="Product"
+                    style={{...styles.inputField, fontSize: '12px', padding: '6px 8px'}}
+                    onFocus={(e) => (e.target.style.borderColor = '#3b82f6')}
+                    onBlur={(e) => (e.target.style.borderColor = '#e2e8f0')}
+                  />
+                </div>
+                <div style={styles.quantityItem}>
+                  <div style={styles.quantityLabel}>Truck Short</div>
                   <input 
                     type="number" 
-                    placeholder="Enter filling amount"
-                    style={styles.inputField}
-                    onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
-                    onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
+                    placeholder="Truck Short"
+                    style={{...styles.inputField, fontSize: '12px', padding: '6px 8px'}}
+                    onFocus={(e) => (e.target.style.borderColor = '#3b82f6')}
+                    onBlur={(e) => (e.target.style.borderColor = '#e2e8f0')}
                   />
                 </div>
                 <div style={styles.quantityItem}>
-                  <div style={styles.quantityLabel}>ATG Value (Endpoint)</div>
-                  <p style={{...styles.quantityValue, color: '#6366f1'}}>15,250 L</p>
+                  <div style={styles.quantityLabel}>Underground Short</div>
+                  <input 
+                    type="number" 
+                    placeholder="Underground Short"
+                    style={{...styles.inputField, fontSize: '12px', padding: '6px 8px'}}
+                    onFocus={(e) => (e.target.style.borderColor = '#3b82f6')}
+                    onBlur={(e) => (e.target.style.borderColor = '#e2e8f0')}
+                  />
                 </div>
                 <div style={styles.quantityItem}>
-                  <div style={styles.quantityLabel}>Difference (Manual - ATG)</div>
-                  <p style={{...styles.quantityValue, color: '#dc2626'}}>-150 L</p>
-                  <div style={{fontSize: '11px', color: '#dc2626', marginTop: '2px'}}>
-                    Manual value lower than ATG
-                  </div>
+                  <div style={styles.quantityLabel}>Fuel as Per Order</div>
+                  <input 
+                    type="number" 
+                    placeholder="Fuel as Per Order"
+                    style={{...styles.inputField, fontSize: '12px', padding: '6px 8px'}}
+                    onFocus={(e) => (e.target.style.borderColor = '#3b82f6')}
+                    onBlur={(e) => (e.target.style.borderColor = '#e2e8f0')}
+                  />
+                </div>
+                <div style={styles.quantityItem}>
+                  <div style={styles.quantityLabel}>Received</div>
+                  <input 
+                    type="number" 
+                    placeholder="Received"
+                    style={{...styles.inputField, fontSize: '12px', padding: '6px 8px'}}
+                    onFocus={(e) => (e.target.style.borderColor = '#3b82f6')}
+                    onBlur={(e) => (e.target.style.borderColor = '#e2e8f0')}
+                  />
                 </div>
               </div>
             </div>
@@ -1289,299 +2278,7 @@ export default function StationDashboard({params}: {params: Promise<{ id: string
           )}
         </div>
 
-        {/* Fuel Pricing Section */}
-        <div style={styles.nozzleSection}>
-          <h3 style={styles.nozzleTitle}>
-            <DollarSign size={20} color="#16a34a" />
-            Fuel Pricing & Sales
-          </h3>
-          <div style={styles.nozzleGrid}>
-            <div style={styles.nozzleCard}>
-              <div style={styles.nozzleHeader}>
-                <span style={styles.nozzleName}>Unleaded Price</span>
-                <span style={{
-                  ...styles.nozzleStatus,
-                  color: '#166534',
-                  backgroundColor: '#dcfce7'
-                }}>
-                  Active
-                </span>
-              </div>
-              <div style={styles.nozzleMetrics}>
-                <div style={styles.nozzleMetric}>
-                  <p style={{...styles.nozzleMetricValue, fontSize: '20px'}}>1.45 TSH</p>
-                  <p style={styles.nozzleMetricLabel}>Per Liter</p>
-                </div>
-                <div style={styles.nozzleMetric}>
-                  <p style={styles.nozzleMetricValue}>4,220 L</p>
-                  <p style={styles.nozzleMetricLabel}>Sold Today</p>
-                </div>
-              </div>
-            </div>
-            <div style={styles.nozzleCard}>
-              <div style={styles.nozzleHeader}>
-                <span style={styles.nozzleName}>Diesel Price</span>
-                <span style={{
-                  ...styles.nozzleStatus,
-                  color: '#166534',
-                  backgroundColor: '#dcfce7'
-                }}>
-                  Active
-                </span>
-              </div>
-              <div style={styles.nozzleMetrics}>
-                <div style={styles.nozzleMetric}>
-                  <p style={{...styles.nozzleMetricValue, fontSize: '20px'}}>1.52 TSH</p>
-                  <p style={styles.nozzleMetricLabel}>Per Liter</p>
-                </div>
-                <div style={styles.nozzleMetric}>
-                  <p style={styles.nozzleMetricValue}>5,800 L</p>
-                  <p style={styles.nozzleMetricLabel}>Sold Today</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Sales Analysis - Separated by Fuel Type */}
-
-{/* Unleaded Sales Analysis */}
-<div style={styles.nozzleSection}>
-  <h3 style={styles.nozzleTitle}>
-    <TrendingUp size={20} color="#2563eb" />
-    ⛽ Unleaded Sales Analysis
-  </h3>
-  <div style={styles.nozzleGrid}>
-    <div style={styles.nozzleCard}>
-      <div style={styles.nozzleHeader}>
-        <span style={styles.nozzleName}>E_Total Sales</span>
-        
-      </div>
-      <div style={styles.nozzleMetrics}>
-        <div style={styles.nozzleMetric}>
-          <p style={styles.nozzleMetricValue}>4,220 L</p>
-          <p style={styles.nozzleMetricLabel}>Total Liters</p>
-        </div>
-        <div style={styles.nozzleMetric}>
-          <p style={{...styles.nozzleMetricValue, color: '#16a34a'}}> 6,119 TSH</p>
-          <p style={styles.nozzleMetricLabel}>Cash Value</p>
-        </div>
-      </div>
-    </div>
-
-    <div style={styles.nozzleCard}>
-      <div style={styles.nozzleHeader}>
-        <span style={styles.nozzleName}>V_Total Sales</span>
-        
-      </div>
-      <div style={styles.nozzleMetrics}>
-        <div style={styles.nozzleMetric}>
-          <p style={styles.nozzleMetricValue}>4,150 L</p>
-          <p style={styles.nozzleMetricLabel}>Total Liters</p>
-        </div>
-        <div style={styles.nozzleMetric}>
-          <p style={{...styles.nozzleMetricValue, color: '#7c3aed'}}>Volume Only</p>
-          <p style={styles.nozzleMetricLabel}>No Price</p>
-        </div>
-      </div>
-    </div>
-
-    <div style={styles.nozzleCard}>
-      <div style={styles.nozzleHeader}>
-        <span style={styles.nozzleName}>E_Total vs V_Total</span>
-        
-      </div>
-      <div style={styles.nozzleMetrics}>
-        <div style={styles.nozzleMetric}>
-          <p style={{...styles.nozzleMetricValue, color: '#ca8a04'}}>+70 L</p>
-          <p style={styles.nozzleMetricLabel}>Difference</p>
-        </div>
-        <div style={styles.nozzleMetric}>
-          <p style={{...styles.nozzleMetricValue, color: '#ca8a04'}}>+1.7%</p>
-          <p style={styles.nozzleMetricLabel}>Variance</p>
-        </div>
-      </div>
-    </div>
-
-    <div style={styles.nozzleCard}>
-      <div style={styles.nozzleHeader}>
-        <span style={styles.nozzleName}>M_Total Sales</span>
-        
-      </div>
-      <div style={styles.nozzleMetrics}>
-        <div style={styles.nozzleMetric}>
-          <p style={styles.nozzleMetricValue}>4,200 L</p>
-          <p style={styles.nozzleMetricLabel}>Total Liters</p>
-        </div>
-        <div style={styles.nozzleMetric}>
-          <p style={{...styles.nozzleMetricValue, color: '#dc2626'}}>Manual Entry</p>
-          <p style={styles.nozzleMetricLabel}>User Input</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-{/* Diesel Sales Analysis */}
-<div style={styles.nozzleSection}>
-  <h3 style={styles.nozzleTitle}>
-    <TrendingUp size={20} color="#16a34a" />
-    🚛 Diesel Sales Analysis
-  </h3>
-  <div style={styles.nozzleGrid}>
-    <div style={styles.nozzleCard}>
-      <div style={styles.nozzleHeader}>
-        <span style={styles.nozzleName}>E_Total Sales</span>
-        
-      </div>
-      <div style={styles.nozzleMetrics}>
-        <div style={styles.nozzleMetric}>
-          <p style={styles.nozzleMetricValue}>5,800 L</p>
-          <p style={styles.nozzleMetricLabel}>Total Liters</p>
-        </div>
-        <div style={styles.nozzleMetric}>
-          <p style={{...styles.nozzleMetricValue, color: '#16a34a'}}> 8,816 TSH</p>
-          <p style={styles.nozzleMetricLabel}>Cash Value</p>
-        </div>
-      </div>
-    </div>
-
-    <div style={styles.nozzleCard}>
-      <div style={styles.nozzleHeader}>
-        <span style={styles.nozzleName}>V_Total Sales</span>
-        
-      </div>
-      <div style={styles.nozzleMetrics}>
-        <div style={styles.nozzleMetric}>
-          <p style={styles.nozzleMetricValue}>5,750 L</p>
-          <p style={styles.nozzleMetricLabel}>Total Liters</p>
-        </div>
-        <div style={styles.nozzleMetric}>
-          <p style={{...styles.nozzleMetricValue, color: '#7c3aed'}}>Volume Only</p>
-          <p style={styles.nozzleMetricLabel}>No Price</p>
-        </div>
-      </div>
-    </div>
-
-    <div style={styles.nozzleCard}>
-      <div style={styles.nozzleHeader}>
-        <span style={styles.nozzleName}>E_Total vs V_Total</span>
-        
-      </div>
-      <div style={styles.nozzleMetrics}>
-        <div style={styles.nozzleMetric}>
-          <p style={{...styles.nozzleMetricValue, color: '#ca8a04'}}>+50 L</p>
-          <p style={styles.nozzleMetricLabel}>Difference</p>
-        </div>
-        <div style={styles.nozzleMetric}>
-          <p style={{...styles.nozzleMetricValue, color: '#ca8a04'}}>+0.9%</p>
-          <p style={styles.nozzleMetricLabel}>Variance</p>
-        </div>
-      </div>
-    </div>
-
-    <div style={styles.nozzleCard}>
-      <div style={styles.nozzleHeader}>
-        <span style={styles.nozzleName}>M_Total Sales</span>
        
-      </div>
-      <div style={styles.nozzleMetrics}>
-        <div style={styles.nozzleMetric}>
-          <p style={styles.nozzleMetricValue}>5,780 L</p>
-          <p style={styles.nozzleMetricLabel}>Total Liters</p>
-        </div>
-        <div style={styles.nozzleMetric}>
-          <p style={{...styles.nozzleMetricValue, color: '#dc2626'}}>Manual Entry</p>
-          <p style={styles.nozzleMetricLabel}>User Input</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-{/* Performance Metrics */}
-        <div style={styles.statsGrid}>
-          <div 
-            style={styles.statCard}
-            onMouseEnter={(e) => e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1)'}
-            onMouseLeave={(e) => e.currentTarget.style.boxShadow = '0 1px 3px 0 rgba(0, 0, 0, 0.1)'}
-          >
-            <div style={styles.statHeader}>
-              <div style={{...styles.statIcon, backgroundColor: '#dcfce7'}}>
-  <span style={{fontSize: '18px', fontWeight: 'bold', color: '#16a34a'}}>TSH</span>
-</div>
-              <span style={{...styles.statusBadge, color: '#166534', backgroundColor: '#dcfce7'}}>+15%</span>
-            </div>
-            <h3 style={styles.statValue}>14,629 TSH</h3>
-            <p style={styles.statLabel}>E_Total Revenue</p>
-            <div style={styles.statFooter}>
-              <TrendingUp size={12} style={{marginRight: '4px'}} />
-              vs yesterday
-            </div>
-          </div>
-
-                  <div 
-          style={styles.statCard}
-          onMouseEnter={(e) => e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1)'}
-          onMouseLeave={(e) => e.currentTarget.style.boxShadow = '0 1px 3px 0 rgba(0, 0, 0, 0.1)'}
-        >
-          <div style={styles.statHeader}>
-            <div style={{...styles.statIcon, backgroundColor: '#f0fdf4'}}>
-              <span style={{fontSize: '18px', fontWeight: 'bold', color: '#16a34a'}}>💰</span>
-            </div>
-            <span style={{...styles.statusBadge, color: '#166534', backgroundColor: '#dcfce7'}}>Manual</span>
-          </div>
-          <h3 style={styles.statValue}>
-            {managerCash ? `${parseFloat(managerCash).toLocaleString()} TSH` : 'No Entry'}
-          </h3>
-          <p style={styles.statLabel}>Manager's Cash</p>
-          <div style={styles.statFooter}>
-            <Clock size={12} style={{marginRight: '4px'}} />
-            Manual count
-          </div>
-        </div>
-
-          <div 
-            style={styles.statCard}
-            onMouseEnter={(e) => e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1)'}
-            onMouseLeave={(e) => e.currentTarget.style.boxShadow = '0 1px 3px 0 rgba(0, 0, 0, 0.1)'}
-          >
-            <div style={styles.statHeader}>
-              <div style={{...styles.statIcon, backgroundColor: '#f3e8ff'}}>
-                <Target size={24} color="#9333ea" />
-              </div>
-              <span style={{...styles.statusBadge, color: '#166534', backgroundColor: '#dcfce7'}}>
-                {pumpsLoading ? 'Loading...' : `${nozzleData.filter(n => n.status).length}/${nozzleData.length} Online`}
-              </span>
-            </div>
-            <h3 style={styles.statValue}>
-              {pumpsLoading ? '...' : `${nozzleData.filter(n => n.status).length}/${nozzleData.length}`}
-            </h3>
-            <p style={styles.statLabel}>Pumps/Nozzles Active</p>
-            <div style={styles.statFooter}>
-              <TrendingUp size={12} style={{marginRight: '4px'}} />
-              {pumpsLoading ? 'Loading...' : `${Math.round((nozzleData.filter(n => n.status).length / nozzleData.length) * 100)}% uptime`}
-            </div>
-          </div>
-
-          <div 
-            style={styles.statCard}
-            onMouseEnter={(e) => e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1)'}
-            onMouseLeave={(e) => e.currentTarget.style.boxShadow = '0 1px 3px 0 rgba(0, 0, 0, 0.1)'}
-          >
-            <div style={styles.statHeader}>
-              <div style={{...styles.statIcon, backgroundColor: '#fef3c7'}}>
-                <AlertTriangle size={24} color="#d97706" />
-              </div>
-              <span style={{...styles.statusBadge, color: '#ca8a04', backgroundColor: '#fef3c7'}}>Monitor</span>
-            </div>
-            <h3 style={styles.statValue}>+70 L</h3>
-            <p style={styles.statLabel}>E vs V Difference</p>
-            <div style={styles.statFooter}>
-              <AlertTriangle size={12} color="#ca8a04" style={{marginRight: '4px'}} />
-              Check variance
-            </div>
-          </div>
-        </div>
        {/* Nozzle Performance - Separated by Fuel Type */}
 <div style={styles.nozzleSection}>
   <h3 style={styles.nozzleTitle}>
@@ -1953,21 +2650,8 @@ export default function StationDashboard({params}: {params: Promise<{ id: string
           </div>
         </div>
 
-        {/* Success Message */}
-        <div style={styles.successMessage}>
-          <div style={styles.messageContent}>
-            <div style={styles.messageIcon}>
-              <Shield size={24} color="#2563eb" />
-            </div>
-            <div>
-              <h3 style={styles.messageTitle}>🎉 Station System Active</h3>
-              <p style={styles.messageText}>
-                Your station monitoring tools are running perfectly! Tank levels, sales tracking, pump monitoring, and alert systems are all operational.
-                {!pumpsLoading && ` Currently monitoring ${nozzleData.length} pumps/nozzles.`}
-              </p>
-            </div>
-          </div>
-        </div>
+        
+       
 
         {/* Checklist Modal */}
         {showChecklistModal && (
