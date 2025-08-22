@@ -43,6 +43,23 @@ async function storeTokenInDB(token: string, expiresAt: Date) {
     // Non-fatal error, we can continue without DB storage
   }
 }
+export async function getStationDailyReportByLicense(ewuraLicense: string) {
+  try {
+    console.log(`📊 Fetching daily report for EWURA license: ${ewuraLicense}`);
+    
+    const data = await makeRequest(`/daily_report/${ewuraLicense}`, {
+      method: 'GET'
+    }, { revalidate: 1800 }); // Cache for 30 minutes
+    
+    console.log(`✅ Daily report fetched for license ${ewuraLicense}`);
+    return data;
+    
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('Error fetching daily report:', errorMessage);
+    throw new Error(`Failed to fetch daily report: ${errorMessage}`);
+  }
+}
 
 // Get token from database
 async function getTokenFromDB(): Promise<{ token: string; expires: Date } | null> {

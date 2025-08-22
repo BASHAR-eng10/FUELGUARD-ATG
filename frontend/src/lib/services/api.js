@@ -58,7 +58,14 @@ class ApiService {
       throw error
     }
   }
-
+  // ===================================================================
+  // Add this method to your existing lib/services/api.js file:
+  // ===================================================================
+  
+  // Add to your ApiService class:
+ async getStationDailyReport(stationId) {
+  return this.request(`/ewura/daily-report/${stationId}`);
+}
   async getCurrentUser() {
     const session = await getSession()
     return session?.user || null

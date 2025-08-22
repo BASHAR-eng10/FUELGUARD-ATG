@@ -7,6 +7,7 @@ import { useAuth } from '@/lib/hooks/useAuth'
 import { updateCurrentManualCashEntries } from '@/lib/services/externalApiService'
 import api from '../../../../lib/services/api'
 
+
 interface StationData {
   id: number
   name: string
@@ -53,6 +54,7 @@ interface NozzleData {
   percentage: number
   status: boolean 
 }
+
 
 const styles = {
   container: {
@@ -390,6 +392,7 @@ const styles = {
     gap: '24px',
     marginBottom: '32px'
   },
+  
   statCard: {
     background: '#ffffff',
     borderRadius: '16px',
@@ -713,9 +716,17 @@ export default function StationDashboard({params}: {params: Promise<{ id: string
     tankLeak: false,
     safetyEquipment: false
   })
-  const [managerCash, setManagerCash] = useState('')
   
- 
+  const [managerCash, setManagerCash] = useState('')
+  // Add this with your other state declarations
+const [dailyReportData, setDailyReportData] = useState(null)
+const [dailyReportLoading, setDailyReportLoading] = useState(true)
+const [dailyReportError, setDailyReportError] = useState<string | null>(null)
+
+
+
+
+
   
   
   // Sales data - normally would come from API
@@ -734,6 +745,32 @@ export default function StationDashboard({params}: {params: Promise<{ id: string
   })
 
   // Fetch pump data from API
+  // Replace your fetchDailyReportData function with this:
+const fetchDailyReportData = async () => {
+  try {
+    setDailyReportLoading(true)
+    setDailyReportError(null)
+    
+    console.log('Fetching daily report data for station ID:', id)
+    
+    // Call your new EWURA daily report API using fetch directly
+    const response = await fetch(`/api/ewura/daily-report/${id}`)
+    const data = await response.json()
+    
+    console.log('Daily Report API Response:', data)
+
+    if (data && data.success && data.data) {
+      setDailyReportData(data.data)
+    } else {
+      throw new Error('Invalid daily report response structure')
+    }
+  } catch (err) {
+    console.error('Error fetching daily report data:', err)
+    setDailyReportError((err as Error).message)
+  } finally {
+    setDailyReportLoading(false)
+  }
+}
   const fetchPumpData = async () => {
     try {
       setPumpsLoading(true)
@@ -1089,7 +1126,7 @@ export default function StationDashboard({params}: {params: Promise<{ id: string
             fontSize: '24px',
             color: '#14532d',
             
-          }}>3250 TSH</p>
+          }}>3200 TSH</p>
           <p style={{...styles.nozzleMetricLabel, color: '#15803d'}}>Per Liter</p>
         </div>
         <div style={styles.nozzleMetric}>
@@ -2133,11 +2170,11 @@ export default function StationDashboard({params}: {params: Promise<{ id: string
               </div>
               <div style={styles.quantityGrid}>
                 <div style={styles.quantityItem}>
-                  <div style={styles.quantityLabel}>Opening (Endpoint)</div>
+                  <div style={styles.quantityLabel}>Opening (ATG)</div>
                   <p style={styles.quantityValue}>75,450 L</p>
                 </div>
                 <div style={styles.quantityItem}>
-                  <div style={styles.quantityLabel}>Closing (Endpoint)</div>
+                  <div style={styles.quantityLabel}>Closing (ATG)</div>
                   <p style={styles.quantityValue}>71,250 L</p>
                 </div>
                 <div style={styles.quantityItem}>
@@ -2157,6 +2194,14 @@ export default function StationDashboard({params}: {params: Promise<{ id: string
                     </button>
                   </div>
                   <p style={styles.quantityValue}>71,180 L</p>
+                </div>
+                <div style={styles.quantityItem}>
+                  <div style={styles.quantityLabel}>Difference of Opening and Closing(ATG)</div>
+                  <p style={styles.quantityValue}>0 L</p>
+                </div>
+                <div style={styles.quantityItem}>
+                  <div style={styles.quantityLabel}>Difference of Opening and Closing(Dipstick)</div>
+                  <p style={styles.quantityValue}>0 L</p>
                 </div>
               </div>
             </div>
@@ -2810,53 +2855,9 @@ export default function StationDashboard({params}: {params: Promise<{ id: string
               </div>
               
               <div style={styles.checklistContainer}>
-                {/* Unleaded Sales */}
-                <div style={styles.salesRow}>
-                  <div>
-                    <div style={styles.salesLabel}>
-                      <span style={styles.salesIcon}>⛽</span>
-                      Unleaded Sales
-                    </div>
-                    <div style={styles.salesDetails}>
-                      {salesData.unleaded.liters.toLocaleString()} L × TSH {salesData.unleaded.pricePerLiter}
-                    </div>
-                  </div>
-                  <div style={styles.salesValue}>
-                    TSH{salesData.unleaded.cash.toLocaleString()}
-                  </div>
-                </div>
+                
 
-                {/* Diesel Sales */}
-                <div style={styles.salesRow}>
-                  <div>
-                    <div style={styles.salesLabel}>
-                      <span style={styles.salesIcon}>🚛</span>
-                      Diesel Sales
-                    </div>
-                    <div style={styles.salesDetails}>
-                      {salesData.diesel.liters.toLocaleString()} L × TSH{salesData.diesel.pricePerLiter}
-                    </div>
-                  </div>
-                  <div style={styles.salesValue}>
-                    TSH{salesData.diesel.cash.toLocaleString()}
-                  </div>
-                </div>
-
-                {/* Combined Fuel Sales */}
-                <div style={{...styles.salesRow, ...styles.salesRowTotal}}>
-                  <div>
-                    <div style={styles.salesLabel}>
-                      <span style={styles.salesIcon}>📊</span>
-                      Total Fuel Sales (Unleaded + Diesel)
-                    </div>
-                    <div style={styles.salesDetails}>
-                      Combined cash from both fuel types
-                    </div>
-                  </div>
-                  <div style={{...styles.salesValue, color: '#1d4ed8'}}>
-                    TSH{(salesData.unleaded.cash + salesData.diesel.cash).toLocaleString()}
-                  </div>
-                </div>
+                
 
                 {/* E_Total System Sales */}
                 <div style={{...styles.salesRow, ...styles.salesRowETotals}}>
