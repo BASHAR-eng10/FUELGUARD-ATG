@@ -67,8 +67,11 @@ interface NozzleData {
   id: number;
   name: string;
   sold: number;
+  price: number;
   percentage: number;
   status: boolean;
+  e_total?: number;
+  v_total?: number;
 }
 
 const styles = {
@@ -759,19 +762,41 @@ export default function StationDashboard({
 
   // Fetch pump data from API
   // Replace your fetchDailyReportData function with this:
-  const fetchDailyReportData = async () => {
+  const fetchDailyReportData = async (license: string) => {
     try {
       setDailyReportLoading(true);
+      setPumpsLoading(true);
       setDailyReportError(null);
 
       console.log("Fetching daily report data for station ID:", id);
 
       // Call your new EWURA daily report API using fetch directly
-      const response = await apiService.getStationDailyReport(stationData?.ewuraLicense);
+      const response = await apiService.getStationDailyReport(license);
       console.log("Daily Report API Response:", response);
 
       if (response) {
         setDailyReportData(response.report);
+        setNozzleData(
+          response.report.pumps_list.map(
+            (pump: {
+              id: any;
+              pump: any;
+              total_volume: any;
+              Price: any;
+              sales_count: any;
+              electronic_totalizer: any;
+              virtual_totalizer: any;
+            }) => ({
+              id: pump.id,
+              name: pump.pump,
+              liters: pump.total_volume,
+              price: pump.Price,
+              sold: pump.total_volume,
+              e_total: pump.electronic_totalizer,
+              v_total: pump.virtual_totalizer,
+            })
+          )
+        );
       } else {
         throw new Error("Invalid daily report response structure");
       }
@@ -780,6 +805,7 @@ export default function StationDashboard({
       setDailyReportError((err as Error).message);
     } finally {
       setDailyReportLoading(false);
+      setPumpsLoading(false);
     }
   };
   const fetchPumpData = async () => {
@@ -803,15 +829,36 @@ export default function StationDashboard({
   };
 
   // Fetch tank data from API
-  const fetchTankData = async () => {
+  const fetchTankData = async (license: string) => {
     try {
       setTanksLoading(true);
       setTanksError(null);
-      const response = await apiService.getStationTanks(id);
+      const response = await apiService.getStationTanks(license);
 
-      if (response.data && Array.isArray(response.data)) {
-        setTankData(response.data);
-        // console.log(response.data)
+      if (response) {
+        setTankData(
+          response.map(
+            (tank: {
+              id: any;
+              tank_name: any;
+              tank_capacity: any;
+              product_name: any;
+              fuel_volume: any;
+              water_volume: any;
+              water_lvl_mm: any;
+              average_temp: any;
+            }) => ({
+              id: tank.id,
+              name: tank.tank_name,
+              tank_capacity: tank.tank_capacity,
+              product_name: tank.product_name,
+              fuel_volume: tank.fuel_volume,
+              water_lvl_mm: tank.water_lvl_mm,
+              water_volume: tank.water_volume,
+              average_temp: tank.average_temp,
+            })
+          )
+        ); // console.log(response.data)
       } else {
         throw new Error("Invalid API response structure");
       }
@@ -873,18 +920,19 @@ export default function StationDashboard({
   };
 
   const refreshAllData = async () => {
-    await Promise.all([
-      fetchStationData(),
-      /*fetchPumpData(), fetchTankData(),*/
-    ]);
+    await Promise.all([fetchStationData()]);
   };
 
   useEffect(() => {
-  if (stationData?.ewuraLicense) {
-    console.log('Station data loaded, now fetching daily report with license:', stationData.ewuraLicense);
-    //fetchDailyReportData();
-  }
-}, [stationData]);
+    if (stationData?.ewuraLicense) {
+      console.log(
+        "Station data loaded, now fetching daily report with license:",
+        stationData.ewuraLicense
+      );
+      fetchDailyReportData(stationData.ewuraLicense);
+      fetchTankData(stationData.ewuraLicense);
+    }
+  }, [stationData]);
 
   useEffect(() => {
     refreshAllData();
@@ -1214,7 +1262,8 @@ export default function StationDashboard({
                       color: "#14532d",
                     }}
                   >
-                    3200 TSH
+                    {nozzleData.find((nozzle) => nozzle.name.includes("A1"))
+                      ?.price + " TSH" || "??? TSH"}
                   </p>
                   <p style={{ ...styles.nozzleMetricLabel, color: "#15803d" }}>
                     Per Liter
@@ -1228,7 +1277,10 @@ export default function StationDashboard({
                       color: "#14532d",
                     }}
                   >
-                    4,220 L
+                    {nozzleData
+                      .filter((nozzle) => nozzle.name.includes("A1"))
+                      .reduce((sum, nozzle) => sum + nozzle.sold, 0)
+                      .toLocaleString() + " L"}
                   </p>
                   <p style={{ ...styles.nozzleMetricLabel, color: "#15803d" }}>
                     Sold Today
@@ -1293,7 +1345,8 @@ export default function StationDashboard({
                       color: "#1e3a8a",
                     }}
                   >
-                    3100 TSH
+                    {nozzleData.find((nozzle) => nozzle.name.includes("A2"))
+                      ?.price + " TSH" || "??? TSH"}
                   </p>
                   <p style={{ ...styles.nozzleMetricLabel, color: "#1d4ed8" }}>
                     Per Liter
@@ -1307,7 +1360,10 @@ export default function StationDashboard({
                       color: "#1e3a8a",
                     }}
                   >
-                    5,800 L
+                    {nozzleData
+                      .filter((nozzle) => nozzle.name.includes("A2"))
+                      .reduce((sum, nozzle) => sum + nozzle.sold, 0)
+                      .toLocaleString() + " L"}{" "}
                   </p>
                   <p style={{ ...styles.nozzleMetricLabel, color: "#1d4ed8" }}>
                     Sold Today
@@ -1391,7 +1447,10 @@ export default function StationDashboard({
                       color: "#0c4a6e",
                     }}
                   >
-                    4,220 L
+                    {nozzleData
+                      .filter((nozzle) => nozzle.name.includes("A1"))
+                      .reduce((sum, nozzle) => sum + nozzle.e_total!, 0)
+                      .toLocaleString() + " L"}{" "}
                   </p>
                   <p style={styles.nozzleMetricLabel}>Total Liters</p>
                 </div>
@@ -1435,7 +1494,10 @@ export default function StationDashboard({
                       color: "#581c87",
                     }}
                   >
-                    4,220 L
+                    {nozzleData
+                      .filter((nozzle) => nozzle.name.includes("A1"))
+                      .reduce((sum, nozzle) => sum + nozzle.v_total!, 0)
+                      .toLocaleString() + " L"}
                   </p>
                   <p style={styles.nozzleMetricLabel}>Total Liters</p>
                 </div>
@@ -1479,7 +1541,26 @@ export default function StationDashboard({
                       color: "#ca8a04",
                     }}
                   >
-                    0 L
+                    {(
+                      nozzleData
+                        .filter((nozzle: NozzleData) =>
+                          nozzle.name.includes("A1")
+                        )
+                        .reduce(
+                          (sum: number, nozzle: NozzleData) =>
+                            sum + (nozzle.e_total || 0),
+                          0
+                        ) -
+                      nozzleData
+                        .filter((nozzle: NozzleData) =>
+                          nozzle.name.includes("A1")
+                        )
+                        .reduce(
+                          (sum: number, nozzle: NozzleData) =>
+                            sum + (nozzle.v_total || 0),
+                          0
+                        )
+                    ).toLocaleString()}{" "}
                   </p>
                   <p style={styles.nozzleMetricLabel}>Difference</p>
                 </div>
@@ -1854,8 +1935,10 @@ export default function StationDashboard({
                       color: "#0c4a6e",
                     }}
                   >
-                    5,800 L
-                  </p>
+{nozzleData
+                      .filter((nozzle) => nozzle.name.includes("A2"))
+                      .reduce((sum, nozzle) => sum + nozzle.e_total!, 0)
+                      .toLocaleString() + " L"}{" "}                  </p>
                   <p style={styles.nozzleMetricLabel}>Total Liters</p>
                 </div>
               </div>
@@ -1898,7 +1981,10 @@ export default function StationDashboard({
                       color: "#581c87",
                     }}
                   >
-                    5,800 L
+                     {nozzleData
+                      .filter((nozzle) => nozzle.name.includes("A2"))
+                      .reduce((sum, nozzle) => sum + nozzle.v_total!, 0)
+                      .toLocaleString() + " L"}
                   </p>
                   <p style={styles.nozzleMetricLabel}>Total Liters</p>
                 </div>
@@ -1942,7 +2028,26 @@ export default function StationDashboard({
                       color: "#ca8a04",
                     }}
                   >
-                    0 L
+                    {(
+                      nozzleData
+                        .filter((nozzle: NozzleData) =>
+                          nozzle.name.includes("A2")
+                        )
+                        .reduce(
+                          (sum: number, nozzle: NozzleData) =>
+                            sum + (nozzle.e_total || 0),
+                          0
+                        ) -
+                      nozzleData
+                        .filter((nozzle: NozzleData) =>
+                          nozzle.name.includes("A2")
+                        )
+                        .reduce(
+                          (sum: number, nozzle: NozzleData) =>
+                            sum + (nozzle.v_total || 0),
+                          0
+                        )
+                    ).toLocaleString()}{" "}
                   </p>
                   <p style={styles.nozzleMetricLabel}>Difference</p>
                 </div>
@@ -3008,13 +3113,13 @@ export default function StationDashboard({
                       <span
                         style={{
                           ...styles.nozzleStatus,
-                          color: nozzle.status ? "#166534" : "#dc2626",
+                          color: nozzle.status ? "#dc2626" : "#166534",
                           backgroundColor: nozzle.status
-                            ? "#dcfce7"
-                            : "#fee2e2",
+                            ? "#fee2e2"
+                            : "#dcfce7",
                         }}
                       >
-                        {nozzle.status ? "Active" : "Inactive"}
+                        {nozzle.status ? "Inactive" : "Active"}
                       </span>
                     </div>
 
@@ -3076,7 +3181,7 @@ export default function StationDashboard({
                             margin: 0,
                           }}
                         >
-                          {(nozzle.sold * 0.95).toFixed(0)} L
+                          {nozzle.e_total} L
                         </p>
                         <p
                           style={{
@@ -3107,7 +3212,7 @@ export default function StationDashboard({
                             margin: 0,
                           }}
                         >
-                          {(nozzle.sold * 0.92).toFixed(0)} L
+                          {nozzle.v_total} L
                         </p>
                         <p
                           style={{
@@ -3204,13 +3309,13 @@ export default function StationDashboard({
                       <span
                         style={{
                           ...styles.nozzleStatus,
-                          color: nozzle.status ? "#166534" : "#dc2626",
+                          color: nozzle.status ? "#dc2626" : "#16a34a",
                           backgroundColor: nozzle.status
-                            ? "#dcfce7"
-                            : "#fee2e2",
+                            ? "#fee2e2"
+                            : "#dcfce7",
                         }}
                       >
-                        {nozzle.status ? "Active" : "Inactive"}
+                        {nozzle.status ? "Inactive" : "Active"}
                       </span>
                     </div>
 
@@ -3272,7 +3377,7 @@ export default function StationDashboard({
                             margin: 0,
                           }}
                         >
-                          {(nozzle.sold * 0.95).toFixed(0)} L
+                          {nozzle.e_total} L
                         </p>
                         <p
                           style={{
@@ -3303,7 +3408,7 @@ export default function StationDashboard({
                             margin: 0,
                           }}
                         >
-                          {(nozzle.sold * 0.92).toFixed(0)} L
+                          {nozzle.v_total} L
                         </p>
                         <p
                           style={{
