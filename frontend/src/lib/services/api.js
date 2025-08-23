@@ -10,7 +10,7 @@ class ApiService {
     const session = await getSession();
     if (session?.accessToken) {
       return {
-        "Authorization": session.accessToken,
+        Authorization: session.accessToken,
         "Content-Type": "application/json",
       };
     }
@@ -75,8 +75,11 @@ class ApiService {
 
   // Add to your ApiService class:
   async getStationDailyReport(license) {
+    console.log(`api js`, license);
+
     return this.request(`/daily_report/EWURA_LC`, {
-      body: { EWURA_LC: license },
+      method: "POST",
+      body: JSON.stringify({ EWURA_LC: license }),
     });
   }
   async getCurrentUser() {
@@ -130,8 +133,13 @@ class ApiService {
   }
 
   // tank methods
-  async getStationTanks(id) {
-    return this.request(`/stations/${id}/tanks`);
+  async getStationTanks(license) {
+    console.log(`api js`, license);
+
+    return this.request(`/ak4tek/tanks/EWURA_LC`, {
+      method: "POST",
+      body: JSON.stringify({ EWURA_LC: license }),
+    });
   }
 
   async getAllStationTanks() {
