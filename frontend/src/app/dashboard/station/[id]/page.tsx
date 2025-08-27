@@ -72,6 +72,7 @@ interface NozzleData {
   status: boolean;
   e_total?: number;
   v_total?: number;
+  product?: string
 }
 
 const styles = {
@@ -777,26 +778,18 @@ export default function StationDashboard({
       if (response) {
         setDailyReportData(response.report);
         setNozzleData(
-          response.report.pumps_list.map(
-            (pump: {
-              id: any;
-              pump: any;
-              total_volume: any;
-              Price: any;
-              sales_count: any;
-              electronic_totalizer: any;
-              virtual_totalizer: any;
-            }) => ({
-              id: pump.id,
-              name: pump.pump,
-              liters: pump.total_volume,
-              price: pump.Price,
-              sold: pump.total_volume,
-              e_total: pump.electronic_totalizer,
-              v_total: pump.virtual_totalizer,
-            })
-          )
-        );
+  response.report.pumps_list.map((pump: any) => ({
+    id: pump.id,
+    name: pump.pump,
+    sold: pump.total_volume,
+    price: pump.Price,
+    percentage: 0, // Add if your interface requires it
+    status: true,  // Add if your interface requires it
+    e_total: pump.electronic_totalizer,
+    v_total: pump.virtual_totalizer,
+    product: pump.product,
+  }))
+);
       } else {
         throw new Error("Invalid daily report response structure");
       }
@@ -1262,7 +1255,7 @@ export default function StationDashboard({
                       color: "#14532d",
                     }}
                   >
-                    {nozzleData.find((nozzle) => nozzle.name.includes("A1"))
+                    {nozzleData.find((nozzle) => nozzle.product===("UNLEADED"))
                       ?.price + " TSH" || "??? TSH"}
                   </p>
                   <p style={{ ...styles.nozzleMetricLabel, color: "#15803d" }}>
@@ -1278,7 +1271,7 @@ export default function StationDashboard({
                     }}
                   >
                     {nozzleData
-                      .filter((nozzle) => nozzle.name.includes("A1"))
+                      .filter((nozzle) => nozzle.product===("UNLEADED"))
                       .reduce((sum, nozzle) => sum + nozzle.sold, 0)
                       .toLocaleString() + " L"}
                   </p>
@@ -1345,7 +1338,7 @@ export default function StationDashboard({
                       color: "#1e3a8a",
                     }}
                   >
-                    {nozzleData.find((nozzle) => nozzle.name.includes("A2"))
+                    {nozzleData.find((nozzle) => nozzle.product===("DIESEL"))
                       ?.price + " TSH" || "??? TSH"}
                   </p>
                   <p style={{ ...styles.nozzleMetricLabel, color: "#1d4ed8" }}>
@@ -1361,7 +1354,7 @@ export default function StationDashboard({
                     }}
                   >
                     {nozzleData
-                      .filter((nozzle) => nozzle.name.includes("A2"))
+                      .filter((nozzle) => nozzle.product===("DIESEL"))
                       .reduce((sum, nozzle) => sum + nozzle.sold, 0)
                       .toLocaleString() + " L"}{" "}
                   </p>
@@ -1447,10 +1440,10 @@ export default function StationDashboard({
                       color: "#0c4a6e",
                     }}
                   >
-                    {nozzleData
-                      .filter((nozzle) => nozzle.name.includes("A1"))
-                      .reduce((sum, nozzle) => sum + nozzle.e_total!, 0)
-                      .toLocaleString() + " L"}{" "}
+                                      {nozzleData
+                    .filter((nozzle) => nozzle.product === "UNLEADED")
+                    .reduce((sum, nozzle) => sum + nozzle.sold!, 0)
+                    .toLocaleString() + " L"}
                   </p>
                   <p style={styles.nozzleMetricLabel}>Total Liters</p>
                 </div>
@@ -1496,7 +1489,7 @@ export default function StationDashboard({
                   >
                     {nozzleData
                       .filter((nozzle) => nozzle.name.includes("A1"))
-                      .reduce((sum, nozzle) => sum + nozzle.v_total!, 0)
+                      .reduce((sum, nozzle) => sum + nozzle.sold!, 0)
                       .toLocaleString() + " L"}
                   </p>
                   <p style={styles.nozzleMetricLabel}>Total Liters</p>
@@ -1548,7 +1541,7 @@ export default function StationDashboard({
                         )
                         .reduce(
                           (sum: number, nozzle: NozzleData) =>
-                            sum + (nozzle.e_total || 0),
+                            sum + (0 || 0),
                           0
                         ) -
                       nozzleData
@@ -1557,7 +1550,7 @@ export default function StationDashboard({
                         )
                         .reduce(
                           (sum: number, nozzle: NozzleData) =>
-                            sum + (nozzle.v_total || 0),
+                            sum + (0 || 0),
                           0
                         )
                     ).toLocaleString()}{" "}
@@ -1936,9 +1929,9 @@ export default function StationDashboard({
                     }}
                   >
 {nozzleData
-                      .filter((nozzle) => nozzle.name.includes("A2"))
-                      .reduce((sum, nozzle) => sum + nozzle.e_total!, 0)
-                      .toLocaleString() + " L"}{" "}                  </p>
+  .filter((nozzle) => nozzle.product === "DIESEL")
+  .reduce((sum, nozzle) => sum + nozzle.sold!, 0)
+  .toLocaleString() + " L"}             </p>
                   <p style={styles.nozzleMetricLabel}>Total Liters</p>
                 </div>
               </div>
@@ -1983,7 +1976,7 @@ export default function StationDashboard({
                   >
                      {nozzleData
                       .filter((nozzle) => nozzle.name.includes("A2"))
-                      .reduce((sum, nozzle) => sum + nozzle.v_total!, 0)
+                      .reduce((sum, nozzle) => sum + nozzle.sold!, 0)
                       .toLocaleString() + " L"}
                   </p>
                   <p style={styles.nozzleMetricLabel}>Total Liters</p>
@@ -2035,7 +2028,7 @@ export default function StationDashboard({
                         )
                         .reduce(
                           (sum: number, nozzle: NozzleData) =>
-                            sum + (nozzle.e_total || 0),
+                            sum + (0 || 0),
                           0
                         ) -
                       nozzleData
@@ -2044,7 +2037,7 @@ export default function StationDashboard({
                         )
                         .reduce(
                           (sum: number, nozzle: NozzleData) =>
-                            sum + (nozzle.v_total || 0),
+                            sum + (0 || 0),
                           0
                         )
                     ).toLocaleString()}{" "}
@@ -2384,7 +2377,23 @@ export default function StationDashboard({
                 E_total
               </span>
             </div>
-            <h3 style={styles.statValue}>31,695,000 TSH</h3>
+            <h3 style={{ ...styles.statValue, color: "#070b16ff" }}>
+  {(() => {
+    const dieselPrice = nozzleData.find(n => n.product === "DIESEL")?.price || 0;
+    const dieselVolume = nozzleData
+      .filter(n => n.product === "DIESEL")
+      .reduce((sum, n) => sum + n.sold, 0);
+    const dieselTotal = dieselPrice * dieselVolume;
+
+    const unleadedPrice = nozzleData.find(n => n.product === "UNLEADED")?.price || 0;
+    const unleadedVolume = nozzleData
+      .filter(n => n.product === "UNLEADED")
+      .reduce((sum, n) => sum + n.sold, 0);
+    const unleadedTotal = unleadedPrice * unleadedVolume;
+
+    return (dieselTotal + unleadedTotal).toLocaleString();
+  })()} TSH
+</h3>
             <p style={styles.statLabel}>E_Total Revenue</p>
             <div style={styles.statFooter}>
               <TrendingUp size={12} style={{ marginRight: "4px" }} />
@@ -2475,13 +2484,22 @@ export default function StationDashboard({
                 Unleaded
               </span>
             </div>
-            <h3 style={{ ...styles.statValue, color: "#16a34a" }}>
-              13,715,000 TSH
-            </h3>
+            <h3 style={{ ...styles.statValue, color: "#144a26ff" }}>
+  {(() => {
+    const dieselPrice = nozzleData.find(n => n.product === "UNLEADED")?.price || 0;
+    const dieselVolume = nozzleData
+      .filter(n => n.product === "UNLEADED")
+      .reduce((sum, n) => sum + n.sold, 0);
+    return (dieselPrice * dieselVolume).toLocaleString();
+  })()} TSH
+</h3>
             <p style={styles.statLabel}>Unleaded Cash</p>
             <div style={styles.statFooter}>
               <TrendingUp size={12} style={{ marginRight: "4px" }} />
-              4,220 L sold
+              {nozzleData
+                      .filter((nozzle) => nozzle.product===("UNLEADED"))
+                      .reduce((sum, nozzle) => sum + nozzle.sold, 0)
+                      .toLocaleString() + " L"}
             </div>
           </div>
 
@@ -2524,12 +2542,21 @@ export default function StationDashboard({
               </span>
             </div>
             <h3 style={{ ...styles.statValue, color: "#1d4ed8" }}>
-              17,980,000 TSH
-            </h3>
+  {(() => {
+    const dieselPrice = nozzleData.find(n => n.product === "DIESEL")?.price || 0;
+    const dieselVolume = nozzleData
+      .filter(n => n.product === "DIESEL")
+      .reduce((sum, n) => sum + n.sold, 0);
+    return (dieselPrice * dieselVolume).toLocaleString();
+  })()} TSH
+</h3>
             <p style={styles.statLabel}>Diesel Cash</p>
             <div style={styles.statFooter}>
               <TrendingUp size={12} style={{ marginRight: "4px" }} />
-              5,800 L sold
+              {nozzleData
+                      .filter((nozzle) => nozzle.product===("DIESEL"))
+                      .reduce((sum, nozzle) => sum + nozzle.sold, 0)
+                      .toLocaleString() + " L"}
             </div>
           </div>
         </div>
@@ -2780,11 +2807,11 @@ export default function StationDashboard({
                       <div style={styles.quantityGrid}>
                         <div style={styles.quantityItem}>
                           <div style={styles.quantityLabel}>Opening (ATG)</div>
-                          <p style={styles.quantityValue}>75,450 L</p>
+                          <p style={styles.quantityValue}>0 L</p>
                         </div>
                         <div style={styles.quantityItem}>
                           <div style={styles.quantityLabel}>Closing (ATG)</div>
-                          <p style={styles.quantityValue}>71,250 L</p>
+                          <p style={styles.quantityValue}>0 L</p>
                         </div>
                         <div style={styles.quantityItem}>
                           <div
@@ -2810,7 +2837,7 @@ export default function StationDashboard({
                               <Edit3 size={12} color="#64748b" />
                             </button>
                           </div>
-                          <p style={styles.quantityValue}>75,400 L</p>
+                          <p style={styles.quantityValue}>-- L</p>
                         </div>
                         <div style={styles.quantityItem}>
                           <div
@@ -2836,13 +2863,13 @@ export default function StationDashboard({
                               <Edit3 size={12} color="#64748b" />
                             </button>
                           </div>
-                          <p style={styles.quantityValue}>71,180 L</p>
+                          <p style={styles.quantityValue}>-- L</p>
                         </div>
                         <div style={styles.quantityItem}>
                           <div style={styles.quantityLabel}>
                             Difference of Opening and Closing(ATG)
                           </div>
-                          <p style={styles.quantityValue}>0 L</p>
+                          <p style={styles.quantityValue}>3818 L</p>
                         </div>
                         <div style={styles.quantityItem}>
                           <div style={styles.quantityLabel}>
@@ -3089,24 +3116,18 @@ export default function StationDashboard({
                 gap: "8px",
               }}
             >
-              ⛽ Unleaded Nozzles
-            </h4>
-            <div style={styles.nozzleGrid}>
-              {nozzleData
-                .filter(
-                  (nozzle) =>
-                    nozzle.name.toLowerCase().includes("unleaded") ||
-                    nozzle.name.toLowerCase().includes("petrol") ||
-                    nozzle.name.toLowerCase().includes("pms") ||
-                    nozzle.name.includes("A2")
-                )
-                .map((nozzle) => (
-                  <div
-                    key={nozzle.id}
-                    style={{
-                      ...styles.nozzleCard,
-                      padding: "20px",
-                    }}
+                ⛽ Unleaded Nozzles
+</h4>
+<div style={styles.nozzleGrid}>
+  {nozzleData
+    .filter((nozzle) => nozzle.product === "UNLEADED")
+    .map((nozzle) => (
+      <div
+        key={nozzle.id}
+        style={{
+          ...styles.nozzleCard,
+          padding: "20px",
+        }}
                   >
                     <div style={styles.nozzleHeader}>
                       <span style={styles.nozzleName}>{nozzle.name}</span>
@@ -3287,22 +3308,17 @@ export default function StationDashboard({
               }}
             >
               🚛 Diesel Nozzles
-            </h4>
-            <div style={styles.nozzleGrid}>
-              {nozzleData
-                .filter(
-                  (nozzle) =>
-                    nozzle.name.toLowerCase().includes("diesel") ||
-                    nozzle.name.toLowerCase().includes("ago") ||
-                    nozzle.name.includes("A1")
-                )
-                .map((nozzle) => (
-                  <div
-                    key={nozzle.id}
-                    style={{
-                      ...styles.nozzleCard,
-                      padding: "20px",
-                    }}
+</h4>
+<div style={styles.nozzleGrid}>
+  {nozzleData
+    .filter((nozzle) => nozzle.product === "DIESEL")
+    .map((nozzle) => (
+      <div
+        key={nozzle.id}
+        style={{
+          ...styles.nozzleCard,
+          padding: "20px",
+        }}
                   >
                     <div style={styles.nozzleHeader}>
                       <span style={styles.nozzleName}>{nozzle.name}</span>

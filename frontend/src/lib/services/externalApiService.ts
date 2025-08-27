@@ -13,7 +13,7 @@ interface AuthData {
 }
 
 // Configuration
-const baseURL = process.env.EXTERNAL_API_URL || 'http://78.189.54.28:3800';
+const baseURL = process.env.EXTERNAL_API_URL || 'http://78.189.54.28:2500';
 const email = process.env.EXTERNAL_API_EMAIL;
 const password = process.env.EXTERNAL_API_PASSWORD;
 
