@@ -64,6 +64,7 @@ export default auth((req) => {
 })
 
 function getDashboardUrlForUser(user: any): string {
+  console.log("hi ahmed",user);
   // SuperAdmin/System Administrator can access general dashboard by default
   if (user.canAccessAll || user.role === 'System Administrator') {
     return '/dashboard/general'

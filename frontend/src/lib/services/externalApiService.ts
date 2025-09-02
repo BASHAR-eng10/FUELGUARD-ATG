@@ -13,7 +13,7 @@ interface AuthData {
 }
 
 // Configuration
-const baseURL = process.env.EXTERNAL_API_URL || 'http://78.189.54.28:2500';
+const baseURL = process.env.EXTERNAL_API_URL || 'http://server.oktin.ak4tek.com:3950';
 const email = process.env.EXTERNAL_API_EMAIL;
 const password = process.env.EXTERNAL_API_PASSWORD;
 
