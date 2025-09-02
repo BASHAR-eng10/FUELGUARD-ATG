@@ -62,7 +62,7 @@ export async function makeAuthenticatedExternalRequest(
     throw new Error('No valid session found. Please login again.');
   }
   
-  const url = `${process.env.EXTERNAL_API_URL || 'http://78.189.54.28:3800'}${endpoint}`;
+  const url = `${process.env.EXTERNAL_API_URL || 'http://server.oktin.ak4tek.com:3950'}${endpoint}`;
 	// console.log(`Making request to ${url} with token: ${tokens.access_token}`);
 
 	options.headers = {

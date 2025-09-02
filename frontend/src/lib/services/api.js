@@ -20,7 +20,7 @@ class ApiService {
   }
 
   async request(endpoint, options = {}) {
-    const url = `http://78.189.54.28:2500${endpoint}`;
+    const url = `http://server.oktin.ak4tek.com:3950${endpoint}`;
 
     // Get auth headers with NextAuth session
     const authHeaders = await this.getAuthHeaders();
