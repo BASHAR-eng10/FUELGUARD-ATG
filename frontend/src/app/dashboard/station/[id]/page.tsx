@@ -1820,19 +1820,34 @@ export default function StationDashboard({
                     }}
                   >
                     {(() => {
-                      const unleadedRefill = refillData.find(refill => refill.product === "Unleaded");
-                      if (unleadedRefill && unleadedRefill.dip_end && unleadedRefill.dip_start) {
-                        return (unleadedRefill.dip_end - unleadedRefill.dip_start).toLocaleString() + " L";
-                      }
-                      return "0 L";
-                    })()}
+  // Get auto refill value (fuel_volume)
+  const autoRefillValue = autorefillData.length > 0 
+    ? (autorefillData.find(refill => refill.product === "Unleaded")?.fuel_volume || 0)
+    : 0;
+  
+  // Get manual refill value (fuel_amount)  
+  const manualRefillValue = refillData.length > 0 
+    ? (refillData.find(refill => refill.product === "Unleaded")?.fuel_amount || 0)
+    : 0;
+  
+  // Calculate the difference
+  const difference = autoRefillValue - manualRefillValue;
+  
+  return (
+    <span style={{ 
+      color: difference === 0 ? '#16a34a' : difference > 0 ? '#f59e0b' : '#dc2626' 
+    }}>
+      {difference > 0 ? '+' : ''}{difference.toLocaleString()} L
+    </span>
+  );
+})()}
                   </p>
                   <p style={styles.nozzleMetricLabel}>Difference</p>
                 </div>
               </div>
             </div>
 
-            {/* Order (Manual) - Enhanced with Input */}
+                        {/* Order (Dipstick) - Display fixed value of 1000 */}
             <div
               style={{
                 ...styles.nozzleCard,
@@ -1862,33 +1877,22 @@ export default function StationDashboard({
                 }}
               >
                 <div style={styles.nozzleMetric}>
-                  <input
-                    type="number"
-                    placeholder="29,800"
+                  <p
                     style={{
-                      width: "120px",
-                      padding: "8px 12px",
-                      border: "2px solid #bbf7d0",
-                      borderRadius: "8px",
-                      fontSize: "16px",
-                      fontWeight: "700",
+                      ...styles.nozzleMetricValue,
+                      fontSize: "20px",
                       color: "#14532d",
-                      background: "#ffffff",
-                      textAlign: "center",
-                      outline: "none",
-                      transition: "all 0.2s",
                     }}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = "#22c55e";
-                      e.target.style.boxShadow =
-                        "0 0 0 3px rgba(34, 197, 94, 0.1)";
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = "#bbf7d0";
-                      e.target.style.boxShadow = "none";
-                    }}
-                  />
-                  <p style={styles.nozzleMetricLabel}>Manual Reading</p>
+                  >
+                    {(() => {
+                      const unleadedRefill = refillData.find(refill => refill.product === "Unleaded");
+                      if (unleadedRefill && unleadedRefill.dip_end && unleadedRefill.dip_start) {
+                        return (unleadedRefill.dip_end - unleadedRefill.dip_start).toLocaleString() + " L";
+                      }
+                      return "0 L";
+                    })()}
+                  </p>
+                  <p style={styles.nozzleMetricLabel}>Dipstick Reading</p>
                 </div>
               </div>
             </div>
@@ -2317,21 +2321,37 @@ export default function StationDashboard({
                       color: "#ca8a04",
                     }}
                   >
-                    {(() => {
-                      const dieselRefill = refillData.find(refill => refill.product === "DIESEL");
-    
-                      if (dieselRefill && dieselRefill.dip_end && dieselRefill.dip_start) {
-                        return (dieselRefill.dip_end - dieselRefill.dip_start).toLocaleString() + " L";
-                      }
-                      return "0 L";
-                    })()}
+                          
+
+              {(() => {
+                // Get auto refill value (fuel_volume)
+                const autoRefillValue = autorefillData.length > 0 
+                  ? (autorefillData.find(refill => refill.product === "DIESEL")?.fuel_volume || 0)
+                  : 0;
+                
+                // Get manual refill value (fuel_amount)  
+                const manualRefillValue = refillData.length > 0 
+                  ? (refillData.find(refill => refill.product === "DIESEL")?.fuel_amount || 0)
+                  : 0;
+                
+                // Calculate the difference
+                const difference = autoRefillValue - manualRefillValue;
+                
+                return (
+                  <span style={{ 
+                    color: difference === 0 ? '#16a34a' : difference > 0 ? '#f59e0b' : '#dc2626' 
+                  }}>
+                    {difference > 0 ? '+' : ''}{difference.toLocaleString()} L
+                  </span>
+                );
+              })()}
                   </p>
                   <p style={styles.nozzleMetricLabel}>Difference</p>
                 </div>
               </div>
             </div>
 
-            {/* Order (Manual) - Enhanced with Input */}
+                        {/* Order (Dipstick) - Display fixed value of 1000 */}
             <div
               style={{
                 ...styles.nozzleCard,
@@ -2361,33 +2381,23 @@ export default function StationDashboard({
                 }}
               >
                 <div style={styles.nozzleMetric}>
-                  <input
-                    type="number"
-                    placeholder="29,800"
+                  <p
                     style={{
-                      width: "120px",
-                      padding: "8px 12px",
-                      border: "2px solid #bbf7d0",
-                      borderRadius: "8px",
-                      fontSize: "16px",
-                      fontWeight: "700",
+                      ...styles.nozzleMetricValue,
+                      fontSize: "20px",
                       color: "#14532d",
-                      background: "#ffffff",
-                      textAlign: "center",
-                      outline: "none",
-                      transition: "all 0.2s",
                     }}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = "#22c55e";
-                      e.target.style.boxShadow =
-                        "0 0 0 3px rgba(34, 197, 94, 0.1)";
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = "#bbf7d0";
-                      e.target.style.boxShadow = "none";
-                    }}
-                  />
-                  <p style={styles.nozzleMetricLabel}>Manual Reading</p>
+                  >
+                    {(() => {
+                      const dieselRefill = refillData.find(refill => refill.product === "DIESEL");
+    
+                      if (dieselRefill && dieselRefill.dip_end && dieselRefill.dip_start) {
+                        return (dieselRefill.dip_end - dieselRefill.dip_start).toLocaleString() + " L";
+                      }
+                      return "0 L";
+                    })()}
+                  </p>
+                  <p style={styles.nozzleMetricLabel}>Dipstick Reading</p>
                 </div>
               </div>
             </div>
@@ -2865,58 +2875,7 @@ export default function StationDashboard({
                           <div style={styles.quantityLabel}>Closing (ATG)</div>
                           <p style={styles.quantityValue}>0 L</p>
                         </div>
-                        <div style={styles.quantityItem}>
-                          <div
-                            style={{
-                              ...styles.quantityLabel,
-                              display: "flex",
-                              alignItems: "center",
-                              gap: "4px",
-                            }}
-                          >
-                            Opening (Manual)
-                            <button
-                              style={styles.editButton}
-                              onMouseEnter={(e) =>
-                                (e.currentTarget.style.backgroundColor =
-                                  "#f1f5f9")
-                              }
-                              onMouseLeave={(e) =>
-                                (e.currentTarget.style.backgroundColor =
-                                  "transparent")
-                              }
-                            >
-                              <Edit3 size={12} color="#64748b" />
-                            </button>
-                          </div>
-                          <p style={styles.quantityValue}>-- L</p>
-                        </div>
-                        <div style={styles.quantityItem}>
-                          <div
-                            style={{
-                              ...styles.quantityLabel,
-                              display: "flex",
-                              alignItems: "center",
-                              gap: "4px",
-                            }}
-                          >
-                            Closing (Manual)
-                            <button
-                              style={styles.editButton}
-                              onMouseEnter={(e) =>
-                                (e.currentTarget.style.backgroundColor =
-                                  "#f1f5f9")
-                              }
-                              onMouseLeave={(e) =>
-                                (e.currentTarget.style.backgroundColor =
-                                  "transparent")
-                              }
-                            >
-                              <Edit3 size={12} color="#64748b" />
-                            </button>
-                          </div>
-                          <p style={styles.quantityValue}>-- L</p>
-                        </div>
+                        
                         <div style={styles.quantityItem}>
                           <div style={styles.quantityLabel}>
                             Difference of Opening and Closing(ATG)
@@ -2932,188 +2891,7 @@ export default function StationDashboard({
                       </div>
                     </div>
 
-                    {/* Loading Information Section */}
-                    <div style={styles.quantitySection}>
-                      <div style={styles.quantityTitle}>
-                        <Truck size={16} color="#10b981" />
-                        Loading Information
-                      </div>
-                      <div
-                        style={{
-                          display: "grid",
-                          gridTemplateColumns: "repeat(3, 1fr)",
-                          gap: "8px",
-                        }}
-                      >
-                        <div style={styles.quantityItem}>
-                          <div style={styles.quantityLabel}>Date</div>
-                          <input
-                            type="date"
-                            style={{
-                              ...styles.inputField,
-                              fontSize: "12px",
-                              padding: "6px 8px",
-                            }}
-                            onFocus={(e) =>
-                              (e.target.style.borderColor = "#3b82f6")
-                            }
-                            onBlur={(e) =>
-                              (e.target.style.borderColor = "#e2e8f0")
-                            }
-                          />
-                        </div>
-                        <div style={styles.quantityItem}>
-                          <div style={styles.quantityLabel}>
-                            Loading Order No
-                          </div>
-                          <input
-                            type="text"
-                            placeholder="Order No"
-                            style={{
-                              ...styles.inputField,
-                              fontSize: "12px",
-                              padding: "6px 8px",
-                            }}
-                            onFocus={(e) =>
-                              (e.target.style.borderColor = "#3b82f6")
-                            }
-                            onBlur={(e) =>
-                              (e.target.style.borderColor = "#e2e8f0")
-                            }
-                          />
-                        </div>
-                        <div style={styles.quantityItem}>
-                          <div style={styles.quantityLabel}>Truck No</div>
-                          <input
-                            type="text"
-                            placeholder="Truck No"
-                            style={{
-                              ...styles.inputField,
-                              fontSize: "12px",
-                              padding: "6px 8px",
-                            }}
-                            onFocus={(e) =>
-                              (e.target.style.borderColor = "#3b82f6")
-                            }
-                            onBlur={(e) =>
-                              (e.target.style.borderColor = "#e2e8f0")
-                            }
-                          />
-                        </div>
-                        <div style={styles.quantityItem}>
-                          <div style={styles.quantityLabel}>Driver Name</div>
-                          <input
-                            type="text"
-                            placeholder="Driver Name"
-                            style={{
-                              ...styles.inputField,
-                              fontSize: "12px",
-                              padding: "6px 8px",
-                            }}
-                            onFocus={(e) =>
-                              (e.target.style.borderColor = "#3b82f6")
-                            }
-                            onBlur={(e) =>
-                              (e.target.style.borderColor = "#e2e8f0")
-                            }
-                          />
-                        </div>
-                        <div style={styles.quantityItem}>
-                          <div style={styles.quantityLabel}>Product</div>
-                          <input
-                            type="text"
-                            placeholder="Product"
-                            style={{
-                              ...styles.inputField,
-                              fontSize: "12px",
-                              padding: "6px 8px",
-                            }}
-                            onFocus={(e) =>
-                              (e.target.style.borderColor = "#3b82f6")
-                            }
-                            onBlur={(e) =>
-                              (e.target.style.borderColor = "#e2e8f0")
-                            }
-                          />
-                        </div>
-                        <div style={styles.quantityItem}>
-                          <div style={styles.quantityLabel}>Truck Short</div>
-                          <input
-                            type="number"
-                            placeholder="Truck Short"
-                            style={{
-                              ...styles.inputField,
-                              fontSize: "12px",
-                              padding: "6px 8px",
-                            }}
-                            onFocus={(e) =>
-                              (e.target.style.borderColor = "#3b82f6")
-                            }
-                            onBlur={(e) =>
-                              (e.target.style.borderColor = "#e2e8f0")
-                            }
-                          />
-                        </div>
-                        <div style={styles.quantityItem}>
-                          <div style={styles.quantityLabel}>
-                            Underground Short
-                          </div>
-                          <input
-                            type="number"
-                            placeholder="Underground Short"
-                            style={{
-                              ...styles.inputField,
-                              fontSize: "12px",
-                              padding: "6px 8px",
-                            }}
-                            onFocus={(e) =>
-                              (e.target.style.borderColor = "#3b82f6")
-                            }
-                            onBlur={(e) =>
-                              (e.target.style.borderColor = "#e2e8f0")
-                            }
-                          />
-                        </div>
-                        <div style={styles.quantityItem}>
-                          <div style={styles.quantityLabel}>
-                            Fuel as Per Order
-                          </div>
-                          <input
-                            type="number"
-                            placeholder="Fuel as Per Order"
-                            style={{
-                              ...styles.inputField,
-                              fontSize: "12px",
-                              padding: "6px 8px",
-                            }}
-                            onFocus={(e) =>
-                              (e.target.style.borderColor = "#3b82f6")
-                            }
-                            onBlur={(e) =>
-                              (e.target.style.borderColor = "#e2e8f0")
-                            }
-                          />
-                        </div>
-                        <div style={styles.quantityItem}>
-                          <div style={styles.quantityLabel}>Received</div>
-                          <input
-                            type="number"
-                            placeholder="Received"
-                            style={{
-                              ...styles.inputField,
-                              fontSize: "12px",
-                              padding: "6px 8px",
-                            }}
-                            onFocus={(e) =>
-                              (e.target.style.borderColor = "#3b82f6")
-                            }
-                            onBlur={(e) =>
-                              (e.target.style.borderColor = "#e2e8f0")
-                            }
-                          />
-                        </div>
-                      </div>
-                    </div>
+                    
                   </div>
                 ))
               ) : (
@@ -3161,7 +2939,7 @@ export default function StationDashboard({
               style={{
                 fontSize: "16px",
                 fontWeight: "600",
-                color: "#2563eb",
+                color: "#10c053ff",
                 marginBottom: "16px",
                 display: "flex",
                 alignItems: "center",
@@ -3186,13 +2964,13 @@ export default function StationDashboard({
                       <span
                         style={{
                           ...styles.nozzleStatus,
-                          color: nozzle.status ? "#dc2626" : "#166534",
+                          color: nozzle.status ? "#10c053ff" : "#166534",
                           backgroundColor: nozzle.status
-                            ? "#fee2e2"
+                            ? "#ffffffff"
                             : "#dcfce7",
                         }}
                       >
-                        {nozzle.status ? "Inactive" : "Active"}
+                        {nozzle.status ? "UNLEADED" : "Active"}
                       </span>
                     </div>
 
@@ -3352,7 +3130,7 @@ export default function StationDashboard({
               style={{
                 fontSize: "16px",
                 fontWeight: "600",
-                color: "#16a34a",
+                color: "#2563eb",
                 marginBottom: "16px",
                 display: "flex",
                 alignItems: "center",
@@ -3377,13 +3155,13 @@ export default function StationDashboard({
                       <span
                         style={{
                           ...styles.nozzleStatus,
-                          color: nozzle.status ? "#dc2626" : "#16a34a",
+                          color: nozzle.status ? "#2563eb" : "#16a34a",
                           backgroundColor: nozzle.status
-                            ? "#fee2e2"
+                            ? "#ffffffff"
                             : "#dcfce7",
                         }}
                       >
-                        {nozzle.status ? "Inactive" : "Active"}
+                        {nozzle.status ? "DIESEL" : "Active"}
                       </span>
                     </div>
 

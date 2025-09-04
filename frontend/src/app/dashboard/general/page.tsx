@@ -555,7 +555,7 @@ export default function GeneralDashboard() {
               }}
             />
             <div>
-              <h1 style={styles.logoTitle}>Lake Oil Group</h1>
+              <h1 style={styles.logoTitle}>LAKE ENERGIES GROUP</h1>
               <p style={styles.logoSubtitle}>General Manager</p>
             </div>
           </div>
@@ -875,17 +875,7 @@ export default function GeneralDashboard() {
                           <MapPin size={12} />
                           {station.location}
                         </p>
-                        {station.operatorName && (
-                          <p
-                            style={{
-                              ...styles.stationLocation,
-                              color: "#9ca3af",
-                              fontSize: "11px",
-                            }}
-                          >
-                            Operator: {station.operatorName}
-                          </p>
-                        )}
+                        
                         {station.ewuraLicense && (
                           <p
                             style={{
@@ -900,49 +890,7 @@ export default function GeneralDashboard() {
                       </div>
                     </div>
 
-                    <div style={styles.stationMetrics}>
-                      <div style={styles.stationMetric}>
-                        <p style={styles.stationMetricValue}>
-                          {station.efficiency}%
-                        </p>
-                        <p style={styles.stationMetricLabel}>Efficiency</p>
-                      </div>
-                      <div style={styles.stationMetric}>
-                        <p style={styles.stationMetricValue}>
-                          {station.revenue}
-                        </p>
-                        <p style={styles.stationMetricLabel}>Today</p>
-                      </div>
-                      <div style={styles.stationMetric}>
-                        <p style={styles.stationMetricValue}>{station.tanks}</p>
-                        <p style={styles.stationMetricLabel}>Tanks</p>
-                      </div>
-                      <div style={styles.stationMetric}>
-                        <p style={styles.stationMetricValue}>
-                          {station.nozzles}
-                        </p>
-                        <p style={styles.stationMetricLabel}>Nozzles</p>
-                      </div>
-                      {station.alerts > 0 && (
-                        <div style={styles.stationMetric}>
-                          <p
-                            style={{
-                              ...styles.stationMetricValue,
-                              color: "#dc2626",
-                            }}
-                          >
-                            {station.alerts}
-                          </p>
-                          <p style={styles.stationMetricLabel}>Alerts</p>
-                        </div>
-                      )}
-                      <div
-                        style={{
-                          ...styles.statusIndicator,
-                          backgroundColor: station.color,
-                        }}
-                      ></div>
-                    </div>
+                    
                   </div>
                 ))}
               </div>
