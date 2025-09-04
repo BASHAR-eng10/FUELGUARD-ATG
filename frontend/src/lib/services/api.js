@@ -82,6 +82,12 @@ class ApiService {
       body: JSON.stringify({ EWURA_LC: license }),
     });
   }
+  async getStationRefillReport() {
+    return this.request(`/ak4tek/tanks/refill`);
+  }
+  async getStationAutoRefillReport() {
+    return this.request(`/ak4tek/tanks/autorefill`);
+  }
   async getCurrentUser() {
     const session = await getSession();
     return session?.user || null;

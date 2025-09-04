@@ -742,6 +742,9 @@ export default function StationDashboard({
 
   const [managerCash, setManagerCash] = useState("");
   // Add this with your other state declarations
+  const [refillData, setRefillData] = useState<any[]>([]);
+  const [autorefillData, setAutoRefillData] = useState<any[]>([]);
+
   const [dailyReportData, setDailyReportData] = useState(null);
   const [dailyReportLoading, setDailyReportLoading] = useState(true);
   const [dailyReportError, setDailyReportError] = useState<string | null>(null);
@@ -820,7 +823,33 @@ export default function StationDashboard({
       setPumpsLoading(false);
     }
   };
-
+  const fetchRefillData = async () => {
+    try {
+      const response = await apiService.getStationRefillReport();
+      if (response) {
+        console.log("Refill API Response:", response.data.records);
+        
+        setRefillData(response.data.records);
+      } else {
+        throw new Error("Invalid API response structure");
+      }
+    } catch (err) {
+      console.error("Error fetching refill data:", err);
+    }
+  };
+  const fetchAutoRefillData = async () => {
+    try {
+      const response = await apiService.getStationAutoRefillReport();
+      if (response) {
+        console.log("Auto Refill API Response:", response.data.records);
+        setAutoRefillData(response.data.records);
+      } else {
+        throw new Error("Invalid API response structure");
+      }
+    } catch (err) {
+      console.error("Error fetching auto refill data:", err);
+    }
+  };
   // Fetch tank data from API
   const fetchTankData = async (license: string) => {
     try {
@@ -924,6 +953,8 @@ export default function StationDashboard({
       );
       fetchDailyReportData(stationData.ewuraLicense);
       fetchTankData(stationData.ewuraLicense);
+      fetchRefillData();
+      fetchAutoRefillData();
     }
   }, [stationData]);
 
@@ -1696,7 +1727,9 @@ export default function StationDashboard({
                       color: "#0c4a6e",
                     }}
                   >
-                    30,000 L
+                    {refillData.length > 0 
+                      ? (refillData.find(refill => refill.product === "Unleaded")?.fuel_amount || "0") + " L" 
+                      : "0 L"}
                   </p>
                   <p style={styles.nozzleMetricLabel}>Order Quantity</p>
                 </div>
@@ -1740,7 +1773,9 @@ export default function StationDashboard({
                       color: "#581c87",
                     }}
                   >
-                    30,000 L
+                    {autorefillData.length > 0 
+                      ? (autorefillData.find(refill => refill.product === "Unleaded")?.fuel_volume || "0") + " L" 
+                      : "0 L"}
                   </p>
                   <p style={styles.nozzleMetricLabel}>ATG Reading</p>
                 </div>
@@ -1784,7 +1819,13 @@ export default function StationDashboard({
                       color: "#ca8a04",
                     }}
                   >
-                    0 L
+                    {(() => {
+                      const unleadedRefill = refillData.find(refill => refill.product === "Unleaded");
+                      if (unleadedRefill && unleadedRefill.dip_end && unleadedRefill.dip_start) {
+                        return (unleadedRefill.dip_end - unleadedRefill.dip_start).toLocaleString() + " L";
+                      }
+                      return "0 L";
+                    })()}
                   </p>
                   <p style={styles.nozzleMetricLabel}>Difference</p>
                 </div>
@@ -2177,15 +2218,17 @@ export default function StationDashboard({
                 }}
               >
                 <div style={styles.nozzleMetric}>
-                  <p
+                    <p
                     style={{
                       ...styles.nozzleMetricValue,
                       fontSize: "20px",
                       color: "#0c4a6e",
                     }}
-                  >
-                    25,000 L
-                  </p>
+                    >
+                    {refillData.length > 0 
+                      ? (refillData.find(refill => refill.product === "DIESEL")?.fuel_amount || "0") + " L" 
+                      : "0 L"}
+                    </p>
                   <p style={styles.nozzleMetricLabel}>Order Quantity</p>
                 </div>
               </div>
@@ -2228,7 +2271,9 @@ export default function StationDashboard({
                       color: "#581c87",
                     }}
                   >
-                    25,000 L
+                    {autorefillData.length > 0 
+                      ? (autorefillData.find(refill => refill.product === "DIESEL")?.fuel_volume || "0") + " L" 
+                      : "0 L"}
                   </p>
                   <p style={styles.nozzleMetricLabel}>ATG Reading</p>
                 </div>
@@ -2272,7 +2317,14 @@ export default function StationDashboard({
                       color: "#ca8a04",
                     }}
                   >
-                    0 L
+                    {(() => {
+                      const dieselRefill = refillData.find(refill => refill.product === "DIESEL");
+    
+                      if (dieselRefill && dieselRefill.dip_end && dieselRefill.dip_start) {
+                        return (dieselRefill.dip_end - dieselRefill.dip_start).toLocaleString() + " L";
+                      }
+                      return "0 L";
+                    })()}
                   </p>
                   <p style={styles.nozzleMetricLabel}>Difference</p>
                 </div>

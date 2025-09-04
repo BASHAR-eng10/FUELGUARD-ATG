@@ -58,6 +58,7 @@ export default function SignInPage() {
       password,
       redirect: false
     })
+    console.log(`Sign in page result:`, result);
 
     if (result?.error) {
       setMessage('Invalid credentials')
