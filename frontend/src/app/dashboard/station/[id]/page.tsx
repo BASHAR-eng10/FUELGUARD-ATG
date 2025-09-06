@@ -37,6 +37,7 @@ interface StationData {
   tanks: number;
   username?: string;
   password?: string;
+  LicenseeTraSerialNo?: string;
 }
 
 interface TankData {
@@ -823,33 +824,72 @@ export default function StationDashboard({
       setPumpsLoading(false);
     }
   };
-  const fetchRefillData = async () => {
-    try {
-      const response = await apiService.getStationRefillReport();
-      if (response) {
-        console.log("Refill API Response:", response.data.records);
+  // Update your fetchRefillData function to filter by current station:
+
+const fetchRefillData = async () => {
+  try {
+    const response = await apiService.getStationRefillReport();
+    if (response && response.data && response.data.records) {
+      console.log("Refill API Response:", response.data.records);
+      
+      // Get current station's serial number
+      const currentStationSerial = stationData?.LicenseeTraSerialNo;
+      
+      console.log("Current station serial:", currentStationSerial);
+      console.log("All refill records:", response.data.records.length);
+      
+      if (currentStationSerial) {
+        // Filter records to show only current station's data
+        const filteredRecords = response.data.records.filter((record: any) => 
+          record.station_serial === currentStationSerial
+        );
         
+        console.log(`Filtered refill records for station ${currentStationSerial}:`, filteredRecords.length);
+        setRefillData(filteredRecords);
+      } else {
+        console.log("No station serial found - showing all refill records");
         setRefillData(response.data.records);
-      } else {
-        throw new Error("Invalid API response structure");
       }
-    } catch (err) {
-      console.error("Error fetching refill data:", err);
+    } else {
+      throw new Error("Invalid API response structure");
     }
-  };
+  } catch (err) {
+    console.error("Error fetching refill data:", err);
+    setRefillData([]);
+  }
+};
   const fetchAutoRefillData = async () => {
-    try {
-      const response = await apiService.getStationAutoRefillReport();
-      if (response) {
-        console.log("Auto Refill API Response:", response.data.records);
-        setAutoRefillData(response.data.records);
+  try {
+    const response = await apiService.getStationAutoRefillReport();
+    if (response && response.data && response.data.records) {
+      console.log("Auto Refill API Response:", response.data.records);
+      
+      // Get current station's serial number - SAME FILTERING LOGIC AS REFILL
+      const currentStationSerial = stationData?.LicenseeTraSerialNo;
+      
+      console.log("Current station serial for auto-refill:", currentStationSerial);
+      console.log("All auto-refill records:", response.data.records.length);
+      
+      if (currentStationSerial) {
+        // Filter records to show only current station's data
+        const filteredRecords = response.data.records.filter((record: any) => 
+          record.station_serial === currentStationSerial
+        );
+        
+        console.log(`Filtered auto-refill records for station ${currentStationSerial}:`, filteredRecords.length);
+        setAutoRefillData(filteredRecords);
       } else {
-        throw new Error("Invalid API response structure");
+        console.log("No station serial found - showing all auto-refill records");
+        setAutoRefillData(response.data.records);
       }
-    } catch (err) {
-      console.error("Error fetching auto refill data:", err);
+    } else {
+      throw new Error("Invalid API response structure");
     }
-  };
+  } catch (err) {
+    console.error("Error fetching auto refill data:", err);
+    setAutoRefillData([]);
+  }
+};
   // Fetch tank data from API
   const fetchTankData = async (license: string) => {
     try {
@@ -917,6 +957,7 @@ export default function StationDashboard({
           tanks: station.TotalNoTanks,
           username: station.automation_server_username,
           password: station.automation_server_pass,
+          LicenseeTraSerialNo: station.LicenseeTraSerialNo,
         });
       } else {
         console.error("Invalid API response structure:", station);
@@ -961,6 +1002,12 @@ export default function StationDashboard({
   useEffect(() => {
     refreshAllData();
   }, []);
+  useEffect(() => {
+  if (stationData?.LicenseeTraSerialNo) {
+    fetchRefillData()
+    fetchAutoRefillData();;
+  }
+}, [stationData]);
 
   const handleSignOut = async () => {
     await logout();
@@ -1728,7 +1775,7 @@ export default function StationDashboard({
                     }}
                   >
                     {refillData.length > 0 
-                      ? (refillData.find(refill => refill.product === "Unleaded")?.fuel_amount || "0") + " L" 
+                      ? (refillData.find(refill => refill.product === "UNLEADED"||"Unleaded")?.fuel_amount || "0") + " L" 
                       : "0 L"}
                   </p>
                   <p style={styles.nozzleMetricLabel}>Order Quantity</p>
@@ -1774,7 +1821,7 @@ export default function StationDashboard({
                     }}
                   >
                     {autorefillData.length > 0 
-                      ? (autorefillData.find(refill => refill.product === "Unleaded")?.fuel_volume || "0") + " L" 
+                      ? (autorefillData.find(refill => refill.product === "UNLEADED"||"Unleaded")?.fuel_volume || "0") + " L" 
                       : "0 L"}
                   </p>
                   <p style={styles.nozzleMetricLabel}>ATG Reading</p>
@@ -1822,12 +1869,12 @@ export default function StationDashboard({
                     {(() => {
   // Get auto refill value (fuel_volume)
   const autoRefillValue = autorefillData.length > 0 
-    ? (autorefillData.find(refill => refill.product === "Unleaded")?.fuel_volume || 0)
+    ? (autorefillData.find(refill => refill.product === "UNLEADED"||"Unleaded")?.fuel_volume || 0)
     : 0;
   
   // Get manual refill value (fuel_amount)  
   const manualRefillValue = refillData.length > 0 
-    ? (refillData.find(refill => refill.product === "Unleaded")?.fuel_amount || 0)
+    ? (refillData.find(refill => refill.product === "UNLEADED"||"Unleaded")?.fuel_amount || 0)
     : 0;
   
   // Calculate the difference
@@ -1847,55 +1894,75 @@ export default function StationDashboard({
               </div>
             </div>
 
-                        {/* Order (Dipstick) - Display fixed value of 1000 */}
-            <div
-              style={{
-                ...styles.nozzleCard,
-                background: "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)",
-                border: "2px solid #22c55e",
-                boxShadow: "0 4px 12px rgba(34, 197, 94, 0.15)",
-              }}
-            >
-              <div style={styles.nozzleHeader}>
-                <span
-                  style={{
-                    ...styles.nozzleName,
-                    fontSize: "16px",
-                    fontWeight: "700",
-                    color: "#14532d",
-                  }}
-                >
-                  Order (Dipstick)
-                </span>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginTop: "16px",
-                }}
-              >
-                <div style={styles.nozzleMetric}>
-                  <p
-                    style={{
-                      ...styles.nozzleMetricValue,
-                      fontSize: "20px",
-                      color: "#14532d",
-                    }}
-                  >
-                    {(() => {
-                      const unleadedRefill = refillData.find(refill => refill.product === "Unleaded");
-                      if (unleadedRefill && unleadedRefill.dip_end && unleadedRefill.dip_start) {
-                        return (unleadedRefill.dip_end - unleadedRefill.dip_start).toLocaleString() + " L";
-                      }
-                      return "0 L";
-                    })()}
-                  </p>
-                  <p style={styles.nozzleMetricLabel}>Dipstick Reading</p>
-                </div>
-              </div>
-            </div>
+                        {/*// Updated Order (Dipstick) section with issue date:*/}
+
+<div
+  style={{
+    ...styles.nozzleCard,
+    background: "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)",
+    border: "2px solid #22c55e",
+    boxShadow: "0 4px 12px rgba(34, 197, 94, 0.15)",
+  }}
+>
+  <div style={styles.nozzleHeader}>
+    <span
+      style={{
+        ...styles.nozzleName,
+        fontSize: "16px",
+        fontWeight: "700",
+        color: "#14532d",
+      }}
+    >
+      Order (Dipstick)
+    </span>
+  </div>
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: "16px",
+    }}
+  >
+    <div style={styles.nozzleMetric}>
+      <p
+        style={{
+          ...styles.nozzleMetricValue,
+          fontSize: "20px",
+          color: "#14532d",
+        }}
+      >
+        {(() => {
+          const dieselRefill = refillData.find(refill => refill.product === "UNLEADED"||"Unleaded");
+
+          if (dieselRefill && dieselRefill.dip_end && dieselRefill.dip_start) {
+            return (dieselRefill.dip_end - dieselRefill.dip_start).toLocaleString() + " L";
+          }
+          return "0 L";
+        })()}
+      </p>
+      <p style={styles.nozzleMetricLabel}>Dipstick Reading</p>
+      
+      {/* Add issue date display */}
+      {(() => {
+        const dieselRefill = refillData.find(refill => refill.product === "UNLEADED"||"Unleaded");
+        if (dieselRefill && dieselRefill.issue_date) {
+          return (
+            <p style={{
+              fontSize: "11px",
+              color: "#15803d",
+              marginTop: "4px",
+              fontStyle: "italic"
+            }}>
+              Date: {new Date(dieselRefill.issue_date).toLocaleDateString()}
+            </p>
+          );
+        }
+        return null;
+      })()}
+    </div>
+  </div>
+</div>
           </div>
         </div>
 
@@ -2351,56 +2418,75 @@ export default function StationDashboard({
               </div>
             </div>
 
-                        {/* Order (Dipstick) - Display fixed value of 1000 */}
-            <div
-              style={{
-                ...styles.nozzleCard,
-                background: "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)",
-                border: "2px solid #22c55e",
-                boxShadow: "0 4px 12px rgba(34, 197, 94, 0.15)",
-              }}
-            >
-              <div style={styles.nozzleHeader}>
-                <span
-                  style={{
-                    ...styles.nozzleName,
-                    fontSize: "16px",
-                    fontWeight: "700",
-                    color: "#14532d",
-                  }}
-                >
-                  Order (Dipstick)
-                </span>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginTop: "16px",
-                }}
-              >
-                <div style={styles.nozzleMetric}>
-                  <p
-                    style={{
-                      ...styles.nozzleMetricValue,
-                      fontSize: "20px",
-                      color: "#14532d",
-                    }}
-                  >
-                    {(() => {
-                      const dieselRefill = refillData.find(refill => refill.product === "DIESEL");
-    
-                      if (dieselRefill && dieselRefill.dip_end && dieselRefill.dip_start) {
-                        return (dieselRefill.dip_end - dieselRefill.dip_start).toLocaleString() + " L";
-                      }
-                      return "0 L";
-                    })()}
-                  </p>
-                  <p style={styles.nozzleMetricLabel}>Dipstick Reading</p>
-                </div>
-              </div>
-            </div>
+                        {/*// Updated Order (Dipstick) section with issue date:*/}
+
+<div
+  style={{
+    ...styles.nozzleCard,
+    background: "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)",
+    border: "2px solid #22c55e",
+    boxShadow: "0 4px 12px rgba(34, 197, 94, 0.15)",
+  }}
+>
+  <div style={styles.nozzleHeader}>
+    <span
+      style={{
+        ...styles.nozzleName,
+        fontSize: "16px",
+        fontWeight: "700",
+        color: "#14532d",
+      }}
+    >
+      Order (Dipstick)
+    </span>
+  </div>
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: "16px",
+    }}
+  >
+    <div style={styles.nozzleMetric}>
+      <p
+        style={{
+          ...styles.nozzleMetricValue,
+          fontSize: "20px",
+          color: "#14532d",
+        }}
+      >
+        {(() => {
+          const dieselRefill = refillData.find(refill => refill.product === "DIESEL");
+
+          if (dieselRefill && dieselRefill.dip_end && dieselRefill.dip_start) {
+            return (dieselRefill.dip_end - dieselRefill.dip_start).toLocaleString() + " L";
+          }
+          return "0 L";
+        })()}
+      </p>
+      <p style={styles.nozzleMetricLabel}>Dipstick Reading</p>
+      
+      {/* Add issue date display */}
+      {(() => {
+        const dieselRefill = refillData.find(refill => refill.product === "DIESEL");
+        if (dieselRefill && dieselRefill.issue_date) {
+          return (
+            <p style={{
+              fontSize: "11px",
+              color: "#15803d",
+              marginTop: "4px",
+              fontStyle: "italic"
+            }}>
+              Date: {new Date(dieselRefill.issue_date).toLocaleDateString()}
+            </p>
+          );
+        }
+        return null;
+      })()}
+    </div>
+  </div>
+</div>
           </div>
         </div>
 
