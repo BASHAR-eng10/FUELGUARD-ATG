@@ -1,7 +1,6 @@
 // "use server"
-// services/externalApiService.ts - Server-side External API Service with persistent token storage
+// services/externalApiService.ts - Server-side External API Service with in-memory token storage
 import { unstable_cache } from 'next/cache'
-import { prisma } from '../prisma'
 
 interface AuthData {
   data?: {
@@ -21,28 +20,15 @@ const password = process.env.EXTERNAL_API_PASSWORD;
 const AUTH_TOKEN_CACHE_KEY = 'external-api-auth-token';
 const TOKEN_EXPIRY_MINUTES = 50; // 50 minutes (assuming 1 hour token expiry)
 
-// Store token in database for persistence across serverless invocations
-async function storeTokenInDB(token: string, expiresAt: Date) {
-  try {
-    await prisma.systemCache.upsert({
-      where: { key: AUTH_TOKEN_CACHE_KEY },
-      update: {
-        value: token,
-        expires_at: expiresAt,
-        updated_at: new Date()
-      },
-      create: {
-        key: AUTH_TOKEN_CACHE_KEY,
-        value: token,
-        expires_at: expiresAt
-      }
-    });
-    console.log('🗄️ Token stored in database');
-  } catch (error) {
-    console.warn('Failed to store token in database:', error);
-    // Non-fatal error, we can continue without DB storage
-  }
+// In-memory token storage (will reset on server restart)
+let tokenCache: { token: string; expires: Date } | null = null;
+
+// Store token in memory
+function storeTokenInMemory(token: string, expiresAt: Date) {
+  tokenCache = { token, expires: expiresAt };
+  console.log('🗄️ Token stored in memory');
 }
+
 export async function getStationDailyReportByLicense(ewuraLicense: string) {
   try {
     console.log(`📊 Fetching daily report for EWURA license: ${ewuraLicense}`);
@@ -61,30 +47,12 @@ export async function getStationDailyReportByLicense(ewuraLicense: string) {
   }
 }
 
-// Get token from database
-async function getTokenFromDB(): Promise<{ token: string; expires: Date } | null> {
-  try {
-    const result = await prisma.systemCache.findUnique({
-      where: { 
-        key: AUTH_TOKEN_CACHE_KEY,
-      },
-      select: {
-        value: true,
-        expires_at: true
-      }
-    });
-    
-    if (result && result.expires_at && result.expires_at > new Date()) {
-      console.log('🗄️ Token retrieved from database');
-      return {
-        token: result.value,
-        expires: result.expires_at
-      };
-    }
-  } catch (error) {
-    console.warn('Failed to get token from database:', error);
+// Get token from memory
+function getTokenFromMemory(): { token: string; expires: Date } | null {
+  if (tokenCache && tokenCache.expires > new Date()) {
+    console.log('🗄️ Token retrieved from memory');
+    return tokenCache;
   }
-  
   return null;
 }
 
@@ -105,7 +73,6 @@ async function login(): Promise<string> {
   }
 
   const data: AuthData = await response.json();
-  // console.log('🔍 Auth response structure:', JSON.stringify(data, null, 2));
 
   let token: string | null = null;
   
@@ -123,9 +90,9 @@ async function login(): Promise<string> {
     throw new Error('No valid token found in authentication response');
   }
 
-  // Store token in database for persistence
+  // Store token in memory
   const expiresAt = new Date(Date.now() + (TOKEN_EXPIRY_MINUTES * 60 * 1000));
-  await storeTokenInDB(token, expiresAt);
+  storeTokenInMemory(token, expiresAt);
 
   return token;
 }
@@ -151,11 +118,11 @@ const getCachedAuthToken = unstable_cache(
 // Helper function to get authentication token with fallbacks
 async function getAuthToken(): Promise<string> {
   try {
-    // First try: Check database for existing valid token
-    const dbToken = await getTokenFromDB();
-    if (dbToken && dbToken.expires > new Date()) {
-      console.log('🔑 Using token from database');
-      return dbToken.token;
+    // First try: Check memory for existing valid token
+    const memoryToken = getTokenFromMemory();
+    if (memoryToken && memoryToken.expires > new Date()) {
+      console.log('🔑 Using token from memory');
+      return memoryToken.token;
     }
 
     // Second try: Use Next.js cached function (will fetch new token if cache miss)
@@ -200,7 +167,7 @@ async function makeRequest(
     
     if (!response.ok) {
       if (response.status === 401) {
-        console.log('🔄 Token expired, clearing cache and database...');
+        console.log('🔄 Token expired, clearing cache...');
         await clearAuthCache();
         throw new Error('Token expired');
       }
@@ -214,17 +181,11 @@ async function makeRequest(
   }
 }
 
-// Clear authentication cache from database and Next.js cache
+// Clear authentication cache from memory and Next.js cache
 async function clearAuthCache() {
-  try {
-    // Clear from database
-    await prisma.systemCache.deleteMany({
-      where: { key: AUTH_TOKEN_CACHE_KEY }
-    });
-    console.log('🗑️ Token removed from database');
-  } catch (error) {
-    console.warn('Failed to clear token from database:', error);
-  }
+  // Clear from memory
+  tokenCache = null;
+  console.log('🗑️ Token removed from memory');
   
   // Clear Next.js cache using revalidateTag
   try {
@@ -271,8 +232,6 @@ export async function getTankInfo() {
       method: 'GET'
     }, { revalidate: 300 });
 
-    // console.log('🔍 Tank info response structure:', JSON.stringify(data, null, 2));
-
     if (data?.data) {
       return data.data;
     }
@@ -293,8 +252,6 @@ export async function getStationInfo() {
       method: 'GET'
     }, { revalidate: 300 });
 
-    // console.log('🔍 Station info response structure:', JSON.stringify(data, null, 2));
-
     if (data?.data) {
       return data.data;
     }
@@ -313,79 +270,34 @@ export async function clearCache() {
 }
 
 export async function getCacheStats() {
-  try {
-    const dbToken = await getTokenFromDB();
-    return {
-      tokenInDB: !!dbToken,
-      tokenExpires: dbToken?.expires,
-      tokenValid: dbToken ? dbToken.expires > new Date() : false
-    };
-  } catch (error) {
-    return {
-      tokenInDB: false,
-      tokenExpires: null,
-      tokenValid: false,
-      error: 'Failed to check cache stats'
-    };
-  }
+  const memoryToken = getTokenFromMemory();
+  return {
+    tokenInMemory: !!memoryToken,
+    tokenExpires: memoryToken?.expires,
+    tokenValid: memoryToken ? memoryToken.expires > new Date() : false
+  };
 }
 
+// Simplified functions without database dependency
 export async function getCurrentManualCashEntries(stationId: string) {
-	//fetch the most recent of manual cash entry for a specific station
-	const currentEntries = await prisma.manualCashEntries.findMany({
-		where: {
-			stationId: stationId,
-		},
-		orderBy: {
-			date: 'desc'
-		},
-		take: 1
-	});
-	if (currentEntries.length > 0) {
-		return currentEntries[0];
-	}
-	throw new Error('No manual cash entry found for the specified station');
+  // Since there's no database, return mock data or throw error
+  throw new Error('Manual cash entries require database functionality - feature disabled');
 }
+
 export async function getAllAlerts() {
-	// Fetch alerts for a specific station
-	const alerts = await prisma.manualCashEntries.findMany({
-		where: {
-			hasAlert: true
-		},
-		orderBy: {
-			date: 'desc'
-		}
-	});
-	return alerts;
+  // Since there's no database, return empty array
+  return [];
 }
 
 export async function getAlerts(stationId: string) {
-	// Fetch alerts for a specific station
-	const alerts = await prisma.manualCashEntries.findMany({
-		where: {
-			stationId: stationId,
-			hasAlert: true
-		},
-		orderBy: {
-			date: 'desc'
-		}
-	});
-	return alerts;
+  // Since there's no database, return empty array
+  return [];
 }
 
 export async function updateCurrentManualCashEntries(stationId: string, actualReading: number, manualReading: number) {
-	// validate the stationId
-	if (!stationId) {
-		throw new Error('Invalid station ID');
-	}
-  await prisma.manualCashEntries.create({
-    data: {
-			stationId:stationId,
-      amount: manualReading,
-      hasAlert: (actualReading - manualReading) / actualReading > 0.01,
-      alert: (actualReading - manualReading) / actualReading > 0.01 ? `Manual cash entry for station ${stationId} has changed by ${(actualReading - manualReading).toFixed(2)}` : null
-    }
-  });
+  // Since there's no database, log the action but don't persist
+  console.log(`Manual cash entry update for station ${stationId}: actual=${actualReading}, manual=${manualReading}`);
+  console.warn('Manual cash entries are not persisted without database');
 }
 
 // Default export for backward compatibility
