@@ -1,8 +1,6 @@
 import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 
-import apiService from "@/lib/services/api";
-
 interface ExternalApiResponse {
   status_code: number;
   data: {
@@ -22,34 +20,22 @@ interface ExternalApiResponse {
   message: string;
 }
 
-// Store user token in database for session persistence
-async function storeUserToken(userId: string, accessToken: string, refreshToken: string) {
-  try {
-    const expiresAt = new Date(Date.now() + (8 * 60 * 60 * 1000)); // 8 hours
+// In-memory session storage (for development/simple use cases)
+// Note: This will not persist across server restarts
+const sessionStorage = new Map<string, any>();
 
-    await prisma.systemCache.upsert({
-      where: { key: `user_session_${userId}` },
-      update: {
-        value: JSON.stringify({
-          access_token: accessToken,
-          refresh_token: refreshToken,
-          created_at: new Date().toISOString()
-        }),
-        expires_at: expiresAt,
-        updated_at: new Date()
-      },
-      create: {
-        key: `user_session_${userId}`,
-        value: JSON.stringify({
-          access_token: accessToken,
-          refresh_token: refreshToken,
-          created_at: new Date().toISOString()
-        }),
-        expires_at: expiresAt
-      }
+// Store user session in memory (replaces database storage)
+function storeUserSession(userId: string, sessionData: any) {
+  try {
+    const expiresAt = Date.now() + (8 * 60 * 60 * 1000); // 8 hours
+    
+    sessionStorage.set(`user_session_${userId}`, {
+      ...sessionData,
+      expiresAt,
+      createdAt: Date.now()
     });
 
-    console.log(`🗄️ User session stored for user ${userId}`);
+    console.log(`🗄️ User session stored in memory for user ${userId}`);
   } catch (error) {
     console.warn('Failed to store user session:', error);
   }
@@ -89,31 +75,33 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           const res: ExternalApiResponse = await response.json()
           const data = res.data
 
-          // Store tokens in database
-          await storeUserToken(
-            data.user_record.id.toString(),
-            data.access_token,
-            data.refresh_token
-          )
+          // Store session data in memory (replaces database)
+          storeUserSession(data.user_record.id.toString(), {
+            access_token: data.access_token,
+            refresh_token: data.refresh_token,
+            user_record: data.user_record
+          });
+
           console.log(`✅ User authenticated: ${credentials.email} (${data.user_record.roles.name})`)
 
-
+          // Get station information
           const stationResponse = await fetch('http://server.oktin.ak4tek.com:3950/stationinfo/all', {
             headers: {
-              'Authorization': data.access_token,
+              'Authorization': `Bearer ${data.access_token}`,
               'Content-Type': 'application/json',
             }
           });
 
           const stationData = await stationResponse.json();
-          console.log("stat res", stationData.data[0].id);
+          console.log("Station response:", stationData.data?.[0]?.id);
+
           return {
             id: data.user_record.id.toString(),
             email: data.user_record.email,
             name: data.user_record.email,
             role: data.user_record.roles.name === "SuperAdmin" ? "System Administrator" : data.user_record.roles.name,
             canAccessAll: data.user_record.roles.name === "SuperAdmin",
-            stationId: data.user_record.associated_station ? stationData.data[0].id : null,
+            stationId: data.user_record.associated_station || (stationData.data?.[0]?.id || null),
             accessToken: data.access_token,
             refreshToken: data.refresh_token,
           }
@@ -156,5 +144,5 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     maxAge: 8 * 60 * 60, // 8 hours
   },
   secret: process.env.NEXTAUTH_SECRET || process.env.JWT_SECRET,
-  trustHost: true, // Trust the host in development and production
+  trustHost: true,
 })
