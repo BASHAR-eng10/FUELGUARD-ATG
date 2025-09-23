@@ -3110,7 +3110,7 @@ fs.realpath@^1.0.0:
   resolved "https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz"
   integrity sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==
 
-"fuel@file:C:\\Users\\yazan\\Desktop\\Work\\FuelGuard\\frontend":
+"fuel@file:C:\\Users\\bashar\\Desktop\\FUELGUARD\\frontend":
   version "0.1.0"
   resolved "file:frontend"
   dependencies:

@@ -147,6 +147,15 @@ class ApiService {
       body: JSON.stringify({ EWURA_LC: license }),
     });
   }
+   // In api.js - rename for clarity
+async getStationCurrentTanks(license) {
+    console.log(`Fetching current tank data for license:`, license);
+    
+    return this.request(`/ak4tek/tanks/all`, {
+      method: "POST",
+      body: JSON.stringify({ EWURA_LC: license }),
+    });
+}
 
   async getAllStationTanks() {
     return this.request("/stations/tanks");
@@ -160,6 +169,9 @@ class ApiService {
   async getStationDashboard(id) {
     return this.request(`/dashboard/station/${id}`);
   }
+  async getBigTanksData() {
+  return this.request(`/ak4tek/tanks/`);
+}
 }
 
 export default new ApiService();

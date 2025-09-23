@@ -2,15 +2,15 @@
 	"name": "fuel-station-monitor",
 	"private": true,
 	"license": "MIT",
-  "workspaces": [
-    "frontend"
-  ],
-  "scripts": {
-    "dev": "npm run dev --workspace=frontend",
-    "build": "npm run build --workspace=frontend",
-    "start": "npm run start --workspace=frontend",
-    "lint": "npm run lint --workspace=frontend",
-    "db:migrate": "npm run db:migrate --workspace=frontend",
-    "db:studio": "npm run db:studio --workspace=frontend"
-  }
+	"workspaces": [
+		"frontend"
+	],
+	"scripts": {
+		"dev": "npm run dev --workspace=frontend",
+		"build": "npm run build --workspace=frontend",
+		"start": "npm run start --workspace=frontend",
+		"lint": "npm run lint --workspace=frontend",
+		"db:migrate": "npm run db:migrate --workspace=frontend",
+		"db:studio": "npm run db:studio --workspace=frontend"
+	}
 }

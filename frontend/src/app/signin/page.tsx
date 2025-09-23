@@ -34,16 +34,7 @@ export default function SignInPage() {
           location: 'Ilala, Dar es Salaam',
           operator: 'LAKE OIL'
         },
-        'ungaltd@manager.com': { 
-          password: 'unga1441', 
-          role: 'UNGA LTD STATION', 
-          redirect: '/dashboard/station/1',
-          canAccessAll: false,
-          stationId: 1,
-          displayName: 'UNGA LTD STATION Manager',
-          location: 'Kipunguni, Ilala MC Kipawa',
-          operator: 'LAKE OIL'
-        }
+        
       } as const
   const router = useRouter()
 

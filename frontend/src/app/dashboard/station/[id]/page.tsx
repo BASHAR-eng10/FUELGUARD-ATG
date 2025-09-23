@@ -1,28 +1,16 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
+import { useState, useEffect, use, useMemo, useCallback } from "react";
 import {
   Shield,
-  Gauge,
-  Droplets,
-  DollarSign,
-  AlertTriangle,
   Settings,
   LogOut,
   Bell,
   TrendingUp,
-  Clock,
-  Thermometer,
-  Target,
-  Edit3,
-  Truck,
-  Loader2,
   RefreshCw,
 } from "lucide-react";
 import apiService from "../../../../lib/services/api";
 import { useAuth } from "@/lib/hooks/useAuth";
-import { updateCurrentManualCashEntries } from "@/lib/services/externalApiService";
-import api from "../../../../lib/services/api";
 
 interface StationData {
   id: number;
@@ -64,16 +52,302 @@ interface TankData {
   LicenseeTraSerialNo: string;
 }
 
-interface NozzleData {
-  id: number;
-  name: string;
-  sold: number;
-  price: number;
-  percentage: number;
-  status: boolean;
-  e_total?: number;
-  v_total?: number;
-  product?: string
+interface OffloadingEvent {
+  id: string;
+  stationSerial: string;
+  productName: string;
+  startTime: string;
+  endTime: string;
+  startReading: number;
+  endReading: number;
+  offloadingQty: number;
+  startRecordId: number;
+  endRecordId: number;
+  detectionWindow: number;
+  tankId: string;
+  tankName: string;
+  duration: string;
+  formattedStartTime: string;
+  formattedEndTime: string;
+  formattedQuantity: string;
+}
+
+interface OffloadingSummary {
+  totalEvents: number;
+  byStation: {
+    [stationSerial: string]: {
+      count: number;
+      totalQuantity: number;
+      events: OffloadingEvent[];
+    };
+  };
+  byProduct: {
+    [productName: string]: {
+      count: number;
+      totalQuantity: number;
+      events: OffloadingEvent[];
+    };
+  };
+  totalQuantity: number;
+  averageQuantity: number;
+  dateRange: {
+    earliest: Date | null;
+    latest: Date | null;
+  };
+}
+
+interface GroupedTankData {
+  [key: string]: (TankData & { parsedDate: Date })[];
+}
+
+// Add this entire class before your component definition
+class OffloadingDetector {
+  private readonly DETECTION_WINDOW_MINUTES = 125;
+  private readonly MIN_OFFLOADING_THRESHOLD = 500;
+
+  detectOffloadingEvents(tankData: TankData[]): OffloadingEvent[] {
+    if (!tankData || !Array.isArray(tankData)) {
+      console.error('Invalid tank data provided');
+      return [];
+    }
+
+    const groupedData = this.groupByStationAndProduct(tankData);
+    let allOffloadingEvents: OffloadingEvent[] = [];
+
+    for (const [key, records] of Object.entries(groupedData)) {
+      const [stationSerial, productName] = key.split('|');
+      const offloadingEvents = this.detectOffloadingForGroup(records, stationSerial, productName);
+      allOffloadingEvents = allOffloadingEvents.concat(offloadingEvents);
+    }
+
+    return allOffloadingEvents;
+  }
+
+  private groupByStationAndProduct(tankData: TankData[]): GroupedTankData {
+    const grouped: GroupedTankData = {};
+    
+    tankData.forEach(record => {
+      const key = `${record.LicenseeTraSerialNo}|${record.product_name}`;
+      if (!grouped[key]) {
+        grouped[key] = [];
+      }
+      grouped[key].push({
+        ...record,
+        parsedDate: new Date(record.date)
+      });
+    });
+
+    Object.keys(grouped).forEach(key => {
+      grouped[key].sort((a, b) => a.parsedDate.getTime() - b.parsedDate.getTime());
+    });
+
+    return grouped;
+  }
+
+  private detectOffloadingForGroup(
+    records: (TankData & { parsedDate: Date })[], 
+    stationSerial: string, 
+    productName: string
+  ): OffloadingEvent[] {
+    const offloadingEvents: OffloadingEvent[] = [];
+    
+    for (let i = 0; i < records.length - 1; i++) {
+      const currentRecord = records[i];
+      const nextRecord = records[i + 1];
+      
+      // Look for significant volume increases (start of offloading)
+      const volumeIncrease = nextRecord.fuel_volume - currentRecord.fuel_volume;
+      
+      if (volumeIncrease >= this.MIN_OFFLOADING_THRESHOLD) {
+        // Check if this increase is preceded by a significant drop
+        if (this.hasSignificantDropBefore(records, i + 1)) {
+          continue; // Skip this potential offloading event
+        }
+        
+        // Check if this increase is followed by a fast sudden drop
+        if (this.isFastSuddenDrop(records, i + 1)) {
+          continue; // Skip this potential offloading event
+        }
+        
+        // Define the detection window (125 minutes from current record)
+        const windowEndTime = new Date(currentRecord.parsedDate.getTime() + this.DETECTION_WINDOW_MINUTES * 60 * 1000);
+        
+        // Find the maximum volume within the detection window
+        let maxVolumeRecord = currentRecord;
+        let maxVolumeIndex = i;
+        
+        // Search within the 125-minute window
+        for (let j = i; j < records.length; j++) {
+          const futureRecord = records[j];
+          
+          // Stop if we've exceeded the detection window
+          if (futureRecord.parsedDate > windowEndTime) {
+            break;
+          }
+          
+          // Update maximum if we find a higher volume
+          if (futureRecord.fuel_volume > maxVolumeRecord.fuel_volume) {
+            maxVolumeRecord = futureRecord;
+            maxVolumeIndex = j;
+          }
+        }
+        
+        // Calculate offloading quantity
+        const totalOffloadingQty = maxVolumeRecord.fuel_volume - currentRecord.fuel_volume;
+        
+        if (totalOffloadingQty >= this.MIN_OFFLOADING_THRESHOLD) {
+          const offloadingEvent: OffloadingEvent = {
+            id: `${stationSerial}_${productName}_${currentRecord.id}`,
+            stationSerial,
+            productName,
+            startTime: currentRecord.date,
+            endTime: maxVolumeRecord.date,
+            startReading: currentRecord.fuel_volume,
+            endReading: maxVolumeRecord.fuel_volume,
+            offloadingQty: parseFloat(totalOffloadingQty.toFixed(2)),
+            startRecordId: currentRecord.id,
+            endRecordId: maxVolumeRecord.id,
+            detectionWindow: this.DETECTION_WINDOW_MINUTES,
+            tankId: currentRecord.tank_id,
+            tankName: currentRecord.tank_name,
+            duration: this.calculateDuration(currentRecord.date, maxVolumeRecord.date),
+            formattedStartTime: new Date(currentRecord.date).toLocaleString(),
+            formattedEndTime: new Date(maxVolumeRecord.date).toLocaleString(),
+            formattedQuantity: `${parseFloat(totalOffloadingQty.toFixed(2)).toLocaleString()} L`
+          };
+
+          offloadingEvents.push(offloadingEvent);
+          
+          // Skip to after the detection window to avoid overlapping detections
+          i = this.findIndexAfterWindow(records, i, windowEndTime);
+        }
+      }
+    }
+
+    return offloadingEvents;
+  }
+
+  private hasSignificantDropBefore(records: (TankData & { parsedDate: Date })[], increaseIndex: number): boolean {
+    const LOOKBACK_RECORDS = 10;
+    const SIGNIFICANT_DROP_THRESHOLD = 1000;
+    
+    const startIndex = Math.max(0, increaseIndex - LOOKBACK_RECORDS);
+    
+    if (startIndex >= increaseIndex) return false;
+    
+    const increaseRecord = records[increaseIndex];
+    const lookbackRecord = records[startIndex];
+    
+    const volumeDifference = lookbackRecord.fuel_volume - increaseRecord.fuel_volume;
+    
+    return volumeDifference > SIGNIFICANT_DROP_THRESHOLD;
+  }
+
+  private isFastSuddenDrop(records: (TankData & { parsedDate: Date })[], startIndex: number): boolean {
+    if (startIndex >= records.length - 1) return false;
+    
+    const startRecord = records[startIndex];
+    const DROP_CHECK_MINUTES = 30;
+    const SUDDEN_DROP_THRESHOLD = this.MIN_OFFLOADING_THRESHOLD * 0.8;
+    
+    const checkEndTime = new Date(startRecord.parsedDate.getTime() + DROP_CHECK_MINUTES * 60 * 1000);
+    
+    for (let i = startIndex + 1; i < records.length; i++) {
+      const currentRecord = records[i];
+      
+      if (currentRecord.parsedDate > checkEndTime) {
+        break;
+      }
+      
+      const volumeChange = currentRecord.fuel_volume - startRecord.fuel_volume;
+      if (volumeChange <= -SUDDEN_DROP_THRESHOLD) {
+        return true;
+      }
+    }
+    
+    return false;
+  }
+
+  private findIndexAfterWindow(
+    records: (TankData & { parsedDate: Date })[], 
+    currentIndex: number, 
+    windowEndTime: Date
+  ): number {
+    for (let i = currentIndex + 1; i < records.length; i++) {
+      if (records[i].parsedDate > windowEndTime) {
+        return i - 1;
+      }
+    }
+    return records.length - 1;
+  }
+
+  generateSummary(offloadingEvents: OffloadingEvent[]): OffloadingSummary {
+    const summary: OffloadingSummary = {
+      totalEvents: offloadingEvents.length,
+      byStation: {},
+      byProduct: {},
+      totalQuantity: 0,
+      averageQuantity: 0,
+      dateRange: {
+        earliest: null,
+        latest: null
+      }
+    };
+
+    offloadingEvents.forEach(event => {
+      if (!summary.byStation[event.stationSerial]) {
+        summary.byStation[event.stationSerial] = {
+          count: 0,
+          totalQuantity: 0,
+          events: []
+        };
+      }
+      summary.byStation[event.stationSerial].count++;
+      summary.byStation[event.stationSerial].totalQuantity += event.offloadingQty;
+      summary.byStation[event.stationSerial].events.push(event);
+
+      if (!summary.byProduct[event.productName]) {
+        summary.byProduct[event.productName] = {
+          count: 0,
+          totalQuantity: 0,
+          events: []
+        };
+      }
+      summary.byProduct[event.productName].count++;
+      summary.byProduct[event.productName].totalQuantity += event.offloadingQty;
+      summary.byProduct[event.productName].events.push(event);
+
+      summary.totalQuantity += event.offloadingQty;
+
+      const eventDate = new Date(event.startTime);
+      if (!summary.dateRange.earliest || eventDate < summary.dateRange.earliest) {
+        summary.dateRange.earliest = eventDate;
+      }
+      if (!summary.dateRange.latest || eventDate > summary.dateRange.latest) {
+        summary.dateRange.latest = eventDate;
+      }
+    });
+
+    summary.averageQuantity = offloadingEvents.length > 0 
+      ? parseFloat((summary.totalQuantity / offloadingEvents.length).toFixed(2))
+      : 0;
+
+    return summary;
+  }
+
+  private calculateDuration(startTime: string, endTime: string): string {
+    const start = new Date(startTime);
+    const end = new Date(endTime);
+    const diffMinutes = Math.floor((end.getTime() - start.getTime()) / (1000 * 60));
+    
+    if (diffMinutes < 60) {
+      return `${diffMinutes} minutes`;
+    } else {
+      const hours = Math.floor(diffMinutes / 60);
+      const minutes = diffMinutes % 60;
+      return `${hours}h ${minutes}m`;
+    }
+  }
 }
 
 const styles = {
@@ -162,185 +436,8 @@ const styles = {
   welcomeSection: {
     marginBottom: "32px",
   },
-  welcomeTitle: {
-    fontSize: "30px",
-    fontWeight: "bold",
-    color: "#111827",
-    marginBottom: "8px",
-  },
   welcomeText: {
     color: "#6b7280",
-  },
-  tankGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))",
-    gap: "24px",
-    marginBottom: "32px",
-  },
-  tankCard: {
-    background: "#ffffff",
-    borderRadius: "16px",
-    boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1)",
-    border: "1px solid #e5e7eb",
-    padding: "24px",
-  },
-  tankHeader: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: "16px",
-  },
-  tankInfo: {
-    display: "flex",
-    alignItems: "center",
-    gap: "12px",
-  },
-  tankIcon: {
-    padding: "8px",
-    borderRadius: "8px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  tankDetails: {
-    flex: 1,
-  },
-  tankName: {
-    fontSize: "18px",
-    fontWeight: "600",
-    color: "#111827",
-    margin: 0,
-  },
-  tankCapacity: {
-    fontSize: "14px",
-    color: "#6b7280",
-    margin: 0,
-  },
-  statusBadge: {
-    fontSize: "12px",
-    fontWeight: "500",
-    padding: "4px 8px",
-    borderRadius: "9999px",
-  },
-  levelSection: {
-    marginBottom: "16px",
-  },
-  levelHeader: {
-    display: "flex",
-    justifyContent: "space-between",
-    marginBottom: "8px",
-  },
-  levelLabel: {
-    fontSize: "14px",
-    fontWeight: "500",
-    color: "#374151",
-  },
-  levelPercentage: {
-    fontSize: "14px",
-    fontWeight: "bold",
-  },
-  progressBar: {
-    width: "100%",
-    height: "12px",
-    backgroundColor: "#e5e7eb",
-    borderRadius: "9999px",
-    overflow: "hidden",
-  },
-  progressFill: {
-    height: "100%",
-    borderRadius: "9999px",
-    transition: "width 0.3s ease",
-  },
-  levelDetails: {
-    display: "flex",
-    justifyContent: "space-between",
-    marginTop: "8px",
-    fontSize: "12px",
-    color: "#6b7280",
-  },
-  metricsGrid: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: "16px",
-    marginTop: "16px",
-  },
-  metricBox: {
-    background: "#f9fafb",
-    borderRadius: "8px",
-    padding: "12px",
-  },
-  metricHeader: {
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-    marginBottom: "4px",
-  },
-  metricLabel: {
-    fontSize: "12px",
-    color: "#6b7280",
-  },
-  metricValue: {
-    fontSize: "18px",
-    fontWeight: "600",
-    color: "#111827",
-    margin: 0,
-  },
-  quantitySection: {
-    background: "#f8fafc",
-    borderRadius: "12px",
-    padding: "16px",
-    marginTop: "16px",
-    border: "1px solid #e2e8f0",
-  },
-  quantityTitle: {
-    fontSize: "14px",
-    fontWeight: "600",
-    color: "#1e293b",
-    marginBottom: "12px",
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-  },
-  quantityGrid: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: "12px",
-  },
-  quantityItem: {
-    background: "#ffffff",
-    borderRadius: "8px",
-    padding: "12px",
-    border: "1px solid #e2e8f0",
-  },
-  quantityLabel: {
-    fontSize: "11px",
-    color: "#64748b",
-    marginBottom: "4px",
-    textTransform: "uppercase" as const,
-    letterSpacing: "0.05em",
-  },
-  quantityValue: {
-    fontSize: "16px",
-    fontWeight: "600",
-    color: "#1e293b",
-    margin: 0,
-  },
-  editButton: {
-    background: "transparent",
-    border: "none",
-    cursor: "pointer",
-    padding: "4px",
-    borderRadius: "4px",
-    transition: "background-color 0.2s",
-  },
-  inputField: {
-    width: "100%",
-    padding: "8px 12px",
-    border: "1px solid #e2e8f0",
-    borderRadius: "6px",
-    fontSize: "14px",
-    outline: "none",
-    transition: "border-color 0.2s",
   },
   nozzleSection: {
     background: "#ffffff",
@@ -381,12 +478,6 @@ const styles = {
     fontWeight: "600",
     color: "#1e293b",
   },
-  nozzleStatus: {
-    fontSize: "10px",
-    fontWeight: "500",
-    padding: "2px 6px",
-    borderRadius: "6px",
-  },
   nozzleMetrics: {
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
@@ -406,309 +497,6 @@ const styles = {
     color: "#64748b",
     marginTop: "2px",
   },
-  statsGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-    gap: "24px",
-    marginBottom: "32px",
-  },
-
-  statCard: {
-    background: "#ffffff",
-    borderRadius: "16px",
-    boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1)",
-    border: "1px solid #e5e7eb",
-    padding: "24px",
-    transition: "box-shadow 0.2s",
-    cursor: "pointer",
-  },
-  statHeader: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: "16px",
-  },
-  statIcon: {
-    padding: "8px",
-    borderRadius: "8px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  statValue: {
-    fontSize: "24px",
-    fontWeight: "bold",
-    color: "#111827",
-    marginBottom: "4px",
-  },
-  statLabel: {
-    color: "#6b7280",
-    fontSize: "14px",
-    marginBottom: "12px",
-  },
-  statFooter: {
-    display: "flex",
-    alignItems: "center",
-    fontSize: "12px",
-    color: "#6b7280",
-  },
-  actionsCard: {
-    background: "#ffffff",
-    borderRadius: "16px",
-    boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1)",
-    border: "1px solid #e5e7eb",
-    padding: "24px",
-    marginBottom: "32px",
-  },
-  actionsTitle: {
-    fontSize: "18px",
-    fontWeight: "600",
-    color: "#111827",
-    marginBottom: "24px",
-  },
-  actionsGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
-    gap: "16px",
-  },
-  actionButton: {
-    display: "flex",
-    flexDirection: "column" as const,
-    alignItems: "center",
-    padding: "16px",
-    borderRadius: "8px",
-    border: "none",
-    cursor: "pointer",
-    transition: "all 0.2s",
-    fontSize: "14px",
-    fontWeight: "500",
-  },
-  successMessage: {
-    background: "linear-gradient(135deg, #dbeafe 0%, #dcfce7 100%)",
-    border: "1px solid #3b82f6",
-    borderRadius: "16px",
-    padding: "24px",
-  },
-  messageContent: {
-    display: "flex",
-    alignItems: "center",
-    gap: "12px",
-  },
-  messageIcon: {
-    padding: "8px",
-    backgroundColor: "#dbeafe",
-    borderRadius: "50%",
-  },
-  messageTitle: {
-    fontWeight: "600",
-    color: "#1e40af",
-    marginBottom: "4px",
-  },
-  messageText: {
-    color: "#1e3a8a",
-  },
-  loadingState: {
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-    color: "#6b7280",
-    fontSize: "14px",
-  },
-  modalOverlay: {
-    position: "fixed" as const,
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 1000,
-  },
-  modalContent: {
-    backgroundColor: "#ffffff",
-    borderRadius: "16px",
-    padding: "32px",
-    width: "90%",
-    maxWidth: "500px",
-    boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
-  },
-  modalHeader: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: "24px",
-  },
-  modalTitle: {
-    fontSize: "20px",
-    fontWeight: "600",
-    color: "#111827",
-    margin: 0,
-  },
-  closeButton: {
-    background: "transparent",
-    border: "none",
-    cursor: "pointer",
-    padding: "8px",
-    borderRadius: "8px",
-    color: "#6b7280",
-  },
-  checklistContainer: {
-    display: "flex",
-    flexDirection: "column" as const,
-    gap: "16px",
-  },
-  checklistItem: {
-    display: "flex",
-    alignItems: "center",
-    gap: "12px",
-    padding: "16px",
-    backgroundColor: "#f8fafc",
-    borderRadius: "12px",
-    border: "1px solid #e2e8f0",
-    transition: "all 0.2s",
-  },
-  checklistItemChecked: {
-    backgroundColor: "#dcfce7",
-    borderColor: "#16a34a",
-  },
-  checkbox: {
-    width: "20px",
-    height: "20px",
-    borderRadius: "4px",
-    border: "2px solid #d1d5db",
-    cursor: "pointer",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#ffffff",
-  },
-  checkboxChecked: {
-    backgroundColor: "#16a34a",
-    borderColor: "#16a34a",
-    color: "#ffffff",
-  },
-  checklistLabel: {
-    fontSize: "16px",
-    color: "#374151",
-    fontWeight: "500",
-    flex: 1,
-  },
-  checklistLabelChecked: {
-    color: "#166534",
-  },
-  modalFooter: {
-    marginTop: "24px",
-    display: "flex",
-    justifyContent: "flex-end",
-    gap: "12px",
-  },
-  modalButton: {
-    padding: "12px 24px",
-    borderRadius: "8px",
-    border: "none",
-    cursor: "pointer",
-    fontSize: "14px",
-    fontWeight: "500",
-    transition: "all 0.2s",
-  },
-  saveButton: {
-    backgroundColor: "#16a34a",
-    color: "#ffffff",
-  },
-  cancelButton: {
-    backgroundColor: "#f3f4f6",
-    color: "#374151",
-  },
-  salesRow: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "16px",
-    backgroundColor: "#f8fafc",
-    borderRadius: "12px",
-    border: "1px solid #e2e8f0",
-    marginBottom: "12px",
-  },
-  salesRowTotal: {
-    backgroundColor: "#dbeafe",
-    borderColor: "#3b82f6",
-    fontWeight: "600",
-  },
-  salesRowETotals: {
-    backgroundColor: "#dcfce7",
-    borderColor: "#16a34a",
-    fontWeight: "600",
-  },
-  salesLabel: {
-    fontSize: "16px",
-    color: "#374151",
-    fontWeight: "500",
-  },
-  salesValue: {
-    fontSize: "18px",
-    fontWeight: "600",
-    color: "#111827",
-  },
-  salesValueHighlight: {
-    color: "#16a34a",
-    fontSize: "20px",
-  },
-  salesDetails: {
-    fontSize: "12px",
-    color: "#6b7280",
-    marginTop: "4px",
-  },
-  salesIcon: {
-    marginRight: "8px",
-  },
-  textarea: {
-    width: "100%",
-    minHeight: "120px",
-    padding: "12px",
-    border: "1px solid #e2e8f0",
-    borderRadius: "8px",
-    fontSize: "14px",
-    fontFamily: "inherit",
-    resize: "vertical" as const,
-    outline: "none",
-    transition: "border-color 0.2s",
-  },
-  selectField: {
-    width: "100%",
-    padding: "12px",
-    border: "1px solid #e2e8f0",
-    borderRadius: "8px",
-    fontSize: "14px",
-    backgroundColor: "#ffffff",
-    outline: "none",
-    transition: "border-color 0.2s",
-  },
-  formGroup: {
-    marginBottom: "16px",
-  },
-  formLabel: {
-    display: "block",
-    fontSize: "14px",
-    fontWeight: "500",
-    color: "#374151",
-    marginBottom: "8px",
-  },
-  urgentCategory: {
-    backgroundColor: "#fee2e2",
-    borderColor: "#dc2626",
-  },
-  characterCount: {
-    fontSize: "12px",
-    color: "#6b7280",
-    textAlign: "right" as const,
-    marginTop: "4px",
-  },
-  sendingButton: {
-    backgroundColor: "#9ca3af",
-    cursor: "not-allowed",
-  },
 };
 
 export default function StationDashboard({
@@ -719,229 +507,267 @@ export default function StationDashboard({
   const { id } = use(params);
   const { logout } = useAuth();
   const [stationData, setStationData] = useState<StationData | null>(null);
-  const [nozzleData, setNozzleData] = useState<NozzleData[]>([]);
-  const [tankData, setTankData] = useState<TankData[]>([]);
   const [loading, setLoading] = useState(true);
-  const [pumpsLoading, setPumpsLoading] = useState(true);
-  const [tanksLoading, setTanksLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [pumpsError, setPumpsError] = useState<string | null>(null);
-  const [tanksError, setTanksError] = useState<string | null>(null);
-  const [showChecklistModal, setShowChecklistModal] = useState(false);
-  const [showSalesModal, setShowSalesModal] = useState(false);
-  const [loadingSalesModal, setLoadingSalesModal] = useState(false);
-  const [showIssueModal, setShowIssueModal] = useState(false);
-  const [issueMessage, setIssueMessage] = useState("");
-  const [issueCategory, setIssueCategory] = useState("general");
-  const [issueSending, setIssueSending] = useState(false);
-  const [checklistItems, setChecklistItems] = useState({
-    calibration: false,
-    pipelineLeak: false,
-    tankLeak: false,
-    safetyEquipment: false,
-  });
-
-  const [managerCash, setManagerCash] = useState("");
-  // Add this with your other state declarations
   const [refillData, setRefillData] = useState<any[]>([]);
-  const [autorefillData, setAutoRefillData] = useState<any[]>([]);
+  const [allTankData, setAllTankData] = useState<TankData[]>([]);
+  const [offloadingEvents, setOffloadingEvents] = useState<OffloadingEvent[]>([]);
+  const [offloadingSummary, setOffloadingSummary] = useState<OffloadingSummary | null>(null);
+  const [isAnalyzingOffloading, setIsAnalyzingOffloading] = useState(false);
 
-  const [dailyReportData, setDailyReportData] = useState(null);
-  const [dailyReportLoading, setDailyReportLoading] = useState(true);
-  const [dailyReportError, setDailyReportError] = useState<string | null>(null);
+  // Initialize offloading detector
+  const offloadingDetector = useMemo(() => new OffloadingDetector(), []);
 
-  // Sales data - normally would come from API
-  const [salesData] = useState({
-    unleaded: {
-      liters: 4220,
-      pricePerLiter: 1.45,
-      cash: 4220 * 1.45,
-    },
-    diesel: {
-      liters: 5800,
-      pricePerLiter: 1.52,
-      cash: 5800 * 1.52,
-    },
-    eTotalCash: 14629,
-  });
+  // SIGNAL - Check if getBigTanksData returned data
+  const hasTankData = allTankData && allTankData.length > 0;
 
-  // Fetch pump data from API
-  // Replace your fetchDailyReportData function with this:
-  const fetchDailyReportData = async (license: string) => {
+  // CALCULATION FUNCTIONS
+  const getUnleadedOrderQty = () => {
+    return refillData.length > 0 
+      ? (refillData.find(refill => refill.product === "UNLEADED" || refill.product === "Unleaded")?.fuel_amount || "0") + " L" 
+      : "0 L";
+  };
+
+  const getDieselOrderQty = () => {
+    return refillData.length > 0 
+      ? (refillData.find(refill => refill.product === "DIESEL" || refill.product === "Diesel" || refill.product === "DIESLE")?.fuel_amount || "0") + " L" 
+      : "0 L";
+  };
+
+  const getUnleadedOffloading = () => {
+    const unleadedOffloading = offloadingEvents
+      .filter(event => 
+        (event.productName === "UNLEADED" || event.productName === "Unleaded") &&
+        event.stationSerial === stationData?.LicenseeTraSerialNo
+      )
+      .slice(-1)[0];
+    
+    return unleadedOffloading 
+      ? `${(unleadedOffloading.offloadingQty + 500).toLocaleString()} L`
+      : "0 L";
+  };
+
+  const getDieselOffloading = () => {
+    const dieselOffloading = offloadingEvents
+      .filter(event => 
+        (event.productName === "DIESEL" || event.productName === "DIESLE") &&
+        event.stationSerial === stationData?.LicenseeTraSerialNo
+      )
+      .slice(-1)[0];
+    
+    return dieselOffloading 
+      ? `${(dieselOffloading.offloadingQty + 500).toLocaleString()} L`
+      : "0 L";
+  };
+
+  const getUnleadedOffloadingDate = () => {
+    const unleadedOffloading = offloadingEvents
+      .filter(event => 
+        (event.productName === "UNLEADED" || event.productName === "Unleaded") &&
+        event.stationSerial === stationData?.LicenseeTraSerialNo
+      )
+      .slice(-1)[0];
+      
+    if (unleadedOffloading) {
+      return `Date: ${new Date(unleadedOffloading.startTime).toLocaleDateString()}`;
+    }
+    return "No recent offloading";
+  };
+
+  const getDieselOffloadingDate = () => {
+    const dieselOffloading = offloadingEvents
+      .filter(event => 
+        (event.productName === "DIESEL" || event.productName === "DIESLE") &&
+        event.stationSerial === stationData?.LicenseeTraSerialNo
+      )
+      .slice(-1)[0];
+      
+    if (dieselOffloading) {
+      return `Date: ${new Date(dieselOffloading.startTime).toLocaleDateString()}`;
+    }
+    return "No recent offloading";
+  };
+
+  const getUnleadedOffloadingValue = () => {
+    const unleadedOffloading = offloadingEvents
+      .filter(event => 
+        (event.productName === "UNLEADED" || event.productName === "Unleaded") &&
+        event.stationSerial === stationData?.LicenseeTraSerialNo
+      )
+      .slice(-1)[0];
+    
+    return unleadedOffloading ? unleadedOffloading.offloadingQty + 500 : 0;
+  };
+
+  const getDieselOffloadingValue = () => {
+    const dieselOffloading = offloadingEvents
+      .filter(event => 
+        (event.productName === "DIESEL" || event.productName === "DIESLE") &&
+        event.stationSerial === stationData?.LicenseeTraSerialNo
+      )
+      .slice(-1)[0];
+    
+    return dieselOffloading ? dieselOffloading.offloadingQty + 500 : 0;
+  };
+
+  const getUnleadedOrderValue = () => {
+    return refillData.length > 0 
+      ? (refillData.find(refill => refill.product === "UNLEADED" || refill.product === "Unleaded")?.fuel_amount || 0)
+      : 0;
+  };
+
+  const getDieselOrderValue = () => {
+    return refillData.length > 0 
+      ? (refillData.find(refill => refill.product === "DIESEL" || refill.product === "Diesel" || refill.product === "DIESLE")?.fuel_amount || 0)
+      : 0;
+  };
+
+  const getUnleadedDifference = () => {
+    const difference = getUnleadedOffloadingValue() - getUnleadedOrderValue();
+    
+    return {
+      value: `${difference > 0 ? '+' : ''}${difference.toLocaleString()} L`,
+      color: difference === 0 ? '#16a34a' : difference > 0 ? '#f59e0b' : '#dc2626'
+    };
+  };
+
+  const getDieselDifference = () => {
+    const difference = getDieselOffloadingValue() - getDieselOrderValue();
+    
+    return {
+      value: `${difference > 0 ? '+' : ''}${difference.toLocaleString()} L`,
+      color: difference === 0 ? '#16a34a' : difference > 0 ? '#f59e0b' : '#dc2626'
+    };
+  };
+
+  const getUnleadedDipstick = () => {
+    const unleadedRefill = refillData.find(refill => 
+      refill.product === "UNLEADED" || refill.product === "Unleaded"
+    );
+
+    if (unleadedRefill && unleadedRefill.dip_end && unleadedRefill.dip_start) {
+      return (unleadedRefill.dip_end - unleadedRefill.dip_start).toLocaleString() + " L";
+    }
+    return "0 L";
+  };
+
+  const getDieselDipstick = () => {
+    const dieselRefill = refillData.find(refill => refill.product === "DIESEL" || refill.product === "DIESLE");
+
+    if (dieselRefill && dieselRefill.dip_end && dieselRefill.dip_start) {
+      return (dieselRefill.dip_end - dieselRefill.dip_start).toLocaleString() + " L";
+    }
+    return "0 L";
+  };
+
+  const getUnleadedDipstickDate = () => {
+    const unleadedRefill = refillData.find(refill => 
+      refill.product === "UNLEADED" || refill.product === "Unleaded"
+    );
+    if (unleadedRefill && unleadedRefill.issue_date) {
+      return `Date: ${new Date(unleadedRefill.issue_date).toLocaleDateString()}`;
+    }
+    return null;
+  };
+
+  const getDieselDipstickDate = () => {
+    const dieselRefill = refillData.find(refill => refill.product === "DIESEL" || refill.product === "DIESLE");
+    if (dieselRefill && dieselRefill.issue_date) {
+      return `Date: ${new Date(dieselRefill.issue_date).toLocaleDateString()}`;
+    }
+    return null;
+  };
+
+  // Offloading Analysis Function
+  const analyzeOffloading = useCallback(async (tankDataForAnalysis: TankData[]) => {
+    if (!tankDataForAnalysis || tankDataForAnalysis.length === 0) {
+      console.log('No tank data available for offloading analysis');
+      return;
+    }
+
+    setIsAnalyzingOffloading(true);
     try {
-      setDailyReportLoading(true);
-      setPumpsLoading(true);
-      setDailyReportError(null);
-
-      console.log("Fetching daily report data for station ID:", id);
-
-      // Call your new EWURA daily report API using fetch directly
-      const response = await apiService.getStationDailyReport(license);
-      console.log("Daily Report API Response:", response);
-
-      if (response) {
-        setDailyReportData(response.report);
-        setNozzleData(
-  response.report.pumps_list.map((pump: any) => ({
-    id: pump.id,
-    name: pump.pump,
-    sold: pump.total_volume,
-    price: pump.Price,
-    percentage: 0, // Add if your interface requires it
-    status: true,  // Add if your interface requires it
-    e_total: pump.electronic_totalizer,
-    v_total: pump.virtual_totalizer,
-    product: pump.product,
-  }))
-);
-      } else {
-        throw new Error("Invalid daily report response structure");
-      }
-    } catch (err) {
-      console.error("Error fetching daily report data:", err);
-      setDailyReportError((err as Error).message);
+      console.log('Starting offloading analysis with', tankDataForAnalysis.length, 'records');
+      
+      const events = offloadingDetector.detectOffloadingEvents(tankDataForAnalysis);
+      const summary = offloadingDetector.generateSummary(events);
+      
+      setOffloadingEvents(events);
+      setOffloadingSummary(summary);
+      
+      console.log('Offloading Analysis Complete:', {
+        totalEvents: events.length,
+        totalQuantity: summary.totalQuantity,
+        summary
+      });
+      
+    } catch (error) {
+      console.error('Error analyzing offloading:', error);
     } finally {
-      setDailyReportLoading(false);
-      setPumpsLoading(false);
+      setIsAnalyzingOffloading(false);
+    }
+  }, [offloadingDetector]);
+
+  const fetchAllTankData = async () => {
+    try {
+      const response = await apiService.getBigTanksData();
+      
+      if (response && response.data) {
+        setAllTankData(response.data);
+        
+        if (stationData?.LicenseeTraSerialNo) {
+          const stationTankData = response.data.filter((record: TankData) => 
+            record.LicenseeTraSerialNo === stationData.LicenseeTraSerialNo
+          );
+          await analyzeOffloading(stationTankData);
+        } else {
+          await analyzeOffloading(response.data);
+        }
+      }
+    } catch (error) {
+      console.error('Error in fetchAllTankData:', error);
     }
   };
-  const fetchPumpData = async () => {
-    try {
-      setPumpsLoading(true);
-      setPumpsError(null);
-      const response = await apiService.getStationPumps();
-      console.log("Pump API Response:", response);
 
-      if (response.data && Array.isArray(response.data)) {
-        setNozzleData(response.data);
+  const fetchRefillData = async () => {
+    try {
+      const response = await apiService.getStationRefillReport();
+      if (response && response.data && response.data.records) {
+        const currentStationSerial = stationData?.LicenseeTraSerialNo;
+        
+        if (currentStationSerial) {
+          const filteredRecords = response.data.records.filter((record: any) =>
+            record.station_serial === currentStationSerial
+          );
+          
+          const latestByProduct: { [key: string]: any } = {};
+          filteredRecords.forEach((record: any) => {
+            const product = record.product;
+            if (!latestByProduct[product] || record.id > latestByProduct[product].id) {
+              latestByProduct[product] = record;
+            }
+          });
+          
+          const latestRecords = Object.values(latestByProduct).sort((a: any, b: any) => b.id - a.id);
+          setRefillData(latestRecords);
+        } else {
+          setRefillData(response.data.records);
+        }
       } else {
         throw new Error("Invalid API response structure");
       }
     } catch (err) {
-      console.error("Error fetching pump data:", err);
-      setPumpsError((err as Error).message);
-    } finally {
-      setPumpsLoading(false);
+      console.error("Error fetching refill data:", err);
+      setRefillData([]);
     }
   };
-  // Update your fetchRefillData function to filter by current station:
 
-const fetchRefillData = async () => {
-  try {
-    const response = await apiService.getStationRefillReport();
-    if (response && response.data && response.data.records) {
-      console.log("Refill API Response:", response.data.records);
-      
-      // Get current station's serial number
-      const currentStationSerial = stationData?.LicenseeTraSerialNo;
-      
-      console.log("Current station serial:", currentStationSerial);
-      console.log("All refill records:", response.data.records.length);
-      
-      if (currentStationSerial) {
-        // Filter records to show only current station's data
-        const filteredRecords = response.data.records.filter((record: any) => 
-          record.station_serial === currentStationSerial
-        );
-        
-        console.log(`Filtered refill records for station ${currentStationSerial}:`, filteredRecords.length);
-        setRefillData(filteredRecords);
-      } else {
-        console.log("No station serial found - showing all refill records");
-        setRefillData(response.data.records);
-      }
-    } else {
-      throw new Error("Invalid API response structure");
-    }
-  } catch (err) {
-    console.error("Error fetching refill data:", err);
-    setRefillData([]);
-  }
-};
-  const fetchAutoRefillData = async () => {
-  try {
-    const response = await apiService.getStationAutoRefillReport();
-    if (response && response.data && response.data.records) {
-      console.log("Auto Refill API Response:", response.data.records);
-      
-      // Get current station's serial number - SAME FILTERING LOGIC AS REFILL
-      const currentStationSerial = stationData?.LicenseeTraSerialNo;
-      
-      console.log("Current station serial for auto-refill:", currentStationSerial);
-      console.log("All auto-refill records:", response.data.records.length);
-      
-      if (currentStationSerial) {
-        // Filter records to show only current station's data
-        const filteredRecords = response.data.records.filter((record: any) => 
-          record.station_serial === currentStationSerial
-        );
-        
-        console.log(`Filtered auto-refill records for station ${currentStationSerial}:`, filteredRecords.length);
-        setAutoRefillData(filteredRecords);
-      } else {
-        console.log("No station serial found - showing all auto-refill records");
-        setAutoRefillData(response.data.records);
-      }
-    } else {
-      throw new Error("Invalid API response structure");
-    }
-  } catch (err) {
-    console.error("Error fetching auto refill data:", err);
-    setAutoRefillData([]);
-  }
-};
-  // Fetch tank data from API
-  const fetchTankData = async (license: string) => {
-    try {
-      setTanksLoading(true);
-      setTanksError(null);
-      const response = await apiService.getStationTanks(license);
-
-      if (response) {
-        setTankData(
-          response.map(
-            (tank: {
-              id: any;
-              tank_name: any;
-              tank_capacity: any;
-              product_name: any;
-              fuel_volume: any;
-              water_volume: any;
-              water_lvl_mm: any;
-              average_temp: any;
-            }) => ({
-              id: tank.id,
-              name: tank.tank_name,
-              tank_capacity: tank.tank_capacity,
-              product_name: tank.product_name,
-              fuel_volume: tank.fuel_volume,
-              water_lvl_mm: tank.water_lvl_mm,
-              water_volume: tank.water_volume,
-              average_temp: tank.average_temp,
-            })
-          )
-        ); // console.log(response.data)
-      } else {
-        throw new Error("Invalid API response structure");
-      }
-    } catch (err) {
-      console.error("Error fetching tank data:", err);
-      setTanksError((err as Error).message);
-    } finally {
-      setTanksLoading(false);
-    }
-  };
-  // Fetch station data from API
   const fetchStationData = async () => {
     try {
       setLoading(true);
       setError(null);
 
-      console.log("Fetching station data for ID:", id);
-
-      // Fetch station info
       const station = await apiService.getStation(id);
-      console.log("Station API Response:", station);
 
       if (station) {
         setStationData({
@@ -960,15 +786,11 @@ const fetchRefillData = async () => {
           LicenseeTraSerialNo: station.LicenseeTraSerialNo,
         });
       } else {
-        console.error("Invalid API response structure:", station);
-        throw new Error(
-          `Station with ID ${id} not found. Available stations: ${station.id}`
-        );
+        throw new Error(`Station with ID ${id} not found`);
       }
     } catch (err) {
       console.error("Error fetching station data:", err);
       setError((err as Error).message);
-      // Enhanced fallback data
       setStationData({
         id: parseInt(id),
         name: `Station ${id} (Fallback)`,
@@ -988,124 +810,23 @@ const fetchRefillData = async () => {
 
   useEffect(() => {
     if (stationData?.ewuraLicense) {
-      console.log(
-        "Station data loaded, now fetching daily report with license:",
-        stationData.ewuraLicense
-      );
-      fetchDailyReportData(stationData.ewuraLicense);
-      fetchTankData(stationData.ewuraLicense);
       fetchRefillData();
-      fetchAutoRefillData();
     }
   }, [stationData]);
 
   useEffect(() => {
     refreshAllData();
   }, []);
+
   useEffect(() => {
-  if (stationData?.LicenseeTraSerialNo) {
-    fetchRefillData()
-    fetchAutoRefillData();;
-  }
-}, [stationData]);
+    if (stationData?.LicenseeTraSerialNo) {
+      fetchRefillData();
+      fetchAllTankData();
+    }
+  }, [stationData]);
 
   const handleSignOut = async () => {
     await logout();
-  };
-
-  const handleChecklistItemChange = (item: keyof typeof checklistItems) => {
-    setChecklistItems((prev) => ({
-      ...prev,
-      [item]: !prev[item],
-    }));
-  };
-
-  const handleSaveChecklist = () => {
-    console.log("Checklist saved:", checklistItems);
-    // Here you would typically save to your API
-    setShowChecklistModal(false);
-  };
-
-  const handleCloseModal = () => {
-    setShowChecklistModal(false);
-  };
-
-  const handleCloseSalesModal = () => {
-    setShowSalesModal(false);
-  };
-
-  const handleSaveSales = async () => {
-    console.log("Sales data recorded:", salesData);
-    //TODO: lreajslkjlk HERE I AM
-    managerCash && console.log("stationid:", id);
-    console.log(
-      "Total actual cash:",
-      salesData.diesel.cash * salesData.diesel.liters +
-        salesData.unleaded.cash * salesData.unleaded.liters
-    );
-    console.log("Total manual cash:", managerCash);
-    const actualCash =
-      salesData.diesel.cash * salesData.diesel.liters +
-      salesData.unleaded.cash * salesData.unleaded.liters;
-    setLoadingSalesModal(true);
-    await api
-      .updateCurrentCashEntry(id, actualCash, parseFloat(managerCash))
-      .then(() => {
-        setLoadingSalesModal(false);
-      })
-      .finally(() => {
-        setShowSalesModal(false);
-      });
-    // Here you would typically save to your API
-  };
-
-  const handleCloseIssueModal = () => {
-    setShowIssueModal(false);
-    setIssueMessage("");
-    setIssueCategory("general");
-  };
-
-  const handleSendIssueReport = async () => {
-    if (!issueMessage.trim()) {
-      alert("Please enter an issue description before sending.");
-      return;
-    }
-
-    setIssueSending(true);
-
-    try {
-      // Simulate API call to send SMS
-      const issueData = {
-        stationId: stationData?.id,
-        stationName: stationData?.name,
-        category: issueCategory,
-        message: issueMessage,
-        timestamp: new Date().toISOString(),
-        managerName: "Station Manager", // Could be from auth context
-        urgency: issueCategory === "emergency" ? "HIGH" : "NORMAL",
-      };
-
-      console.log("Sending issue report:", issueData);
-
-      // Here you would call your SMS API
-      // await apiService.sendIssueReport(issueData)
-
-      // Simulate delay
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      alert(
-        `Issue report sent successfully!\n\nSMS sent to General Manager:\n"STATION ALERT: ${
-          stationData?.name || "Station"
-        } - ${issueCategory.toUpperCase()}\n${issueMessage}\nReported by: Station Manager\nTime: ${new Date().toLocaleString()}"`
-      );
-
-      handleCloseIssueModal();
-    } catch (error) {
-      console.error("Error sending issue report:", error);
-      alert("Failed to send issue report. Please try again.");
-    } finally {
-      setIssueSending(false);
-    }
   };
 
   return (
@@ -1170,7 +891,6 @@ const fetchRefillData = async () => {
       <main style={styles.main}>
         {/* Welcome Section */}
         <div style={styles.welcomeSection}>
-          <h2 style={styles.welcomeTitle}>Station Overview </h2>
           <p style={styles.welcomeText}>
             {loading
               ? "Loading station information..."
@@ -1200,44 +920,15 @@ const fetchRefillData = async () => {
                 }}
               >
                 <div>
-                  📍 <strong>Location:</strong> {stationData.location}
-                </div>
-                <div>
-                  🏢 <strong>Operator:</strong> {stationData.operatorName}
+                  🏢 <strong>Serial No:</strong> {stationData.LicenseeTraSerialNo}
                 </div>
                 <div>
                   📋 <strong>License:</strong> {stationData.ewuraLicense}
                 </div>
                 <div>
-                  🛢️ <strong>Tanks:</strong>{" "}
-                  {tanksLoading
-                    ? "Loading..."
-                    : tankData.length || stationData.tanks}
-                </div>
-                <div>
-                  ⛽ <strong>Pumps/Nozzles:</strong>{" "}
-                  {pumpsLoading ? "Loading..." : nozzleData.length}
+                  🛢️ <strong>Tanks:</strong> {stationData.tanks}
                 </div>
               </div>
-
-              {(pumpsError || tanksError) && (
-                <div
-                  style={{
-                    marginTop: "8px",
-                    padding: "8px",
-                    backgroundColor: "#fee2e2",
-                    borderRadius: "6px",
-                    fontSize: "12px",
-                    color: "#dc2626",
-                  }}
-                >
-                  {pumpsError && <div>⚠️ Pump data error: {pumpsError}</div>}
-                  {tanksError && <div>⚠️ Tank data error: {tanksError}</div>}
-                  <div style={{ marginTop: "4px", fontSize: "11px" }}>
-                    Using fallback data where available
-                  </div>
-                </div>
-              )}
 
               <button
                 onClick={refreshAllData}
@@ -1261,191 +952,34 @@ const fetchRefillData = async () => {
             </div>
           )}
         </div>
-        {/* Fuel Pricing Section - Enhanced with Colored Backgrounds */}
-        <div
-          style={{
-            ...styles.nozzleSection,
-            background: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
-            border: "2px solid #e2e8f0",
-            borderRadius: "16px",
-            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.05)",
-            padding: "24px",
-          }}
-        >
-          <h3 style={styles.nozzleTitle}>
-            <DollarSign size={20} color="#16a34a" />
-            Fuel Pricing & Sales
-          </h3>
-          <div style={styles.nozzleGrid}>
-            {/* Unleaded Price Card - Green Background */}
-            <div
-              style={{
-                ...styles.nozzleCard,
-                background: "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)",
-                border: "3px solid #16a34a",
-                borderRadius: "16px",
-                boxShadow: "0 6px 20px rgba(22, 163, 74, 0.15)",
-                position: "relative",
-                overflow: "hidden",
-              }}
-            >
-              {/* Green accent stripe */}
-              <div
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  height: "4px",
-                  background:
-                    "linear-gradient(90deg, #16a34a 0%, #22c55e 50%, #16a34a 100%)",
-                }}
-              ></div>
 
-              <div style={styles.nozzleHeader}>
-                <span
-                  style={{
-                    ...styles.nozzleName,
-                    color: "#14532d",
-                    fontWeight: "700",
-                    fontSize: "16px",
-                  }}
-                >
-                  Unleaded Price
-                </span>
-                <span
-                  style={{
-                    ...styles.nozzleStatus,
-                    color: "#166534",
-                    backgroundColor: "#dcfce7",
-                    border: "1px solid #16a34a",
-                  }}
-                >
-                  Active
-                </span>
-              </div>
-              <div style={styles.nozzleMetrics}>
-                <div style={styles.nozzleMetric}>
-                  <p
-                    style={{
-                      ...styles.nozzleMetricValue,
-                      fontSize: "24px",
-                      color: "#14532d",
-                    }}
-                  >
-                    {nozzleData.find((nozzle) => nozzle.product===("UNLEADED"))
-                      ?.price + " TSH" || "??? TSH"}
-                  </p>
-                  <p style={{ ...styles.nozzleMetricLabel, color: "#15803d" }}>
-                    Per Liter
-                  </p>
-                </div>
-                <div style={styles.nozzleMetric}>
-                  <p
-                    style={{
-                      ...styles.nozzleMetricValue,
-                      fontSize: "24px",
-                      color: "#14532d",
-                    }}
-                  >
-                    {nozzleData
-                      .filter((nozzle) => nozzle.product===("UNLEADED"))
-                      .reduce((sum, nozzle) => sum + nozzle.sold, 0)
-                      .toLocaleString() + " L"}
-                  </p>
-                  <p style={{ ...styles.nozzleMetricLabel, color: "#15803d" }}>
-                    Sold Today
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Diesel Price Card - Blue Background */}
-            <div
-              style={{
-                ...styles.nozzleCard,
-                background: "linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)",
-                border: "3px solid #3b82f6",
-                borderRadius: "16px",
-                boxShadow: "0 6px 20px rgba(59, 130, 246, 0.15)",
-                position: "relative",
-                overflow: "hidden",
-              }}
-            >
-              {/* Blue accent stripe */}
-              <div
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  height: "4px",
-                  background:
-                    "linear-gradient(90deg, #3b82f6 0%, #60a5fa 50%, #3b82f6 100%)",
-                }}
-              ></div>
-
-              <div style={styles.nozzleHeader}>
-                <span
-                  style={{
-                    ...styles.nozzleName,
-                    color: "#1e3a8a",
-                    fontWeight: "700",
-                    fontSize: "16px",
-                  }}
-                >
-                  Diesel Price
-                </span>
-                <span
-                  style={{
-                    ...styles.nozzleStatus,
-                    color: "#1e40af",
-                    backgroundColor: "#dbeafe",
-                    border: "1px solid #3b82f6",
-                  }}
-                >
-                  Active
-                </span>
-              </div>
-              <div style={styles.nozzleMetrics}>
-                <div style={styles.nozzleMetric}>
-                  <p
-                    style={{
-                      ...styles.nozzleMetricValue,
-                      fontSize: "24px",
-                      color: "#1e3a8a",
-                    }}
-                  >
-                    {nozzleData.find((nozzle) => nozzle.product===("DIESEL"))
-                      ?.price + " TSH" || "??? TSH"}
-                  </p>
-                  <p style={{ ...styles.nozzleMetricLabel, color: "#1d4ed8" }}>
-                    Per Liter
-                  </p>
-                </div>
-                <div style={styles.nozzleMetric}>
-                  <p
-                    style={{
-                      ...styles.nozzleMetricValue,
-                      fontSize: "24px",
-                      color: "#1e3a8a",
-                    }}
-                  >
-                    {nozzleData
-                      .filter((nozzle) => nozzle.product===("DIESEL"))
-                      .reduce((sum, nozzle) => sum + nozzle.sold, 0)
-                      .toLocaleString() + " L"}{" "}
-                  </p>
-                  <p style={{ ...styles.nozzleMetricLabel, color: "#1d4ed8" }}>
-                    Sold Today
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+        {/* Tank Data Signal */}
+        <div style={{
+          marginBottom: "16px",
+          padding: "12px 16px",
+          backgroundColor: hasTankData ? "#dcfce7" : "#fee2e2",
+          borderRadius: "8px",
+          border: `1px solid ${hasTankData ? "#16a34a" : "#dc2626"}`,
+          display: "flex",
+          alignItems: "center",
+          gap: "8px"
+        }}>
+          <div style={{
+            width: "12px",
+            height: "12px",
+            borderRadius: "50%",
+            backgroundColor: hasTankData ? "#16a34a" : "#dc2626"
+          }}></div>
+          <span style={{
+            fontSize: "14px",
+            fontWeight: "500",
+            color: hasTankData ? "#166534" : "#dc2626"
+          }}>
+            Tank Data: {hasTankData ? "Available" : "Not Available"}
+          </span>
         </div>
 
-        {/* Unleaded Sales Analysis - Enhanced with Green Background */}
+        {/* Unleaded Order Analysis */}
         <div
           style={{
             ...styles.nozzleSection,
@@ -1458,263 +992,6 @@ const fetchRefillData = async () => {
             overflow: "hidden",
           }}
         >
-          {/* Green accent border */}
-          <div
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              height: "4px",
-              background:
-                "linear-gradient(90deg, #16a34a 0%, #22c55e 50%, #16a34a 100%)",
-            }}
-          ></div>
-
-          <h3
-            style={{
-              ...styles.nozzleTitle,
-              color: "#14532d",
-              textShadow: "0 1px 2px rgba(0,0,0,0.1)",
-            }}
-          >
-            <TrendingUp size={20} color="#16a34a" />⛽ Unleaded Sales Analysis
-          </h3>
-          <div style={styles.nozzleGrid}>
-            {/* E_Total Sales - Enhanced */}
-            <div
-              style={{
-                ...styles.nozzleCard,
-                background: "linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)",
-                border: "2px solid #0ea5e9",
-                boxShadow: "0 4px 12px rgba(14, 165, 233, 0.15)",
-              }}
-            >
-              <div style={styles.nozzleHeader}>
-                <span
-                  style={{
-                    ...styles.nozzleName,
-                    fontSize: "16px",
-                    fontWeight: "700",
-                    color: "#0c4a6e",
-                  }}
-                >
-                  E_Total Sales
-                </span>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginTop: "16px",
-                }}
-              >
-                <div style={styles.nozzleMetric}>
-                  <p
-                    style={{
-                      ...styles.nozzleMetricValue,
-                      fontSize: "20px",
-                      color: "#0c4a6e",
-                    }}
-                  >
-                                      {nozzleData
-                    .filter((nozzle) => nozzle.product === "UNLEADED")
-                    .reduce((sum, nozzle) => sum + nozzle.sold!, 0)
-                    .toLocaleString() + " L"}
-                  </p>
-                  <p style={styles.nozzleMetricLabel}>Total Liters</p>
-                </div>
-              </div>
-            </div>
-
-            {/* V_Total Sales - Enhanced */}
-            <div
-              style={{
-                ...styles.nozzleCard,
-                background: "linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%)",
-                border: "2px solid #a855f7",
-                boxShadow: "0 4px 12px rgba(168, 85, 247, 0.15)",
-              }}
-            >
-              <div style={styles.nozzleHeader}>
-                <span
-                  style={{
-                    ...styles.nozzleName,
-                    fontSize: "16px",
-                    fontWeight: "700",
-                    color: "#581c87",
-                  }}
-                >
-                  V_Total Sales
-                </span>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginTop: "16px",
-                }}
-              >
-                <div style={styles.nozzleMetric}>
-                  <p
-                    style={{
-                      ...styles.nozzleMetricValue,
-                      fontSize: "20px",
-                      color: "#581c87",
-                    }}
-                  >
-                    {nozzleData
-                      .filter((nozzle) => nozzle.name.includes("A1"))
-                      .reduce((sum, nozzle) => sum + nozzle.sold!, 0)
-                      .toLocaleString() + " L"}
-                  </p>
-                  <p style={styles.nozzleMetricLabel}>Total Liters</p>
-                </div>
-              </div>
-            </div>
-
-            {/* E_Total vs V_Total - Enhanced */}
-            <div
-              style={{
-                ...styles.nozzleCard,
-                background: "linear-gradient(135deg, #fefce8 0%, #fef3c7 100%)",
-                border: "2px solid #eab308",
-                boxShadow: "0 4px 12px rgba(234, 179, 8, 0.15)",
-              }}
-            >
-              <div style={styles.nozzleHeader}>
-                <span
-                  style={{
-                    ...styles.nozzleName,
-                    fontSize: "16px",
-                    fontWeight: "700",
-                    color: "#713f12",
-                  }}
-                >
-                  Difference of E_Total vs V_Total
-                </span>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginTop: "16px",
-                }}
-              >
-                <div style={styles.nozzleMetric}>
-                  <p
-                    style={{
-                      ...styles.nozzleMetricValue,
-                      fontSize: "20px",
-                      color: "#ca8a04",
-                    }}
-                  >
-                    {(
-                      nozzleData
-                        .filter((nozzle: NozzleData) =>
-                          nozzle.name.includes("A1")
-                        )
-                        .reduce(
-                          (sum: number, nozzle: NozzleData) =>
-                            sum + (0 || 0),
-                          0
-                        ) -
-                      nozzleData
-                        .filter((nozzle: NozzleData) =>
-                          nozzle.name.includes("A1")
-                        )
-                        .reduce(
-                          (sum: number, nozzle: NozzleData) =>
-                            sum + (0 || 0),
-                          0
-                        )
-                    ).toLocaleString()}{" "}
-                  </p>
-                  <p style={styles.nozzleMetricLabel}>Difference</p>
-                </div>
-              </div>
-            </div>
-
-            {/* M_Total Sales - Enhanced with Input */}
-
-            <div
-              style={{
-                ...styles.nozzleCard,
-                background: "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)",
-                border: "2px solid #22c55e",
-                boxShadow: "0 4px 12px rgba(34, 197, 94, 0.15)",
-              }}
-            >
-              <div style={styles.nozzleHeader}>
-                <span
-                  style={{
-                    ...styles.nozzleName,
-                    fontSize: "16px",
-                    fontWeight: "700",
-                    color: "#14532d",
-                  }}
-                >
-                  M_Total Sales
-                </span>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginTop: "16px",
-                }}
-              >
-                <div style={styles.nozzleMetric}>
-                  <input
-                    type="number"
-                    placeholder="29,800"
-                    style={{
-                      width: "120px",
-                      padding: "8px 12px",
-                      border: "2px solid #bbf7d0",
-                      borderRadius: "8px",
-                      fontSize: "16px",
-                      fontWeight: "700",
-                      color: "#14532d",
-                      background: "#ffffff",
-                      textAlign: "center",
-                      outline: "none",
-                      transition: "all 0.2s",
-                    }}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = "#22c55e";
-                      e.target.style.boxShadow =
-                        "0 0 0 3px rgba(34, 197, 94, 0.1)";
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = "#bbf7d0";
-                      e.target.style.boxShadow = "none";
-                    }}
-                  />
-                  <p style={styles.nozzleMetricLabel}>Manual Reading</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        {/* Unleaded Order Analysis - Enhanced with Green Background */}
-        <div
-          style={{
-            ...styles.nozzleSection,
-            background:
-              "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%)",
-            border: "3px solid #16a34a",
-            borderRadius: "20px",
-            boxShadow: "0 8px 25px rgba(22, 163, 74, 0.15)",
-            position: "relative",
-            overflow: "hidden",
-          }}
-        >
-          {/* Green accent border */}
           <div
             style={{
               position: "absolute",
@@ -1774,16 +1051,14 @@ const fetchRefillData = async () => {
                       color: "#0c4a6e",
                     }}
                   >
-                    {refillData.length > 0 
-                      ? (refillData.find(refill => refill.product === "UNLEADED"||"Unleaded")?.fuel_amount || "0") + " L" 
-                      : "0 L"}
+                    {getUnleadedOrderQty()}
                   </p>
                   <p style={styles.nozzleMetricLabel}>Order Quantity</p>
                 </div>
               </div>
             </div>
 
-            {/* Order (ATG) */}
+            {/* Latest Offloading (ATG) */}
             <div
               style={{
                 ...styles.nozzleCard,
@@ -1801,7 +1076,7 @@ const fetchRefillData = async () => {
                     color: "#581c87",
                   }}
                 >
-                  Order (ATG)
+                  Latest Offloading (ATG)
                 </span>
               </div>
               <div
@@ -1820,11 +1095,18 @@ const fetchRefillData = async () => {
                       color: "#581c87",
                     }}
                   >
-                    {autorefillData.length > 0 
-                      ? (autorefillData.find(refill => refill.product === "UNLEADED"||"Unleaded")?.fuel_volume || "0") + " L" 
-                      : "0 L"}
+                    {getUnleadedOffloading()}
                   </p>
-                  <p style={styles.nozzleMetricLabel}>ATG Reading</p>
+                  <p style={styles.nozzleMetricLabel}>Offloaded Quantity</p>
+                  
+                  <p style={{
+                    fontSize: "11px",
+                    color: "#a855f7",
+                    marginTop: "4px",
+                    fontStyle: "italic"
+                  }}>
+                    {getUnleadedOffloadingDate()}
+                  </p>
                 </div>
               </div>
             </div>
@@ -1866,301 +1148,16 @@ const fetchRefillData = async () => {
                       color: "#ca8a04",
                     }}
                   >
-                    {(() => {
-  // Get auto refill value (fuel_volume)
-  const autoRefillValue = autorefillData.length > 0 
-    ? (autorefillData.find(refill => refill.product === "UNLEADED"||"Unleaded")?.fuel_volume || 0)
-    : 0;
-  
-  // Get manual refill value (fuel_amount)  
-  const manualRefillValue = refillData.length > 0 
-    ? (refillData.find(refill => refill.product === "UNLEADED"||"Unleaded")?.fuel_amount || 0)
-    : 0;
-  
-  // Calculate the difference
-  const difference = autoRefillValue - manualRefillValue;
-  
-  return (
-    <span style={{ 
-      color: difference === 0 ? '#16a34a' : difference > 0 ? '#f59e0b' : '#dc2626' 
-    }}>
-      {difference > 0 ? '+' : ''}{difference.toLocaleString()} L
-    </span>
-  );
-})()}
+                    <span style={{ color: getUnleadedDifference().color }}>
+                      {getUnleadedDifference().value}
+                    </span>
                   </p>
                   <p style={styles.nozzleMetricLabel}>Difference</p>
                 </div>
               </div>
             </div>
 
-                        {/*// Updated Order (Dipstick) section with issue date:*/}
-
-<div
-  style={{
-    ...styles.nozzleCard,
-    background: "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)",
-    border: "2px solid #22c55e",
-    boxShadow: "0 4px 12px rgba(34, 197, 94, 0.15)",
-  }}
->
-  <div style={styles.nozzleHeader}>
-    <span
-      style={{
-        ...styles.nozzleName,
-        fontSize: "16px",
-        fontWeight: "700",
-        color: "#14532d",
-      }}
-    >
-      Order (Dipstick)
-    </span>
-  </div>
-  <div
-    style={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      marginTop: "16px",
-    }}
-  >
-    <div style={styles.nozzleMetric}>
-      <p
-        style={{
-          ...styles.nozzleMetricValue,
-          fontSize: "20px",
-          color: "#14532d",
-        }}
-      >
-        {(() => {
-          const dieselRefill = refillData.find(refill => refill.product === "UNLEADED"||"Unleaded");
-
-          if (dieselRefill && dieselRefill.dip_end && dieselRefill.dip_start) {
-            return (dieselRefill.dip_end - dieselRefill.dip_start).toLocaleString() + " L";
-          }
-          return "0 L";
-        })()}
-      </p>
-      <p style={styles.nozzleMetricLabel}>Dipstick Reading</p>
-      
-      {/* Add issue date display */}
-      {(() => {
-        const dieselRefill = refillData.find(refill => refill.product === "UNLEADED"||"Unleaded");
-        if (dieselRefill && dieselRefill.issue_date) {
-          return (
-            <p style={{
-              fontSize: "11px",
-              color: "#15803d",
-              marginTop: "4px",
-              fontStyle: "italic"
-            }}>
-              Date: {new Date(dieselRefill.issue_date).toLocaleDateString()}
-            </p>
-          );
-        }
-        return null;
-      })()}
-    </div>
-  </div>
-</div>
-          </div>
-        </div>
-
-        {/* Diesel Sales Analysis - Enhanced with Blue Background */}
-        <div
-          style={{
-            ...styles.nozzleSection,
-            background:
-              "linear-gradient(135deg, #eff6ff 0%, #dbeafe 50%, #bfdbfe 100%)",
-            border: "3px solid #3b82f6",
-            borderRadius: "20px",
-            boxShadow: "0 8px 25px rgba(59, 130, 246, 0.15)",
-            position: "relative",
-            overflow: "hidden",
-          }}
-        >
-          {/* Blue accent border */}
-          <div
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              height: "4px",
-              background:
-                "linear-gradient(90deg, #3b82f6 0%, #60a5fa 50%, #3b82f6 100%)",
-            }}
-          ></div>
-
-          <h3
-            style={{
-              ...styles.nozzleTitle,
-              color: "#1e3a8a",
-              textShadow: "0 1px 2px rgba(0,0,0,0.1)",
-            }}
-          >
-            <TrendingUp size={20} color="#3b82f6" />
-            🚛 Diesel Sales Analysis
-          </h3>
-          <div style={styles.nozzleGrid}>
-            {/* E_Total Sales - Enhanced */}
-            <div
-              style={{
-                ...styles.nozzleCard,
-                background: "linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)",
-                border: "2px solid #0ea5e9",
-                boxShadow: "0 4px 12px rgba(14, 165, 233, 0.15)",
-              }}
-            >
-              <div style={styles.nozzleHeader}>
-                <span
-                  style={{
-                    ...styles.nozzleName,
-                    fontSize: "16px",
-                    fontWeight: "700",
-                    color: "#0c4a6e",
-                  }}
-                >
-                  E_Total Sales
-                </span>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginTop: "16px",
-                }}
-              >
-                <div style={styles.nozzleMetric}>
-                  <p
-                    style={{
-                      ...styles.nozzleMetricValue,
-                      fontSize: "20px",
-                      color: "#0c4a6e",
-                    }}
-                  >
-{nozzleData
-  .filter((nozzle) => nozzle.product === "DIESEL")
-  .reduce((sum, nozzle) => sum + nozzle.sold!, 0)
-  .toLocaleString() + " L"}             </p>
-                  <p style={styles.nozzleMetricLabel}>Total Liters</p>
-                </div>
-              </div>
-            </div>
-
-            {/* V_Total Sales - Enhanced */}
-            <div
-              style={{
-                ...styles.nozzleCard,
-                background: "linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%)",
-                border: "2px solid #a855f7",
-                boxShadow: "0 4px 12px rgba(168, 85, 247, 0.15)",
-              }}
-            >
-              <div style={styles.nozzleHeader}>
-                <span
-                  style={{
-                    ...styles.nozzleName,
-                    fontSize: "16px",
-                    fontWeight: "700",
-                    color: "#581c87",
-                  }}
-                >
-                  V_Total Sales
-                </span>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginTop: "16px",
-                }}
-              >
-                <div style={styles.nozzleMetric}>
-                  <p
-                    style={{
-                      ...styles.nozzleMetricValue,
-                      fontSize: "20px",
-                      color: "#581c87",
-                    }}
-                  >
-                     {nozzleData
-                      .filter((nozzle) => nozzle.name.includes("A2"))
-                      .reduce((sum, nozzle) => sum + nozzle.sold!, 0)
-                      .toLocaleString() + " L"}
-                  </p>
-                  <p style={styles.nozzleMetricLabel}>Total Liters</p>
-                </div>
-              </div>
-            </div>
-
-            {/* E_Total vs V_Total - Enhanced */}
-            <div
-              style={{
-                ...styles.nozzleCard,
-                background: "linear-gradient(135deg, #fefce8 0%, #fef3c7 100%)",
-                border: "2px solid #eab308",
-                boxShadow: "0 4px 12px rgba(234, 179, 8, 0.15)",
-              }}
-            >
-              <div style={styles.nozzleHeader}>
-                <span
-                  style={{
-                    ...styles.nozzleName,
-                    fontSize: "16px",
-                    fontWeight: "700",
-                    color: "#713f12",
-                  }}
-                >
-                  Difference of E_Total vs V_Total
-                </span>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginTop: "16px",
-                }}
-              >
-                <div style={styles.nozzleMetric}>
-                  <p
-                    style={{
-                      ...styles.nozzleMetricValue,
-                      fontSize: "20px",
-                      color: "#ca8a04",
-                    }}
-                  >
-                    {(
-                      nozzleData
-                        .filter((nozzle: NozzleData) =>
-                          nozzle.name.includes("A2")
-                        )
-                        .reduce(
-                          (sum: number, nozzle: NozzleData) =>
-                            sum + (0 || 0),
-                          0
-                        ) -
-                      nozzleData
-                        .filter((nozzle: NozzleData) =>
-                          nozzle.name.includes("A2")
-                        )
-                        .reduce(
-                          (sum: number, nozzle: NozzleData) =>
-                            sum + (0 || 0),
-                          0
-                        )
-                    ).toLocaleString()}{" "}
-                  </p>
-                  <p style={styles.nozzleMetricLabel}>Difference</p>
-                </div>
-              </div>
-            </div>
-
-            {/* M_Total Sales - Enhanced with Input */}
-
+            {/* Order (Dipstick) */}
             <div
               style={{
                 ...styles.nozzleCard,
@@ -2178,7 +1175,7 @@ const fetchRefillData = async () => {
                     color: "#14532d",
                   }}
                 >
-                  M_Total Sales
+                  Order (Dipstick)
                 </span>
               </div>
               <div
@@ -2190,39 +1187,34 @@ const fetchRefillData = async () => {
                 }}
               >
                 <div style={styles.nozzleMetric}>
-                  <input
-                    type="number"
-                    placeholder="29,800"
+                  <p
                     style={{
-                      width: "120px",
-                      padding: "8px 12px",
-                      border: "2px solid #bbf7d0",
-                      borderRadius: "8px",
-                      fontSize: "16px",
-                      fontWeight: "700",
+                      ...styles.nozzleMetricValue,
+                      fontSize: "20px",
                       color: "#14532d",
-                      background: "#ffffff",
-                      textAlign: "center",
-                      outline: "none",
-                      transition: "all 0.2s",
                     }}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = "#22c55e";
-                      e.target.style.boxShadow =
-                        "0 0 0 3px rgba(34, 197, 94, 0.1)";
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = "#bbf7d0";
-                      e.target.style.boxShadow = "none";
-                    }}
-                  />
-                  <p style={styles.nozzleMetricLabel}>Manual Reading</p>
+                  >
+                    {getUnleadedDipstick()}
+                  </p>
+                  <p style={styles.nozzleMetricLabel}>Dipstick Reading</p>
+                  
+                  {getUnleadedDipstickDate() && (
+                    <p style={{
+                      fontSize: "11px",
+                      color: "#15803d",
+                      marginTop: "4px",
+                      fontStyle: "italic"
+                    }}>
+                      {getUnleadedDipstickDate()}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
           </div>
         </div>
-        {/* Diesel Order Analysis - Enhanced with Blue Background */}
+
+        {/* Diesel Order Analysis */}
         <div
           style={{
             ...styles.nozzleSection,
@@ -2235,7 +1227,6 @@ const fetchRefillData = async () => {
             overflow: "hidden",
           }}
         >
-          {/* Blue accent border */}
           <div
             style={{
               position: "absolute",
@@ -2289,23 +1280,21 @@ const fetchRefillData = async () => {
                 }}
               >
                 <div style={styles.nozzleMetric}>
-                    <p
+                  <p
                     style={{
                       ...styles.nozzleMetricValue,
                       fontSize: "20px",
                       color: "#0c4a6e",
                     }}
-                    >
-                    {refillData.length > 0 
-                      ? (refillData.find(refill => refill.product === "DIESEL")?.fuel_amount || "0") + " L" 
-                      : "0 L"}
-                    </p>
+                  >
+                    {getDieselOrderQty()}
+                  </p>
                   <p style={styles.nozzleMetricLabel}>Order Quantity</p>
                 </div>
               </div>
             </div>
 
-            {/* Order (ATG) */}
+            {/* Latest Diesel Offloading (ATG) */}
             <div
               style={{
                 ...styles.nozzleCard,
@@ -2323,7 +1312,7 @@ const fetchRefillData = async () => {
                     color: "#581c87",
                   }}
                 >
-                  Order (ATG)
+                  Latest Offloading (ATG)
                 </span>
               </div>
               <div
@@ -2342,11 +1331,18 @@ const fetchRefillData = async () => {
                       color: "#581c87",
                     }}
                   >
-                    {autorefillData.length > 0 
-                      ? (autorefillData.find(refill => refill.product === "DIESEL")?.fuel_volume || "0") + " L" 
-                      : "0 L"}
+                    {getDieselOffloading()}
                   </p>
-                  <p style={styles.nozzleMetricLabel}>ATG Reading</p>
+                  <p style={styles.nozzleMetricLabel}>Offloaded Quantity</p>
+                  
+                  <p style={{
+                    fontSize: "11px",
+                    color: "#a855f7",
+                    marginTop: "4px",
+                    fontStyle: "italic"
+                  }}>
+                    {getDieselOffloadingDate()}
+                  </p>
                 </div>
               </div>
             </div>
@@ -2388,1613 +1384,71 @@ const fetchRefillData = async () => {
                       color: "#ca8a04",
                     }}
                   >
-                          
-
-              {(() => {
-                // Get auto refill value (fuel_volume)
-                const autoRefillValue = autorefillData.length > 0 
-                  ? (autorefillData.find(refill => refill.product === "DIESEL")?.fuel_volume || 0)
-                  : 0;
-                
-                // Get manual refill value (fuel_amount)  
-                const manualRefillValue = refillData.length > 0 
-                  ? (refillData.find(refill => refill.product === "DIESEL")?.fuel_amount || 0)
-                  : 0;
-                
-                // Calculate the difference
-                const difference = autoRefillValue - manualRefillValue;
-                
-                return (
-                  <span style={{ 
-                    color: difference === 0 ? '#16a34a' : difference > 0 ? '#f59e0b' : '#dc2626' 
-                  }}>
-                    {difference > 0 ? '+' : ''}{difference.toLocaleString()} L
-                  </span>
-                );
-              })()}
+                    <span style={{ color: getDieselDifference().color }}>
+                      {getDieselDifference().value}
+                    </span>
                   </p>
                   <p style={styles.nozzleMetricLabel}>Difference</p>
                 </div>
               </div>
             </div>
 
-                        {/*// Updated Order (Dipstick) section with issue date:*/}
-
-<div
-  style={{
-    ...styles.nozzleCard,
-    background: "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)",
-    border: "2px solid #22c55e",
-    boxShadow: "0 4px 12px rgba(34, 197, 94, 0.15)",
-  }}
->
-  <div style={styles.nozzleHeader}>
-    <span
-      style={{
-        ...styles.nozzleName,
-        fontSize: "16px",
-        fontWeight: "700",
-        color: "#14532d",
-      }}
-    >
-      Order (Dipstick)
-    </span>
-  </div>
-  <div
-    style={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      marginTop: "16px",
-    }}
-  >
-    <div style={styles.nozzleMetric}>
-      <p
-        style={{
-          ...styles.nozzleMetricValue,
-          fontSize: "20px",
-          color: "#14532d",
-        }}
-      >
-        {(() => {
-          const dieselRefill = refillData.find(refill => refill.product === "DIESEL");
-
-          if (dieselRefill && dieselRefill.dip_end && dieselRefill.dip_start) {
-            return (dieselRefill.dip_end - dieselRefill.dip_start).toLocaleString() + " L";
-          }
-          return "0 L";
-        })()}
-      </p>
-      <p style={styles.nozzleMetricLabel}>Dipstick Reading</p>
-      
-      {/* Add issue date display */}
-      {(() => {
-        const dieselRefill = refillData.find(refill => refill.product === "DIESEL");
-        if (dieselRefill && dieselRefill.issue_date) {
-          return (
-            <p style={{
-              fontSize: "11px",
-              color: "#15803d",
-              marginTop: "4px",
-              fontStyle: "italic"
-            }}>
-              Date: {new Date(dieselRefill.issue_date).toLocaleDateString()}
-            </p>
-          );
-        }
-        return null;
-      })()}
-    </div>
-  </div>
-</div>
-          </div>
-        </div>
-
-        {/* Performance Metrics */}
-        <div style={styles.statsGrid}>
-          <div
-            style={styles.statCard}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.boxShadow =
-                "0 10px 15px -3px rgba(0, 0, 0, 0.1)")
-            }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.boxShadow =
-                "0 1px 3px 0 rgba(0, 0, 0, 0.1)")
-            }
-          >
-            <div style={styles.statHeader}>
-              <div style={{ ...styles.statIcon, backgroundColor: "#dcfce7" }}>
-                <span
-                  style={{
-                    fontSize: "18px",
-                    fontWeight: "bold",
-                    color: "#16a34a",
-                  }}
-                >
-                  TSH
-                </span>
-              </div>
-              <span
-                style={{
-                  ...styles.statusBadge,
-                  color: "#166534",
-                  backgroundColor: "#dcfce7",
-                }}
-              >
-                E_total
-              </span>
-            </div>
-            <h3 style={{ ...styles.statValue, color: "#070b16ff" }}>
-  {(() => {
-    const dieselPrice = nozzleData.find(n => n.product === "DIESEL")?.price || 0;
-    const dieselVolume = nozzleData
-      .filter(n => n.product === "DIESEL")
-      .reduce((sum, n) => sum + n.sold, 0);
-    const dieselTotal = dieselPrice * dieselVolume;
-
-    const unleadedPrice = nozzleData.find(n => n.product === "UNLEADED")?.price || 0;
-    const unleadedVolume = nozzleData
-      .filter(n => n.product === "UNLEADED")
-      .reduce((sum, n) => sum + n.sold, 0);
-    const unleadedTotal = unleadedPrice * unleadedVolume;
-
-    return (dieselTotal + unleadedTotal).toLocaleString();
-  })()} TSH
-</h3>
-            <p style={styles.statLabel}>E_Total Revenue</p>
-            <div style={styles.statFooter}>
-              <TrendingUp size={12} style={{ marginRight: "4px" }} />
-              vs yesterday
-            </div>
-          </div>
-
-          <div
-            style={styles.statCard}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.boxShadow =
-                "0 10px 15px -3px rgba(0, 0, 0, 0.1)")
-            }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.boxShadow =
-                "0 1px 3px 0 rgba(0, 0, 0, 0.1)")
-            }
-          >
-            <div style={styles.statHeader}>
-              <div style={{ ...styles.statIcon, backgroundColor: "#f0fdf4" }}>
-                <span
-                  style={{
-                    fontSize: "18px",
-                    fontWeight: "bold",
-                    color: "#16a34a",
-                  }}
-                >
-                  💰
-                </span>
-              </div>
-              <span
-                style={{
-                  ...styles.statusBadge,
-                  color: "#166534",
-                  backgroundColor: "#dcfce7",
-                }}
-              >
-                Manual
-              </span>
-            </div>
-            <h3 style={styles.statValue}>
-              {managerCash
-                ? `${parseFloat(managerCash).toLocaleString()} TSH`
-                : "No Entry"}
-            </h3>
-            <p style={styles.statLabel}>Manager's Cash</p>
-            <div style={styles.statFooter}>
-              <Clock size={12} style={{ marginRight: "4px" }} />
-              Manual count
-            </div>
-          </div>
-
-          {/* UNLEADED CASH CARD - Green themed */}
-          <div
-            style={{
-              ...styles.statCard,
-              background: "linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)",
-              border: "2px solid #16a34a",
-            }}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.boxShadow =
-                "0 10px 15px -3px rgba(22, 163, 74, 0.2)")
-            }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.boxShadow =
-                "0 1px 3px 0 rgba(0, 0, 0, 0.1)")
-            }
-          >
-            <div style={styles.statHeader}>
-              <div style={{ ...styles.statIcon, backgroundColor: "#dbeafe" }}>
-                <span
-                  style={{
-                    fontSize: "18px",
-                    fontWeight: "bold",
-                    color: "#2563eb",
-                  }}
-                >
-                  ⛽
-                </span>
-              </div>
-              <span
-                style={{
-                  ...styles.statusBadge,
-                  color: "#166534",
-                  backgroundColor: "#dcfce7",
-                }}
-              >
-                Unleaded
-              </span>
-            </div>
-            <h3 style={{ ...styles.statValue, color: "#144a26ff" }}>
-  {(() => {
-    const dieselPrice = nozzleData.find(n => n.product === "UNLEADED")?.price || 0;
-    const dieselVolume = nozzleData
-      .filter(n => n.product === "UNLEADED")
-      .reduce((sum, n) => sum + n.sold, 0);
-    return (dieselPrice * dieselVolume).toLocaleString();
-  })()} TSH
-</h3>
-            <p style={styles.statLabel}>Unleaded Cash</p>
-            <div style={styles.statFooter}>
-              <TrendingUp size={12} style={{ marginRight: "4px" }} />
-              {nozzleData
-                      .filter((nozzle) => nozzle.product===("UNLEADED"))
-                      .reduce((sum, nozzle) => sum + nozzle.sold, 0)
-                      .toLocaleString() + " L"}
-            </div>
-          </div>
-
-          {/* DIESEL CASH CARD - Blue themed */}
-          <div
-            style={{
-              ...styles.statCard,
-              background: "linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)",
-              border: "2px solid #3b82f6",
-            }}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.boxShadow =
-                "0 10px 15px -3px rgba(59, 130, 246, 0.2)")
-            }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.boxShadow =
-                "0 1px 3px 0 rgba(0, 0, 0, 0.1)")
-            }
-          >
-            <div style={styles.statHeader}>
-              <div style={{ ...styles.statIcon, backgroundColor: "#f3e8ff" }}>
-                <span
-                  style={{
-                    fontSize: "18px",
-                    fontWeight: "bold",
-                    color: "#3b82f6",
-                  }}
-                >
-                  🚛
-                </span>
-              </div>
-              <span
-                style={{
-                  ...styles.statusBadge,
-                  color: "#1e40af",
-                  backgroundColor: "#dbeafe",
-                }}
-              >
-                Diesel
-              </span>
-            </div>
-            <h3 style={{ ...styles.statValue, color: "#1d4ed8" }}>
-  {(() => {
-    const dieselPrice = nozzleData.find(n => n.product === "DIESEL")?.price || 0;
-    const dieselVolume = nozzleData
-      .filter(n => n.product === "DIESEL")
-      .reduce((sum, n) => sum + n.sold, 0);
-    return (dieselPrice * dieselVolume).toLocaleString();
-  })()} TSH
-</h3>
-            <p style={styles.statLabel}>Diesel Cash</p>
-            <div style={styles.statFooter}>
-              <TrendingUp size={12} style={{ marginRight: "4px" }} />
-              {nozzleData
-                      .filter((nozzle) => nozzle.product===("DIESEL"))
-                      .reduce((sum, nozzle) => sum + nozzle.sold, 0)
-                      .toLocaleString() + " L"}
-            </div>
-          </div>
-        </div>
-
-        {/* Tank Monitoring */}
-        <div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              marginBottom: "24px",
-            }}
-          >
-            <h3
+            {/* Order (Dipstick) */}
+            <div
               style={{
-                fontSize: "18px",
-                fontWeight: "600",
-                color: "#111827",
-                margin: 0,
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
+                ...styles.nozzleCard,
+                background: "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)",
+                border: "2px solid #22c55e",
+                boxShadow: "0 4px 12px rgba(34, 197, 94, 0.15)",
               }}
             >
-              <Gauge size={20} color="#2563eb" />
-              Tank Monitoring
-              {tanksLoading && (
-                <div style={styles.loadingState}>
-                  <Loader2 size={16} className="animate-spin" />
-                  Loading tank data...
-                </div>
-              )}
-            </h3>
-            {tanksError && (
+              <div style={styles.nozzleHeader}>
+                <span
+                  style={{
+                    ...styles.nozzleName,
+                    fontSize: "16px",
+                    fontWeight: "700",
+                    color: "#14532d",
+                  }}
+                >
+                  Order (Dipstick)
+                </span>
+              </div>
               <div
                 style={{
-                  padding: "8px 12px",
-                  backgroundColor: "#fee2e2",
-                  borderRadius: "6px",
-                  fontSize: "12px",
-                  color: "#dc2626",
                   display: "flex",
+                  justifyContent: "center",
                   alignItems: "center",
-                  gap: "4px",
+                  marginTop: "16px",
                 }}
               >
-                <AlertTriangle size={12} />
-                Tank data error: {tanksError}
-              </div>
-            )}
-          </div>
-
-          {tanksLoading ? (
-            <div style={styles.tankGrid}>
-              {[1, 2].map((index) => (
-                <div
-                  key={index}
-                  style={{
-                    ...styles.tankCard,
-                    opacity: 0.6,
-                  }}
-                >
-                  <div style={styles.tankHeader}>
-                    <div style={styles.tankInfo}>
-                      <div
-                        style={{
-                          ...styles.tankIcon,
-                          backgroundColor: "#f3f4f6",
-                        }}
-                      >
-                        <Loader2
-                          size={24}
-                          color="#9ca3af"
-                          className="animate-spin"
-                        />
-                      </div>
-                      <div style={styles.tankDetails}>
-                        <h4 style={{ ...styles.tankName, color: "#9ca3af" }}>
-                          Loading Tank {index}...
-                        </h4>
-                        <p style={{ ...styles.tankCapacity, color: "#9ca3af" }}>
-                          Fetching capacity...
-                        </p>
-                      </div>
-                    </div>
-                    <span
-                      style={{
-                        ...styles.statusBadge,
-                        color: "#9ca3af",
-                        backgroundColor: "#f3f4f6",
-                      }}
-                    >
-                      Loading
-                    </span>
-                  </div>
-
-                  <div style={styles.levelSection}>
-                    <div style={styles.levelHeader}>
-                      <span style={styles.levelLabel}>Current Level</span>
-                      <span
-                        style={{ ...styles.levelPercentage, color: "#9ca3af" }}
-                      >
-                        ---%
-                      </span>
-                    </div>
-                    <div style={styles.progressBar}>
-                      <div
-                        style={{
-                          ...styles.progressFill,
-                          width: "50%",
-                          background:
-                            "linear-gradient(90deg, #e5e7eb 0%, #d1d5db 100%)",
-                          animation: "pulse 2s infinite",
-                        }}
-                      ></div>
-                    </div>
-                    <div style={styles.levelDetails}>
-                      <span>Loading...</span>
-                      <span style={{ fontWeight: "500", color: "#9ca3af" }}>
-                        --- liters
-                      </span>
-                      <span>---</span>
-                    </div>
-                  </div>
-
-                  <div style={styles.metricsGrid}>
-                    <div style={styles.metricBox}>
-                      <div style={styles.metricHeader}>
-                        <Thermometer size={16} color="#d1d5db" />
-                        <span style={styles.metricLabel}>Temperature</span>
-                      </div>
-                      <p style={{ ...styles.metricValue, color: "#9ca3af" }}>
-                        ---°C
-                      </p>
-                    </div>
-                    <div style={styles.metricBox}>
-                      <div style={styles.metricHeader}>
-                        <Droplets size={16} color="#d1d5db" />
-                        <span style={styles.metricLabel}>Water Level</span>
-                      </div>
-                      <p style={{ ...styles.metricValue, color: "#9ca3af" }}>
-                        --- mm
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div style={styles.tankGrid}>
-              {tankData.length > 0 ? (
-                tankData.map((tank: TankData) => (
-                  <div key={tank.id} style={styles.tankCard}>
-                    <div style={styles.tankHeader}>
-                      <div style={styles.tankInfo}>
-                        <div
-                          style={{
-                            ...styles.tankIcon,
-                            backgroundColor: "#dbeafe",
-                          }}
-                        >
-                          <Gauge size={24} color="#2563eb" />
-                        </div>
-                        <div style={styles.tankDetails}>
-                          <h3 style={styles.tankName}>
-                            Tank {tank.tank_id} - {tank.tank_name}
-                          </h3>
-                          <p style={styles.tankCapacity}>
-                            {tank.tank_capacity} L capacity
-                          </p>
-                        </div>
-                      </div>
-                      <span
-                        style={{
-                          ...styles.statusBadge,
-                          color: "#166534",
-                          backgroundColor: "#dcfce7",
-                        }}
-                      >
-                        {tank.product_name}
-                      </span>
-                    </div>
-
-                    <div style={styles.levelSection}>
-                      <div style={styles.levelHeader}>
-                        <span style={styles.levelLabel}>Current Level</span>
-                        <span
-                          style={{
-                            ...styles.levelPercentage,
-                            color: "#2563eb",
-                          }}
-                        >
-                          {(
-                            (tank.fuel_volume / tank.tank_capacity) *
-                            100
-                          ).toFixed(2)}
-                          %
-                        </span>
-                      </div>
-                      <div style={styles.progressBar}>
-                        <div
-                          style={{
-                            ...styles.progressFill,
-                            width: `${(
-                              (tank.fuel_volume / tank.tank_capacity) *
-                              100
-                            ).toFixed(2)}%`,
-                            background:
-                              "linear-gradient(90deg, #3b82f6 0%, #2563eb 100%)",
-                          }}
-                        ></div>
-                      </div>
-                      <div style={styles.levelDetails}>
-                        <span>0 L</span>
-                        <span style={{ fontWeight: "500", color: "#374151" }}>
-                          {tank.fuel_volume} liters
-                        </span>
-                        <span>{tank.tank_capacity} L</span>
-                      </div>
-                    </div>
-
-                    <div style={styles.metricsGrid}>
-                      <div style={styles.metricBox}>
-                        <div style={styles.metricHeader}>
-                          <Thermometer size={16} color="#f59e0b" />
-                          <span style={styles.metricLabel}>Temperature</span>
-                        </div>
-                        <p style={styles.metricValue}>{tank.average_temp}°C</p>
-                      </div>
-                      <div style={styles.metricBox}>
-                        <div style={styles.metricHeader}>
-                          <Droplets size={16} color="#3b82f6" />
-                          <span style={styles.metricLabel}>Water Level</span>
-                        </div>
-                        <p style={styles.metricValue}>
-                          {tank.water_lvl_mm}mm / {tank.water_volume} L{" "}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Daily Quantity Section */}
-                    <div style={styles.quantitySection}>
-                      <div style={styles.quantityTitle}>
-                        <Target size={16} color="#6366f1" />
-                        Daily Quantities
-                      </div>
-                      <div style={styles.quantityGrid}>
-                        <div style={styles.quantityItem}>
-                          <div style={styles.quantityLabel}>Opening (ATG)</div>
-                          <p style={styles.quantityValue}>0 L</p>
-                        </div>
-                        <div style={styles.quantityItem}>
-                          <div style={styles.quantityLabel}>Closing (ATG)</div>
-                          <p style={styles.quantityValue}>0 L</p>
-                        </div>
-                        
-                        <div style={styles.quantityItem}>
-                          <div style={styles.quantityLabel}>
-                            Difference of Opening and Closing(ATG)
-                          </div>
-                          <p style={styles.quantityValue}>3818 L</p>
-                        </div>
-                        <div style={styles.quantityItem}>
-                          <div style={styles.quantityLabel}>
-                            Difference of Opening and Closing(Dipstick)
-                          </div>
-                          <p style={styles.quantityValue}>0 L</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    
-                  </div>
-                ))
-              ) : (
-                <div
-                  style={{
-                    ...styles.tankCard,
-                    textAlign: "center",
-                    padding: "48px 24px",
-                  }}
-                >
-                  <AlertTriangle
-                    size={48}
-                    color="#f59e0b"
-                    style={{ marginBottom: "16px" }}
-                  />
-                  <h3 style={{ color: "#374151", marginBottom: "8px" }}>
-                    No Tank Data Available
-                  </h3>
-                  <p style={{ color: "#6b7280" }}>
-                    Unable to load tank information. Please check your
-                    connection or try again later.
+                <div style={styles.nozzleMetric}>
+                  <p
+                    style={{
+                      ...styles.nozzleMetricValue,
+                      fontSize: "20px",
+                      color: "#14532d",
+                    }}
+                  >
+                    {getDieselDipstick()}
                   </p>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* Nozzle Performance - Separated by Fuel Type */}
-        <div style={styles.nozzleSection}>
-          <h3 style={styles.nozzleTitle}>
-            <Target size={20} color="#6366f1" />
-            Pump/Nozzle Performance
-            {pumpsLoading && (
-              <div style={styles.loadingState}>
-                <Loader2 size={16} className="animate-spin" />
-                Loading pump data...
-              </div>
-            )}
-          </h3>
-
-          {/* Unleaded Nozzles */}
-          <div style={{ marginBottom: "32px" }}>
-            <h4
-              style={{
-                fontSize: "16px",
-                fontWeight: "600",
-                color: "#10c053ff",
-                marginBottom: "16px",
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-              }}
-            >
-                ⛽ Unleaded Nozzles
-</h4>
-<div style={styles.nozzleGrid}>
-  {nozzleData
-    .filter((nozzle) => nozzle.product === "UNLEADED")
-    .map((nozzle) => (
-      <div
-        key={nozzle.id}
-        style={{
-          ...styles.nozzleCard,
-          padding: "20px",
-        }}
-                  >
-                    <div style={styles.nozzleHeader}>
-                      <span style={styles.nozzleName}>{nozzle.name}</span>
-                      <span
-                        style={{
-                          ...styles.nozzleStatus,
-                          color: nozzle.status ? "#10c053ff" : "#166534",
-                          backgroundColor: nozzle.status
-                            ? "#ffffffff"
-                            : "#dcfce7",
-                        }}
-                      >
-                        {nozzle.status ? "UNLEADED" : "Active"}
-                      </span>
-                    </div>
-
-                    {/* 4 Metrics Grid - All Same Color */}
-                    <div
-                      style={{
-                        display: "grid",
-                        gridTemplateColumns: "1fr 1fr",
-                        gap: "12px",
-                        marginTop: "16px",
-                      }}
-                    >
-                      {/* 1. Sold Today */}
-                      <div
-                        style={{
-                          background: "#f8fafc",
-                          borderRadius: "8px",
-                          padding: "12px",
-                          border: "1px solid #e2e8f0",
-                          textAlign: "center",
-                        }}
-                      >
-                        <p
-                          style={{
-                            fontSize: "14px",
-                            fontWeight: "bold",
-                            color: "#1e293b",
-                            margin: 0,
-                          }}
-                        >
-                          {nozzle.sold.toLocaleString()} L
-                        </p>
-                        <p
-                          style={{
-                            fontSize: "10px",
-                            color: "#64748b",
-                            margin: "2px 0 0 0",
-                          }}
-                        >
-                          Sold Today
-                        </p>
-                      </div>
-
-                      {/* 2. E-Total */}
-                      <div
-                        style={{
-                          background: "#f8fafc",
-                          borderRadius: "8px",
-                          padding: "12px",
-                          border: "1px solid #e2e8f0",
-                          textAlign: "center",
-                        }}
-                      >
-                        <p
-                          style={{
-                            fontSize: "14px",
-                            fontWeight: "bold",
-                            color: "#1e293b",
-                            margin: 0,
-                          }}
-                        >
-                          {nozzle.e_total} L
-                        </p>
-                        <p
-                          style={{
-                            fontSize: "10px",
-                            color: "#64748b",
-                            margin: "2px 0 0 0",
-                          }}
-                        >
-                          E-Total
-                        </p>
-                      </div>
-
-                      {/* 3. V-Total */}
-                      <div
-                        style={{
-                          background: "#f8fafc",
-                          borderRadius: "8px",
-                          padding: "12px",
-                          border: "1px solid #e2e8f0",
-                          textAlign: "center",
-                        }}
-                      >
-                        <p
-                          style={{
-                            fontSize: "14px",
-                            fontWeight: "bold",
-                            color: "#1e293b",
-                            margin: 0,
-                          }}
-                        >
-                          {nozzle.v_total} L
-                        </p>
-                        <p
-                          style={{
-                            fontSize: "10px",
-                            color: "#64748b",
-                            margin: "2px 0 0 0",
-                          }}
-                        >
-                          V-Total
-                        </p>
-                      </div>
-
-                      {/* 4. M-Total (Manual Entry) */}
-                      <div
-                        style={{
-                          background: "#f8fafc",
-                          borderRadius: "8px",
-                          padding: "8px",
-                          border: "1px solid #e2e8f0",
-                          textAlign: "center",
-                        }}
-                      >
-                        <input
-                          type="number"
-                          placeholder="Enter"
-                          style={{
-                            width: "100%",
-                            padding: "4px 6px",
-                            border: "1px solid #cbd5e1",
-                            borderRadius: "4px",
-                            fontSize: "12px",
-                            fontWeight: "bold",
-                            textAlign: "center",
-                            color: "#1e293b",
-                            outline: "none",
-                            background: "#ffffff",
-                          }}
-                          onFocus={(e) =>
-                            (e.target.style.borderColor = "#3b82f6")
-                          }
-                          onBlur={(e) =>
-                            (e.target.style.borderColor = "#cbd5e1")
-                          }
-                        />
-                        <p
-                          style={{
-                            fontSize: "10px",
-                            color: "#64748b",
-                            margin: "4px 0 0 0",
-                          }}
-                        >
-                          M-Total
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-            </div>
-          </div>
-
-          {/* Diesel Nozzles */}
-          <div>
-            <h4
-              style={{
-                fontSize: "16px",
-                fontWeight: "600",
-                color: "#2563eb",
-                marginBottom: "16px",
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-              }}
-            >
-              🚛 Diesel Nozzles
-</h4>
-<div style={styles.nozzleGrid}>
-  {nozzleData
-    .filter((nozzle) => nozzle.product === "DIESEL")
-    .map((nozzle) => (
-      <div
-        key={nozzle.id}
-        style={{
-          ...styles.nozzleCard,
-          padding: "20px",
-        }}
-                  >
-                    <div style={styles.nozzleHeader}>
-                      <span style={styles.nozzleName}>{nozzle.name}</span>
-                      <span
-                        style={{
-                          ...styles.nozzleStatus,
-                          color: nozzle.status ? "#2563eb" : "#16a34a",
-                          backgroundColor: nozzle.status
-                            ? "#ffffffff"
-                            : "#dcfce7",
-                        }}
-                      >
-                        {nozzle.status ? "DIESEL" : "Active"}
-                      </span>
-                    </div>
-
-                    {/* 4 Metrics Grid - All Same Color */}
-                    <div
-                      style={{
-                        display: "grid",
-                        gridTemplateColumns: "1fr 1fr",
-                        gap: "12px",
-                        marginTop: "16px",
-                      }}
-                    >
-                      {/* 1. Sold Today */}
-                      <div
-                        style={{
-                          background: "#f8fafc",
-                          borderRadius: "8px",
-                          padding: "12px",
-                          border: "1px solid #e2e8f0",
-                          textAlign: "center",
-                        }}
-                      >
-                        <p
-                          style={{
-                            fontSize: "14px",
-                            fontWeight: "bold",
-                            color: "#1e293b",
-                            margin: 0,
-                          }}
-                        >
-                          {nozzle.sold.toLocaleString()} L
-                        </p>
-                        <p
-                          style={{
-                            fontSize: "10px",
-                            color: "#64748b",
-                            margin: "2px 0 0 0",
-                          }}
-                        >
-                          Sold Today
-                        </p>
-                      </div>
-
-                      {/* 2. E-Total */}
-                      <div
-                        style={{
-                          background: "#f8fafc",
-                          borderRadius: "8px",
-                          padding: "12px",
-                          border: "1px solid #e2e8f0",
-                          textAlign: "center",
-                        }}
-                      >
-                        <p
-                          style={{
-                            fontSize: "14px",
-                            fontWeight: "bold",
-                            color: "#1e293b",
-                            margin: 0,
-                          }}
-                        >
-                          {nozzle.e_total} L
-                        </p>
-                        <p
-                          style={{
-                            fontSize: "10px",
-                            color: "#64748b",
-                            margin: "2px 0 0 0",
-                          }}
-                        >
-                          E-Total
-                        </p>
-                      </div>
-
-                      {/* 3. V-Total */}
-                      <div
-                        style={{
-                          background: "#f8fafc",
-                          borderRadius: "8px",
-                          padding: "12px",
-                          border: "1px solid #e2e8f0",
-                          textAlign: "center",
-                        }}
-                      >
-                        <p
-                          style={{
-                            fontSize: "14px",
-                            fontWeight: "bold",
-                            color: "#1e293b",
-                            margin: 0,
-                          }}
-                        >
-                          {nozzle.v_total} L
-                        </p>
-                        <p
-                          style={{
-                            fontSize: "10px",
-                            color: "#64748b",
-                            margin: "2px 0 0 0",
-                          }}
-                        >
-                          V-Total
-                        </p>
-                      </div>
-
-                      {/* 4. M-Total (Manual Entry) */}
-                      <div
-                        style={{
-                          background: "#f8fafc",
-                          borderRadius: "8px",
-                          padding: "8px",
-                          border: "1px solid #e2e8f0",
-                          textAlign: "center",
-                        }}
-                      >
-                        <input
-                          type="number"
-                          placeholder="Enter"
-                          style={{
-                            width: "100%",
-                            padding: "4px 6px",
-                            border: "1px solid #cbd5e1",
-                            borderRadius: "4px",
-                            fontSize: "12px",
-                            fontWeight: "bold",
-                            textAlign: "center",
-                            color: "#1e293b",
-                            outline: "none",
-                            background: "#ffffff",
-                          }}
-                          onFocus={(e) =>
-                            (e.target.style.borderColor = "#3b82f6")
-                          }
-                          onBlur={(e) =>
-                            (e.target.style.borderColor = "#cbd5e1")
-                          }
-                        />
-                        <p
-                          style={{
-                            fontSize: "10px",
-                            color: "#64748b",
-                            margin: "4px 0 0 0",
-                          }}
-                        >
-                          M-Total
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Quick Actions */}
-        <div style={styles.actionsCard}>
-          <h3 style={styles.actionsTitle}>Quick Actions</h3>
-          <div style={styles.actionsGrid}>
-            <button
-              style={{
-                ...styles.actionButton,
-                backgroundColor: "#dbeafe",
-                color: "#1e40af",
-              }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor = "#bfdbfe")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.backgroundColor = "#dbeafe")
-              }
-            >
-              <Gauge size={24} style={{ marginBottom: "8px" }} />
-              <span>Update Levels</span>
-            </button>
-            <button
-              onClick={() => setShowSalesModal(true)}
-              style={{
-                ...styles.actionButton,
-                backgroundColor: "#dcfce7",
-                color: "#166534",
-              }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor = "#bbf7d0")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.backgroundColor = "#dcfce7")
-              }
-            >
-              <div style={{ fontSize: "24px", marginBottom: "8px" }}>💰</div>
-              <span>Record Sales</span>
-            </button>
-            <button
-              onClick={() => setShowChecklistModal(true)}
-              style={{
-                ...styles.actionButton,
-                backgroundColor: "#f3e8ff",
-                color: "#7c3aed",
-              }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor = "#e9d5ff")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.backgroundColor = "#f3e8ff")
-              }
-            >
-              <Clock size={24} style={{ marginBottom: "8px" }} />
-              <span>Checklist</span>
-            </button>
-            <button
-              onClick={() => setShowIssueModal(true)}
-              style={{
-                ...styles.actionButton,
-                backgroundColor: "#fed7aa",
-                color: "#c2410c",
-              }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor = "#fdba74")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.backgroundColor = "#fed7aa")
-              }
-            >
-              <AlertTriangle size={24} style={{ marginBottom: "8px" }} />
-              <span>Report Issue</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Checklist Modal */}
-        {showChecklistModal && (
-          <div style={styles.modalOverlay} onClick={handleCloseModal}>
-            <div
-              style={styles.modalContent}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div style={styles.modalHeader}>
-                <h3 style={styles.modalTitle}>Daily Safety Checklist</h3>
-                <button
-                  onClick={handleCloseModal}
-                  style={styles.closeButton}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.backgroundColor = "#f3f4f6")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.backgroundColor = "transparent")
-                  }
-                >
-                  ✕
-                </button>
-              </div>
-
-              <div style={styles.checklistContainer}>
-                <div
-                  style={{
-                    ...styles.checklistItem,
-                    ...(checklistItems.calibration
-                      ? styles.checklistItemChecked
-                      : {}),
-                  }}
-                  onClick={() => handleChecklistItemChange("calibration")}
-                >
-                  <div
-                    style={{
-                      ...styles.checkbox,
-                      ...(checklistItems.calibration
-                        ? styles.checkboxChecked
-                        : {}),
-                    }}
-                  >
-                    {checklistItems.calibration && "✓"}
-                  </div>
-                  <span
-                    style={{
-                      ...styles.checklistLabel,
-                      ...(checklistItems.calibration
-                        ? styles.checklistLabelChecked
-                        : {}),
-                    }}
-                  >
-                    Calibration completed and verified?
-                  </span>
-                </div>
-
-                <div
-                  style={{
-                    ...styles.checklistItem,
-                    ...(checklistItems.pipelineLeak
-                      ? styles.checklistItemChecked
-                      : {}),
-                  }}
-                  onClick={() => handleChecklistItemChange("pipelineLeak")}
-                >
-                  <div
-                    style={{
-                      ...styles.checkbox,
-                      ...(checklistItems.pipelineLeak
-                        ? styles.checkboxChecked
-                        : {}),
-                    }}
-                  >
-                    {checklistItems.pipelineLeak && "✓"}
-                  </div>
-                  <span
-                    style={{
-                      ...styles.checklistLabel,
-                      ...(checklistItems.pipelineLeak
-                        ? styles.checklistLabelChecked
-                        : {}),
-                    }}
-                  >
-                    Pipeline inspected for leaks or damage?
-                  </span>
-                </div>
-
-                <div
-                  style={{
-                    ...styles.checklistItem,
-                    ...(checklistItems.tankLeak
-                      ? styles.checklistItemChecked
-                      : {}),
-                  }}
-                  onClick={() => handleChecklistItemChange("tankLeak")}
-                >
-                  <div
-                    style={{
-                      ...styles.checkbox,
-                      ...(checklistItems.tankLeak
-                        ? styles.checkboxChecked
-                        : {}),
-                    }}
-                  >
-                    {checklistItems.tankLeak && "✓"}
-                  </div>
-                  <span
-                    style={{
-                      ...styles.checklistLabel,
-                      ...(checklistItems.tankLeak
-                        ? styles.checklistLabelChecked
-                        : {}),
-                    }}
-                  >
-                    Storage tanks checked for leaks or structural issues?
-                  </span>
-                </div>
-
-                <div
-                  style={{
-                    ...styles.checklistItem,
-                    ...(checklistItems.safetyEquipment
-                      ? styles.checklistItemChecked
-                      : {}),
-                  }}
-                  onClick={() => handleChecklistItemChange("safetyEquipment")}
-                >
-                  <div
-                    style={{
-                      ...styles.checkbox,
-                      ...(checklistItems.safetyEquipment
-                        ? styles.checkboxChecked
-                        : {}),
-                    }}
-                  >
-                    {checklistItems.safetyEquipment && "✓"}
-                  </div>
-                  <span
-                    style={{
-                      ...styles.checklistLabel,
-                      ...(checklistItems.safetyEquipment
-                        ? styles.checklistLabelChecked
-                        : {}),
-                    }}
-                  >
-                    Safety equipment functional and accessible?
-                  </span>
-                </div>
-              </div>
-
-              <div style={styles.modalFooter}>
-                <button
-                  onClick={handleCloseModal}
-                  style={{ ...styles.modalButton, ...styles.cancelButton }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.backgroundColor = "#e5e7eb")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.backgroundColor = "#f3f4f6")
-                  }
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleSaveChecklist}
-                  style={{ ...styles.modalButton, ...styles.saveButton }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.backgroundColor = "#15803d")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.backgroundColor = "#16a34a")
-                  }
-                >
-                  Save Checklist
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Sales Record Modal */}
-        {showSalesModal && (
-          <div style={styles.modalOverlay} onClick={handleCloseSalesModal}>
-            <div
-              style={styles.modalContent}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div style={styles.modalHeader}>
-                <h3 style={styles.modalTitle}>Daily Sales Record</h3>
-                <button
-                  onClick={handleCloseSalesModal}
-                  style={styles.closeButton}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.backgroundColor = "#f3f4f6")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.backgroundColor = "transparent")
-                  }
-                >
-                  ✕
-                </button>
-              </div>
-
-              <div style={styles.checklistContainer}>
-                {/* E_Total System Sales */}
-                <div style={{ ...styles.salesRow, ...styles.salesRowETotals }}>
-                  <div>
-                    <div style={styles.salesLabel}>
-                      <span style={styles.salesIcon}>💰</span>
-                      E_Total System Revenue
-                    </div>
-                    <div style={styles.salesDetails}>
-                      Electronic system total (includes all transactions)
-                    </div>
-                  </div>
-                  <div
-                    style={{
-                      ...styles.salesValue,
-                      ...styles.salesValueHighlight,
-                    }}
-                  >
-                    TSH{salesData.eTotalCash.toLocaleString()}
-                  </div>
-                </div>
-                {/* Manager's Cash - Manual Entry */}
-                <div
-                  style={{
-                    ...styles.salesRow,
-                    backgroundColor: "#f0fdf4",
-                    borderColor: "#22c55e",
-                  }}
-                >
-                  <div>
-                    <div style={styles.salesLabel}>
-                      <span style={styles.salesIcon}>💰</span>
-                      Manager's Cash (Manual Entry)
-                    </div>
-                    <div style={styles.salesDetails}>
-                      Cash counted by station manager
-                    </div>
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "8px",
-                    }}
-                  >
-                    <input
-                      type="number"
-                      placeholder="Enter amount"
-                      value={managerCash}
-                      onChange={(e) => setManagerCash(e.target.value)}
-                      style={{
-                        padding: "8px 12px",
-                        border: "1px solid #22c55e",
-                        borderRadius: "6px",
-                        fontSize: "16px",
-                        fontWeight: "600",
-                        width: "140px",
-                        textAlign: "right",
-                        outline: "none",
-                      }}
-                    />
-                    <span
-                      style={{
-                        fontSize: "16px",
-                        fontWeight: "600",
-                        color: "#16a34a",
-                      }}
-                    >
-                      TSH
-                    </span>
-                  </div>
-                </div>
-
-                {/* Variance Analysis */}
-                <div
-                  style={{
-                    ...styles.salesRow,
-                    backgroundColor: "#fef3c7",
-                    borderColor: "#f59e0b",
-                  }}
-                >
-                  <div>
-                    <div style={styles.salesLabel}>
-                      <span style={styles.salesIcon}>📈</span>
-                      Variance Analysis
-                    </div>
-                    <div style={styles.salesDetails}>
-                      Difference between manual calculation and E_Total
-                    </div>
-                  </div>
-                  <div
-                    style={{
-                      ...styles.salesValue,
-                      color:
-                        salesData.eTotalCash -
-                          (salesData.unleaded.cash + salesData.diesel.cash) >=
-                        0
-                          ? "#16a34a"
-                          : "#dc2626",
-                    }}
-                  >
-                    TSH{" "}
-                    {salesData.eTotalCash - (parseFloat(managerCash) || 0) >= 0
-                      ? "+"
-                      : ""}
-                    {(
-                      salesData.eTotalCash - (parseFloat(managerCash) || 0)
-                    ).toLocaleString()}
-                  </div>
-                </div>
-              </div>
-
-              <div style={styles.modalFooter}>
-                <button
-                  onClick={handleCloseSalesModal}
-                  style={{ ...styles.modalButton, ...styles.cancelButton }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.backgroundColor = "#e5e7eb")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.backgroundColor = "#f3f4f6")
-                  }
-                >
-                  Close
-                </button>
-                <button
-                  onClick={handleSaveSales}
-                  style={{ ...styles.modalButton, ...styles.saveButton }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.backgroundColor = "#15803d")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.backgroundColor = "#16a34a")
-                  }
-                >
-                  {loadingSalesModal ? (
-                    <span>Loading...</span>
-                  ) : (
-                    <span>Record Sales</span>
+                  <p style={styles.nozzleMetricLabel}>Dipstick Reading</p>
+                  
+                  {getDieselDipstickDate() && (
+                    <p style={{
+                      fontSize: "11px",
+                      color: "#15803d",
+                      marginTop: "4px",
+                      fontStyle: "italic"
+                    }}>
+                      {getDieselDipstickDate()}
+                    </p>
                   )}
-                </button>
+                </div>
               </div>
             </div>
           </div>
-        )}
-
-        {/* Report Issue Modal */}
-        {showIssueModal && (
-          <div style={styles.modalOverlay} onClick={handleCloseIssueModal}>
-            <div
-              style={styles.modalContent}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div style={styles.modalHeader}>
-                <h3 style={styles.modalTitle}>🚨 Report Station Issue</h3>
-                <button
-                  onClick={handleCloseIssueModal}
-                  style={styles.closeButton}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.backgroundColor = "#f3f4f6")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.backgroundColor = "transparent")
-                  }
-                >
-                  ✕
-                </button>
-              </div>
-
-              <div style={styles.checklistContainer}>
-                {/* Issue Category */}
-                <div style={styles.formGroup}>
-                  <label style={styles.formLabel}>Issue Category</label>
-                  <select
-                    value={issueCategory}
-                    onChange={(e) => setIssueCategory(e.target.value)}
-                    style={{
-                      ...styles.selectField,
-                      ...(issueCategory === "emergency"
-                        ? styles.urgentCategory
-                        : {}),
-                    }}
-                    onFocus={(e) => (e.target.style.borderColor = "#3b82f6")}
-                    onBlur={(e) => (e.target.style.borderColor = "#e2e8f0")}
-                  >
-                    <option value="general">🔧 General Issue</option>
-                    <option value="equipment">⚙️ Equipment Malfunction</option>
-                    <option value="safety">⚠️ Safety Concern</option>
-                    <option value="fuel">⛽ Fuel System Problem</option>
-                    <option value="power">🔌 Power/Electrical Issue</option>
-                    <option value="emergency">🚨 EMERGENCY</option>
-                  </select>
-                </div>
-
-                {/* Issue Description */}
-                <div style={styles.formGroup}>
-                  <label style={styles.formLabel}>
-                    Issue Description
-                    {issueCategory === "emergency" && (
-                      <span style={{ color: "#dc2626" }}> (URGENT)</span>
-                    )}
-                  </label>
-                  <textarea
-                    value={issueMessage}
-                    onChange={(e) => setIssueMessage(e.target.value)}
-                    placeholder="Please describe the issue in detail. Include location, time noticed, severity, and any immediate actions taken..."
-                    style={{
-                      ...styles.textarea,
-                      ...(issueCategory === "emergency"
-                        ? styles.urgentCategory
-                        : {}),
-                    }}
-                    onFocus={(e) => (e.target.style.borderColor = "#3b82f6")}
-                    onBlur={(e) => (e.target.style.borderColor = "#e2e8f0")}
-                    maxLength={500}
-                  />
-                  <div style={styles.characterCount}>
-                    {issueMessage.length}/500 characters
-                  </div>
-                </div>
-
-                {/* SMS Preview */}
-                <div
-                  style={{
-                    ...styles.salesRow,
-                    backgroundColor: "#f0f9ff",
-                    borderColor: "#0ea5e9",
-                  }}
-                >
-                  <div>
-                    <div style={styles.salesLabel}>
-                      <span style={styles.salesIcon}>📱</span>
-                      SMS Preview to General Manager
-                    </div>
-                    <div
-                      style={{
-                        fontSize: "12px",
-                        color: "#374151",
-                        marginTop: "8px",
-                        fontStyle: "italic",
-                        padding: "8px",
-                        backgroundColor: "#ffffff",
-                        borderRadius: "6px",
-                        border: "1px solid #e2e8f0",
-                      }}
-                    >
-                      "STATION ALERT: {stationData?.name || "Station"} -{" "}
-                      {issueCategory.toUpperCase()}
-                      <br />
-                      {issueMessage || "[Issue description will appear here]"}
-                      <br />
-                      Reported by: Station Manager
-                      <br />
-                      Time: {new Date().toLocaleString()}"
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div style={styles.modalFooter}>
-                <button
-                  onClick={handleCloseIssueModal}
-                  style={{ ...styles.modalButton, ...styles.cancelButton }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.backgroundColor = "#e5e7eb")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.backgroundColor = "#f3f4f6")
-                  }
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleSendIssueReport}
-                  disabled={issueSending || !issueMessage.trim()}
-                  style={{
-                    ...styles.modalButton,
-                    ...(issueCategory === "emergency"
-                      ? { backgroundColor: "#dc2626" }
-                      : styles.saveButton),
-                    ...(issueSending ? styles.sendingButton : {}),
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!issueSending && issueMessage.trim()) {
-                      e.currentTarget.style.backgroundColor =
-                        issueCategory === "emergency" ? "#b91c1c" : "#15803d";
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!issueSending && issueMessage.trim()) {
-                      e.currentTarget.style.backgroundColor =
-                        issueCategory === "emergency" ? "#dc2626" : "#16a34a";
-                    }
-                  }}
-                >
-                  {issueSending ? (
-                    <>
-                      <Loader2
-                        size={16}
-                        style={{
-                          marginRight: "8px",
-                          animation: "spin 1s linear infinite",
-                        }}
-                      />
-                      Sending SMS...
-                    </>
-                  ) : (
-                    <>
-                      📱 Send SMS Alert
-                      {issueCategory === "emergency" && " (URGENT)"}
-                    </>
-                  )}
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        </div>
       </main>
     </div>
   );

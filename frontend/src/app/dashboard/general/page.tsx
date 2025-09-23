@@ -864,10 +864,11 @@ export default function GeneralDashboard() {
                       <div
                         style={{
                           ...styles.stationIcon,
-                          backgroundColor: `${station.color}20`,
+                          backgroundColor: `
+                      e.currentTarget.style.backgroundColor = "#f9fafb"20`,
                         }}
                       >
-                        <Building2 size={20} color={station.color} />
+                        <Building2 size={20} color="#2563eb" />
                       </div>
                       <div style={styles.stationDetails}>
                         <h4 style={styles.stationName}>{station.name}</h4>
