@@ -1,7 +1,6 @@
 // "use server"
 // services/externalApiService.ts - Server-side External API Service with persistent token storage
 import { unstable_cache } from 'next/cache'
-import { prisma } from '../prisma'
 
 interface AuthData {
   data?: {
@@ -10,6 +9,15 @@ interface AuthData {
   };
   access_token?: string;
   token?: string;
+}
+
+interface ManualCashEntry {
+  id?: string;
+  stationId: string;
+  amount: number;
+  hasAlert: boolean;
+  alert?: string | null;
+  date: Date;
 }
 
 // Configuration
@@ -21,28 +29,24 @@ const password = process.env.EXTERNAL_API_PASSWORD;
 const AUTH_TOKEN_CACHE_KEY = 'external-api-auth-token';
 const TOKEN_EXPIRY_MINUTES = 50; // 50 minutes (assuming 1 hour token expiry)
 
-// Store token in database for persistence across serverless invocations
-async function storeTokenInDB(token: string, expiresAt: Date) {
+// In-memory storage for tokens and cash entries
+const tokenCache = new Map<string, { token: string; expires: Date }>();
+const manualCashEntriesCache = new Map<string, ManualCashEntry[]>();
+
+// Store token in memory cache for persistence
+async function storeTokenInCache(token: string, expiresAt: Date) {
   try {
-    await prisma.systemCache.upsert({
-      where: { key: AUTH_TOKEN_CACHE_KEY },
-      update: {
-        value: token,
-        expires_at: expiresAt,
-        updated_at: new Date()
-      },
-      create: {
-        key: AUTH_TOKEN_CACHE_KEY,
-        value: token,
-        expires_at: expiresAt
-      }
+    tokenCache.set(AUTH_TOKEN_CACHE_KEY, {
+      token: token,
+      expires: expiresAt
     });
-    console.log('🗄️ Token stored in database');
+    console.log('🗄️ Token stored in memory cache');
   } catch (error) {
-    console.warn('Failed to store token in database:', error);
-    // Non-fatal error, we can continue without DB storage
+    console.warn('Failed to store token in cache:', error);
+    // Non-fatal error, we can continue without cache storage
   }
 }
+
 export async function getStationDailyReportByLicense(ewuraLicense: string) {
   try {
     console.log(`📊 Fetching daily report for EWURA license: ${ewuraLicense}`);
@@ -61,28 +65,22 @@ export async function getStationDailyReportByLicense(ewuraLicense: string) {
   }
 }
 
-// Get token from database
-async function getTokenFromDB(): Promise<{ token: string; expires: Date } | null> {
+// Get token from memory cache
+async function getTokenFromCache(): Promise<{ token: string; expires: Date } | null> {
   try {
-    const result = await prisma.systemCache.findUnique({
-      where: { 
-        key: AUTH_TOKEN_CACHE_KEY,
-      },
-      select: {
-        value: true,
-        expires_at: true
-      }
-    });
+    const result = tokenCache.get(AUTH_TOKEN_CACHE_KEY);
     
-    if (result && result.expires_at && result.expires_at > new Date()) {
-      console.log('🗄️ Token retrieved from database');
-      return {
-        token: result.value,
-        expires: result.expires_at
-      };
+    if (result && result.expires > new Date()) {
+      console.log('🗄️ Token retrieved from memory cache');
+      return result;
+    }
+    
+    // Remove expired token
+    if (result) {
+      tokenCache.delete(AUTH_TOKEN_CACHE_KEY);
     }
   } catch (error) {
-    console.warn('Failed to get token from database:', error);
+    console.warn('Failed to get token from cache:', error);
   }
   
   return null;
@@ -123,9 +121,9 @@ async function login(): Promise<string> {
     throw new Error('No valid token found in authentication response');
   }
 
-  // Store token in database for persistence
+  // Store token in cache for persistence
   const expiresAt = new Date(Date.now() + (TOKEN_EXPIRY_MINUTES * 60 * 1000));
-  await storeTokenInDB(token, expiresAt);
+  await storeTokenInCache(token, expiresAt);
 
   return token;
 }
@@ -151,11 +149,11 @@ const getCachedAuthToken = unstable_cache(
 // Helper function to get authentication token with fallbacks
 async function getAuthToken(): Promise<string> {
   try {
-    // First try: Check database for existing valid token
-    const dbToken = await getTokenFromDB();
-    if (dbToken && dbToken.expires > new Date()) {
-      console.log('🔑 Using token from database');
-      return dbToken.token;
+    // First try: Check cache for existing valid token
+    const cachedToken = await getTokenFromCache();
+    if (cachedToken && cachedToken.expires > new Date()) {
+      console.log('🔑 Using token from cache');
+      return cachedToken.token;
     }
 
     // Second try: Use Next.js cached function (will fetch new token if cache miss)
@@ -200,7 +198,7 @@ async function makeRequest(
     
     if (!response.ok) {
       if (response.status === 401) {
-        console.log('🔄 Token expired, clearing cache and database...');
+        console.log('🔄 Token expired, clearing cache...');
         await clearAuthCache();
         throw new Error('Token expired');
       }
@@ -214,16 +212,14 @@ async function makeRequest(
   }
 }
 
-// Clear authentication cache from database and Next.js cache
+// Clear authentication cache from memory and Next.js cache
 async function clearAuthCache() {
   try {
-    // Clear from database
-    await prisma.systemCache.deleteMany({
-      where: { key: AUTH_TOKEN_CACHE_KEY }
-    });
-    console.log('🗑️ Token removed from database');
+    // Clear from memory cache
+    tokenCache.delete(AUTH_TOKEN_CACHE_KEY);
+    console.log('🗑️ Token removed from memory cache');
   } catch (error) {
-    console.warn('Failed to clear token from database:', error);
+    console.warn('Failed to clear token from cache:', error);
   }
   
   // Clear Next.js cache using revalidateTag
@@ -314,15 +310,15 @@ export async function clearCache() {
 
 export async function getCacheStats() {
   try {
-    const dbToken = await getTokenFromDB();
+    const cachedToken = await getTokenFromCache();
     return {
-      tokenInDB: !!dbToken,
-      tokenExpires: dbToken?.expires,
-      tokenValid: dbToken ? dbToken.expires > new Date() : false
+      tokenInCache: !!cachedToken,
+      tokenExpires: cachedToken?.expires,
+      tokenValid: cachedToken ? cachedToken.expires > new Date() : false
     };
   } catch (error) {
     return {
-      tokenInDB: false,
+      tokenInCache: false,
       tokenExpires: null,
       tokenValid: false,
       error: 'Failed to check cache stats'
@@ -330,62 +326,66 @@ export async function getCacheStats() {
   }
 }
 
+// Manual Cash Entries functions - using in-memory storage
 export async function getCurrentManualCashEntries(stationId: string) {
-	//fetch the most recent of manual cash entry for a specific station
-	const currentEntries = await prisma.manualCashEntries.findMany({
-		where: {
-			stationId: stationId,
-		},
-		orderBy: {
-			date: 'desc'
-		},
-		take: 1
-	});
-	if (currentEntries.length > 0) {
-		return currentEntries[0];
-	}
-	throw new Error('No manual cash entry found for the specified station');
+  // Fetch the most recent manual cash entry for a specific station
+  const entries = manualCashEntriesCache.get(stationId) || [];
+  const sortedEntries = entries.sort((a, b) => b.date.getTime() - a.date.getTime());
+  
+  if (sortedEntries.length > 0) {
+    return sortedEntries[0];
+  }
+  throw new Error('No manual cash entry found for the specified station');
 }
+
 export async function getAllAlerts() {
-	// Fetch alerts for a specific station
-	const alerts = await prisma.manualCashEntries.findMany({
-		where: {
-			hasAlert: true
-		},
-		orderBy: {
-			date: 'desc'
-		}
-	});
-	return alerts;
+  // Fetch alerts from all stations
+  const allAlerts: ManualCashEntry[] = [];
+  
+  for (const entries of manualCashEntriesCache.values()) {
+    const alertEntries = entries.filter(entry => entry.hasAlert);
+    allAlerts.push(...alertEntries);
+  }
+  
+  // Sort by date descending
+  return allAlerts.sort((a, b) => b.date.getTime() - a.date.getTime());
 }
 
 export async function getAlerts(stationId: string) {
-	// Fetch alerts for a specific station
-	const alerts = await prisma.manualCashEntries.findMany({
-		where: {
-			stationId: stationId,
-			hasAlert: true
-		},
-		orderBy: {
-			date: 'desc'
-		}
-	});
-	return alerts;
+  // Fetch alerts for a specific station
+  const entries = manualCashEntriesCache.get(stationId) || [];
+  const alerts = entries.filter(entry => entry.hasAlert);
+  
+  // Sort by date descending
+  return alerts.sort((a, b) => b.date.getTime() - a.date.getTime());
 }
 
 export async function updateCurrentManualCashEntries(stationId: string, actualReading: number, manualReading: number) {
-	// validate the stationId
-	if (!stationId) {
-		throw new Error('Invalid station ID');
-	}
-  await prisma.manualCashEntries.create({
-    data: {
-			stationId:stationId,
-      amount: manualReading,
-      hasAlert: (actualReading - manualReading) / actualReading > 0.01,
-      alert: (actualReading - manualReading) / actualReading > 0.01 ? `Manual cash entry for station ${stationId} has changed by ${(actualReading - manualReading).toFixed(2)}` : null
-    }
-  });
+  // Validate the stationId
+  if (!stationId) {
+    throw new Error('Invalid station ID');
+  }
+
+  const hasAlert = (actualReading - manualReading) / actualReading > 0.01;
+  const newEntry: ManualCashEntry = {
+    id: `${stationId}_${Date.now()}`, // Simple ID generation
+    stationId: stationId,
+    amount: manualReading,
+    hasAlert: hasAlert,
+    alert: hasAlert ? `Manual cash entry for station ${stationId} has changed by ${(actualReading - manualReading).toFixed(2)}` : null,
+    date: new Date()
+  };
+
+  // Get existing entries or create new array
+  const existingEntries = manualCashEntriesCache.get(stationId) || [];
+  existingEntries.push(newEntry);
+  
+  // Keep only the last 100 entries per station to prevent memory bloat
+  if (existingEntries.length > 100) {
+    existingEntries.splice(0, existingEntries.length - 100);
+  }
+  
+  manualCashEntriesCache.set(stationId, existingEntries);
 }
 
 // Default export for backward compatibility

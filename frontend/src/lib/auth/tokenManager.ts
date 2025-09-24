@@ -1,31 +1,31 @@
 // src/lib/auth/tokenManager.ts - User token management utilities
-// "use server"
-import { prisma } from '../prisma';
+"use server"
 import jwt from 'jsonwebtoken';
 
 interface StoredSession {
   access_token: string;
   refresh_token: string;
   created_at: string;
+  expires_at?: Date;
 }
 
-// Get user's external API tokens from database
+// In-memory storage for user sessions (replace with Redis in production)
+const userSessionCache = new Map<string, StoredSession>();
+
+// Get user's external API tokens from memory cache
 export async function getUserTokens(userId: string): Promise<StoredSession | null> {
   try {
-    const session = await prisma.systemCache.findUnique({
-      where: { 
-        key: `user_session_${userId}`,
-      },
-      select: {
-        value: true,
-        expires_at: true
-      }
-    });
+    const sessionKey = `user_session_${userId}`;
+    const session = userSessionCache.get(sessionKey);
     
     if (session && session.expires_at && session.expires_at > new Date()) {
-      const tokens: StoredSession = JSON.parse(session.value);
       // console.log(`🔑 Retrieved tokens for user ${userId}`);
-      return tokens;
+      return session;
+    }
+    
+    // Remove expired session
+    if (session) {
+      userSessionCache.delete(sessionKey);
     }
     
     console.log(`⚠️ No valid session found for user ${userId}`);
@@ -33,6 +33,28 @@ export async function getUserTokens(userId: string): Promise<StoredSession | nul
   } catch (error) {
     console.warn('Failed to get user tokens:', error);
     return null;
+  }
+}
+
+// Store user tokens in memory cache
+export async function storeUserTokens(
+  userId: string, 
+  accessToken: string, 
+  refreshToken: string
+): Promise<void> {
+  try {
+    const expiresAt = new Date(Date.now() + (8 * 60 * 60 * 1000)); // 8 hours
+    
+    userSessionCache.set(`user_session_${userId}`, {
+      access_token: accessToken,
+      refresh_token: refreshToken,
+      created_at: new Date().toISOString(),
+      expires_at: expiresAt
+    });
+    
+    console.log(`🗄️ User session stored in memory for user ${userId}`);
+  } catch (error) {
+    console.warn('Failed to store user tokens:', error);
   }
 }
 
@@ -63,14 +85,14 @@ export async function makeAuthenticatedExternalRequest(
   }
   
   const url = `${process.env.EXTERNAL_API_URL || 'http://server.oktin.ak4tek.com:3950'}${endpoint}`;
-	// console.log(`Making request to ${url} with token: ${tokens.access_token}`);
+  // console.log(`Making request to ${url} with token: ${tokens.access_token}`);
 
-	options.headers = {
-		'Content-Type': 'application/json',
-		'Accept': 'application/json',
-		'Authorization': `${tokens.access_token}`,
-		...options.headers
-	};
+  options.headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Authorization': `${tokens.access_token}`,
+    ...options.headers
+  };
 
   const response = await fetch(url, options);
 
@@ -88,9 +110,8 @@ export async function makeAuthenticatedExternalRequest(
 // Clear user session
 export async function clearUserSession(userId: string): Promise<void> {
   try {
-    await prisma.systemCache.deleteMany({
-      where: { key: `user_session_${userId}` }
-    });
+    const sessionKey = `user_session_${userId}`;
+    userSessionCache.delete(sessionKey);
     console.log(`🗑️ Session cleared for user ${userId}`);
   } catch (error) {
     console.warn('Failed to clear user session:', error);

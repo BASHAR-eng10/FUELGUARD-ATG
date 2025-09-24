@@ -1,6 +1,5 @@
 import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
-import { prisma } from './prisma'
 import apiService from "@/lib/services/api";
 
 interface ExternalApiResponse {
@@ -22,34 +21,22 @@ interface ExternalApiResponse {
   message: string;
 }
 
-// Store user token in database for session persistence
+// Optional: Store user token in memory cache (instead of database)
+const userSessionCache = new Map();
+
 async function storeUserToken(userId: string, accessToken: string, refreshToken: string) {
   try {
     const expiresAt = new Date(Date.now() + (8 * 60 * 60 * 1000)); // 8 hours
-
-    await prisma.systemCache.upsert({
-      where: { key: `user_session_${userId}` },
-      update: {
-        value: JSON.stringify({
-          access_token: accessToken,
-          refresh_token: refreshToken,
-          created_at: new Date().toISOString()
-        }),
-        expires_at: expiresAt,
-        updated_at: new Date()
-      },
-      create: {
-        key: `user_session_${userId}`,
-        value: JSON.stringify({
-          access_token: accessToken,
-          refresh_token: refreshToken,
-          created_at: new Date().toISOString()
-        }),
-        expires_at: expiresAt
-      }
+    
+    // Store in memory cache instead of database
+    userSessionCache.set(`user_session_${userId}`, {
+      access_token: accessToken,
+      refresh_token: refreshToken,
+      created_at: new Date().toISOString(),
+      expires_at: expiresAt
     });
 
-    console.log(`🗄️ User session stored for user ${userId}`);
+    console.log(`🗄️ User session stored in memory for user ${userId}`);
   } catch (error) {
     console.warn('Failed to store user session:', error);
   }
@@ -89,14 +76,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           const res: ExternalApiResponse = await response.json()
           const data = res.data
 
-          // Store tokens in database
+          // Store tokens in memory cache
           await storeUserToken(
             data.user_record.id.toString(),
             data.access_token,
             data.refresh_token
           )
           console.log(`✅ User authenticated: ${credentials.email} (${data.user_record.roles.name})`)
-
 
           const stationResponse = await fetch('http://server.oktin.ak4tek.com:3950/stationinfo/all', {
             headers: {
