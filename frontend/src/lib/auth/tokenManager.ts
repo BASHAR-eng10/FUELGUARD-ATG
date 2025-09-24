@@ -1,5 +1,4 @@
 // src/lib/auth/tokenManager.ts - User token management utilities
-"use server"
 import jwt from 'jsonwebtoken';
 
 interface StoredSession {
@@ -19,7 +18,6 @@ export async function getUserTokens(userId: string): Promise<StoredSession | nul
     const session = userSessionCache.get(sessionKey);
     
     if (session && session.expires_at && session.expires_at > new Date()) {
-      // console.log(`🔑 Retrieved tokens for user ${userId}`);
       return session;
     }
     
@@ -28,7 +26,7 @@ export async function getUserTokens(userId: string): Promise<StoredSession | nul
       userSessionCache.delete(sessionKey);
     }
     
-    console.log(`⚠️ No valid session found for user ${userId}`);
+    console.log(`No valid session found for user ${userId}`);
     return null;
   } catch (error) {
     console.warn('Failed to get user tokens:', error);
@@ -52,13 +50,13 @@ export async function storeUserTokens(
       expires_at: expiresAt
     });
     
-    console.log(`🗄️ User session stored in memory for user ${userId}`);
+    console.log(`User session stored in memory for user ${userId}`);
   } catch (error) {
     console.warn('Failed to store user tokens:', error);
   }
 }
 
-// Extract user ID from JWT token
+// Extract user ID from JWT token - synchronous utility function
 export function getUserIdFromToken(authHeader: string | null): string | null {
   try {
     const token = authHeader?.replace('Bearer ', '');
@@ -77,7 +75,7 @@ export async function makeAuthenticatedExternalRequest(
   userId: string, 
   endpoint: string, 
   options: RequestInit = {}
-) {
+): Promise<any> {
   const tokens = await getUserTokens(userId);
   
   if (!tokens) {
@@ -85,20 +83,23 @@ export async function makeAuthenticatedExternalRequest(
   }
   
   const url = `${process.env.EXTERNAL_API_URL || 'http://server.oktin.ak4tek.com:3950'}${endpoint}`;
-  // console.log(`Making request to ${url} with token: ${tokens.access_token}`);
 
-  options.headers = {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    'Authorization': `${tokens.access_token}`,
-    ...options.headers
+  const requestOptions: RequestInit = {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `${tokens.access_token}`,
+      ...options.headers
+    }
   };
 
-  const response = await fetch(url, options);
+  const response = await fetch(url, requestOptions);
 
   if (!response.ok) {
     if (response.status === 401) {
-      // Token expired, could implement refresh logic here
+      // Token expired, clear the session
+      await clearUserSession(userId);
       throw new Error('Session expired. Please login again.');
     }
     throw new Error(`Request failed: ${response.status} ${response.statusText}`);
@@ -107,12 +108,12 @@ export async function makeAuthenticatedExternalRequest(
   return response.json();
 }
 
-// Clear user session
+// Clear user session from memory
 export async function clearUserSession(userId: string): Promise<void> {
   try {
     const sessionKey = `user_session_${userId}`;
     userSessionCache.delete(sessionKey);
-    console.log(`🗑️ Session cleared for user ${userId}`);
+    console.log(`Session cleared for user ${userId}`);
   } catch (error) {
     console.warn('Failed to clear user session:', error);
   }
@@ -122,4 +123,15 @@ export async function clearUserSession(userId: string): Promise<void> {
 export async function isSessionValid(userId: string): Promise<boolean> {
   const tokens = await getUserTokens(userId);
   return tokens !== null;
+}
+
+// Clear all sessions (useful for debugging)
+export async function clearAllSessions(): Promise<void> {
+  userSessionCache.clear();
+  console.log('All sessions cleared from memory');
+}
+
+// Get session count (useful for debugging)
+export function getSessionCount(): number {
+  return userSessionCache.size;
 }
