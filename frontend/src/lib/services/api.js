@@ -14,15 +14,14 @@ class ApiService {
         // Development: Use direct HTTP call
         return 'http://server.oktin.ak4tek.com:3950';
       } else {
-        // Production: Use Vercel proxy
-        return '/api/external';
+        // Production: Temporarily use direct calls until backend connectivity is fixed
+        // NOTE: This will cause mixed content errors but allows testing
+        return 'http://server.oktin.ak4tek.com:3950';
       }
     }
     
     // Server-side rendering fallback
-    return process.env.NODE_ENV === 'development' 
-      ? 'http://server.oktin.ak4tek.com:3950'
-      : '/api/external';
+    return 'http://server.oktin.ak4tek.com:3950';
   }
 
   async getAuthHeaders() {
