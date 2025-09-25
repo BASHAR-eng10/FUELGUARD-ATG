@@ -1,9 +1,28 @@
-// src/services/api.js - Frontend API service
+// src/services/api.js - Updated with environment-based URLs
 import { getSession } from "next-auth/react";
 
 class ApiService {
   constructor() {
     // NextAuth handles tokens via sessions, no need for manual token storage
+  }
+
+  // Get the correct base URL based on environment
+  getBaseUrl() {
+    if (typeof window !== 'undefined') {
+      // Client-side: Check if we're in development or production
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        // Development: Use direct HTTP call
+        return 'http://server.oktin.ak4tek.com:3950';
+      } else {
+        // Production: Use Vercel proxy
+        return '/api';
+      }
+    }
+    
+    // Server-side rendering fallback
+    return process.env.NODE_ENV === 'development' 
+      ? 'http://server.oktin.ak4tek.com:3950'
+      : '/api';
   }
 
   async getAuthHeaders() {
@@ -20,7 +39,8 @@ class ApiService {
   }
 
   async request(endpoint, options = {}) {
-    const url = `http://server.oktin.ak4tek.com:3950${endpoint}`;
+    const baseUrl = this.getBaseUrl();
+    const url = `${baseUrl}${endpoint}`;
 
     // Get auth headers with NextAuth session
     const authHeaders = await this.getAuthHeaders();
@@ -35,6 +55,7 @@ class ApiService {
 
     try {
       console.log(`🌐 API Request: ${options.method || "GET"} ${url}`);
+      console.log(`🔧 Environment: ${process.env.NODE_ENV}, Base URL: ${baseUrl}`);
 
       const response = await fetch(url, config);
 
@@ -69,25 +90,24 @@ class ApiService {
       throw error;
     }
   }
-  // ===================================================================
-  // Add this method to your existing lib/services/api.js file:
-  // ===================================================================
 
-  // Add to your ApiService class:
+  // ... rest of your methods remain the same
   async getStationDailyReport(license) {
     console.log(`api js`, license);
-
     return this.request(`/daily_report/EWURA_LC`, {
       method: "POST",
       body: JSON.stringify({ EWURA_LC: license }),
     });
   }
+
   async getStationRefillReport() {
     return this.request(`/ak4tek/tanks/refill`);
   }
+
   async getStationAutoRefillReport() {
     return this.request(`/ak4tek/tanks/autorefill`);
   }
+
   async getCurrentUser() {
     const session = await getSession();
     return session?.user || null;
@@ -107,9 +127,6 @@ class ApiService {
     return this.request(`/stationinfo/${id}`);
   }
 
-  // getAllStations() {
-  // 	return this.request("/stationinfo/all");
-  // }
   async getAlerts(id) {
     return this.request(`/stations/${id}/alerts`);
   }
@@ -124,7 +141,7 @@ class ApiService {
 
   async updateCurrentCashEntry(id, actualReading, manualReading) {
     return this.request(`/stations/${id}/cash`, {
-      method: "POST", //TODO: set to PUT
+      method: "POST",
       body: JSON.stringify({ actualReading, manualReading }),
     });
   }
@@ -141,21 +158,19 @@ class ApiService {
   // tank methods
   async getStationTanks(license) {
     console.log(`api js`, license);
-
     return this.request(`/ak4tek/tanks/EWURA_LC`, {
       method: "POST",
       body: JSON.stringify({ EWURA_LC: license }),
     });
   }
-   // In api.js - rename for clarity
-async getStationCurrentTanks(license) {
+
+  async getStationCurrentTanks(license) {
     console.log(`Fetching current tank data for license:`, license);
-    
     return this.request(`/ak4tek/tanks/all`, {
       method: "POST",
       body: JSON.stringify({ EWURA_LC: license }),
     });
-}
+  }
 
   async getAllStationTanks() {
     return this.request("/stations/tanks");
@@ -169,9 +184,10 @@ async getStationCurrentTanks(license) {
   async getStationDashboard(id) {
     return this.request(`/dashboard/station/${id}`);
   }
+
   async getBigTanksData() {
-  return this.request(`/ak4tek/tanks/`);
-}
+    return this.request(`/ak4tek/tanks/`);
+  }
 }
 
 export default new ApiService();
