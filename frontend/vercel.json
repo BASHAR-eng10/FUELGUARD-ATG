@@ -1,13 +1,13 @@
 {
   "rewrites": [
     {
-      "source": "/api/:path*",
+      "source": "/api/external/:path*",
       "destination": "http://server.oktin.ak4tek.com:3950/:path*"
     }
   ],
   "headers": [
     {
-      "source": "/api/(.*)",
+      "source": "/api/external/(.*)",
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",

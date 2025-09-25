@@ -15,14 +15,14 @@ class ApiService {
         return 'http://server.oktin.ak4tek.com:3950';
       } else {
         // Production: Use Vercel proxy
-        return '/api';
+        return '/api/external';
       }
     }
     
     // Server-side rendering fallback
     return process.env.NODE_ENV === 'development' 
       ? 'http://server.oktin.ak4tek.com:3950'
-      : '/api';
+      : '/api/external';
   }
 
   async getAuthHeaders() {
