@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/external/:path*",
-      "destination": "https://your-backend-domain.com/:path*"
+      "destination": "https://server.oktin.ak4tek.com:3950/:path*"
     }
   ],
   "headers": [
