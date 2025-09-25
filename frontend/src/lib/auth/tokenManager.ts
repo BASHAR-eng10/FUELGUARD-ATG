@@ -1,5 +1,5 @@
 // src/lib/auth/tokenManager.ts - User token management utilities
-"use server"
+
 import jwt from 'jsonwebtoken';
 
 interface StoredSession {
