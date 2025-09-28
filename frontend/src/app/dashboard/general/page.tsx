@@ -33,6 +33,7 @@ interface Station {
   nozzles: number;
   alerts: number;
   color: string;
+  LicenseeTraSerialNo?: string;
 }
 
 const styles = {
@@ -423,12 +424,7 @@ export default function GeneralDashboard() {
           (station: any, index: number) => ({
             id: station.id,
             name: station.RetailStationName,
-            location: `${station.WardName}, ${station.DistrictName}`,
-            region: station.RegionName,
-            zone: station.Zone,
-            operatorName: station.OperatorName,
-            contactEmail: station.ContactPersonEmailAddress,
-            contactPhone: station.ContactPersonPhone,
+            
             ewuraLicense: station.EWURALicenseNo,
             tanks: station.TotalNoTanks,
             username: station.automation_server_username,
@@ -867,12 +863,9 @@ export default function GeneralDashboard() {
                       </div>
                       <div style={styles.stationDetails}>
                         <h4 style={styles.stationName}>{station.name}</h4>
-                        <p style={styles.stationLocation}>
-                          <MapPin size={12} />
-                          {station.location}
-                        </p>
+                       
                         
-                        {station.ewuraLicense && (
+                        {station.LicenseeTraSerialNo && (
                           <p
                             style={{
                               ...styles.stationLocation,
