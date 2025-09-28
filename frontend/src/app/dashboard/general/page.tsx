@@ -22,12 +22,7 @@ import api from "../../../lib/services/api";
 interface Station {
   id: number;
   name: string;
-  location: string;
-  region?: string;
-  zone?: string;
-  operatorName?: string;
-  contactEmail?: string;
-  contactPhone?: number;
+  
   ewuraLicense?: string;
   tanks: number;
   username?: string;
@@ -478,7 +473,7 @@ export default function GeneralDashboard() {
         {
           id: 1,
           name: "Main Street Station",
-          location: "123 Main Street, Downtown",
+          
           status: "excellent",
           efficiency: 92,
           revenue: "$4,280",

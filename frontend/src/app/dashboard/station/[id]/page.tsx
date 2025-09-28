@@ -15,12 +15,7 @@ import { useAuth } from "@/lib/hooks/useAuth";
 interface StationData {
   id: number;
   name: string;
-  location: string;
-  region?: string;
-  zone?: string;
-  operatorName?: string;
-  contactEmail?: string;
-  contactPhone?: number;
+ 
   ewuraLicense?: string;
   tanks: number;
   username?: string;
@@ -773,12 +768,7 @@ export default function StationDashboard({
         setStationData({
           id: station.id,
           name: station.RetailStationName,
-          location: `${station.WardName}, ${station.DistrictName}`,
-          region: station.RegionName,
-          zone: station.Zone,
-          operatorName: station.OperatorName,
-          contactEmail: station.ContactPersonEmailAddress,
-          contactPhone: station.ContactPersonPhone,
+         
           ewuraLicense: station.EWURALicenseNo,
           tanks: station.TotalNoTanks,
           username: station.automation_server_username,
@@ -794,8 +784,8 @@ export default function StationDashboard({
       setStationData({
         id: parseInt(id),
         name: `Station ${id} (Fallback)`,
-        location: "Location unavailable",
-        operatorName: "LAKE OIL",
+       
+        
         tanks: 2,
         ewuraLicense: "License unavailable",
       });
