@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, use, useMemo, useCallback } from "react";
+import { useState, useEffect, use } from "react";
 import {
   Shield,
   Settings,
@@ -15,7 +15,6 @@ import { useAuth } from "@/lib/hooks/useAuth";
 interface StationData {
   id: number;
   name: string;
- 
   ewuraLicense?: string;
   tanks: number;
   username?: string;
@@ -48,301 +47,27 @@ interface TankData {
 }
 
 interface OffloadingEvent {
-  id: string;
-  stationSerial: string;
-  productName: string;
-  startTime: string;
-  endTime: string;
-  startReading: number;
-  endReading: number;
-  offloadingQty: number;
-  startRecordId: number;
-  endRecordId: number;
-  detectionWindow: number;
-  tankId: string;
-  tankName: string;
-  duration: string;
-  formattedStartTime: string;
-  formattedEndTime: string;
-  formattedQuantity: string;
-}
-
-interface OffloadingSummary {
-  totalEvents: number;
-  byStation: {
-    [stationSerial: string]: {
-      count: number;
-      totalQuantity: number;
-      events: OffloadingEvent[];
-    };
-  };
-  byProduct: {
-    [productName: string]: {
-      count: number;
-      totalQuantity: number;
-      events: OffloadingEvent[];
-    };
-  };
-  totalQuantity: number;
-  averageQuantity: number;
-  dateRange: {
-    earliest: Date | null;
-    latest: Date | null;
-  };
-}
-
-interface GroupedTankData {
-  [key: string]: (TankData & { parsedDate: Date })[];
-}
-
-// Add this entire class before your component definition
-class OffloadingDetector {
-  private readonly DETECTION_WINDOW_MINUTES = 125;
-  private readonly MIN_OFFLOADING_THRESHOLD = 500;
-
-  detectOffloadingEvents(tankData: TankData[]): OffloadingEvent[] {
-    if (!tankData || !Array.isArray(tankData)) {
-      console.error('Invalid tank data provided');
-      return [];
-    }
-
-    const groupedData = this.groupByStationAndProduct(tankData);
-    let allOffloadingEvents: OffloadingEvent[] = [];
-
-    for (const [key, records] of Object.entries(groupedData)) {
-      const [stationSerial, productName] = key.split('|');
-      const offloadingEvents = this.detectOffloadingForGroup(records, stationSerial, productName);
-      allOffloadingEvents = allOffloadingEvents.concat(offloadingEvents);
-    }
-
-    return allOffloadingEvents;
-  }
-
-  private groupByStationAndProduct(tankData: TankData[]): GroupedTankData {
-    const grouped: GroupedTankData = {};
-    
-    tankData.forEach(record => {
-      const key = `${record.LicenseeTraSerialNo}|${record.product_name}`;
-      if (!grouped[key]) {
-        grouped[key] = [];
-      }
-      grouped[key].push({
-        ...record,
-        parsedDate: new Date(record.date)
-      });
-    });
-
-    Object.keys(grouped).forEach(key => {
-      grouped[key].sort((a, b) => a.parsedDate.getTime() - b.parsedDate.getTime());
-    });
-
-    return grouped;
-  }
-
-  private detectOffloadingForGroup(
-    records: (TankData & { parsedDate: Date })[], 
-    stationSerial: string, 
-    productName: string
-  ): OffloadingEvent[] {
-    const offloadingEvents: OffloadingEvent[] = [];
-    
-    for (let i = 0; i < records.length - 1; i++) {
-      const currentRecord = records[i];
-      const nextRecord = records[i + 1];
-      
-      // Look for significant volume increases (start of offloading)
-      const volumeIncrease = nextRecord.fuel_volume - currentRecord.fuel_volume;
-      
-      if (volumeIncrease >= this.MIN_OFFLOADING_THRESHOLD) {
-        // Check if this increase is preceded by a significant drop
-        if (this.hasSignificantDropBefore(records, i + 1)) {
-          continue; // Skip this potential offloading event
-        }
-        
-        // Check if this increase is followed by a fast sudden drop
-        if (this.isFastSuddenDrop(records, i + 1)) {
-          continue; // Skip this potential offloading event
-        }
-        
-        // Define the detection window (125 minutes from current record)
-        const windowEndTime = new Date(currentRecord.parsedDate.getTime() + this.DETECTION_WINDOW_MINUTES * 60 * 1000);
-        
-        // Find the maximum volume within the detection window
-        let maxVolumeRecord = currentRecord;
-        let maxVolumeIndex = i;
-        
-        // Search within the 125-minute window
-        for (let j = i; j < records.length; j++) {
-          const futureRecord = records[j];
-          
-          // Stop if we've exceeded the detection window
-          if (futureRecord.parsedDate > windowEndTime) {
-            break;
-          }
-          
-          // Update maximum if we find a higher volume
-          if (futureRecord.fuel_volume > maxVolumeRecord.fuel_volume) {
-            maxVolumeRecord = futureRecord;
-            maxVolumeIndex = j;
-          }
-        }
-        
-        // Calculate offloading quantity
-        const totalOffloadingQty = maxVolumeRecord.fuel_volume - currentRecord.fuel_volume;
-        
-        if (totalOffloadingQty >= this.MIN_OFFLOADING_THRESHOLD) {
-          const offloadingEvent: OffloadingEvent = {
-            id: `${stationSerial}_${productName}_${currentRecord.id}`,
-            stationSerial,
-            productName,
-            startTime: currentRecord.date,
-            endTime: maxVolumeRecord.date,
-            startReading: currentRecord.fuel_volume,
-            endReading: maxVolumeRecord.fuel_volume,
-            offloadingQty: parseFloat(totalOffloadingQty.toFixed(2)),
-            startRecordId: currentRecord.id,
-            endRecordId: maxVolumeRecord.id,
-            detectionWindow: this.DETECTION_WINDOW_MINUTES,
-            tankId: currentRecord.tank_id,
-            tankName: currentRecord.tank_name,
-            duration: this.calculateDuration(currentRecord.date, maxVolumeRecord.date),
-            formattedStartTime: new Date(currentRecord.date).toLocaleString(),
-            formattedEndTime: new Date(maxVolumeRecord.date).toLocaleString(),
-            formattedQuantity: `${parseFloat(totalOffloadingQty.toFixed(2)).toLocaleString()} L`
-          };
-
-          offloadingEvents.push(offloadingEvent);
-          
-          // Skip to after the detection window to avoid overlapping detections
-          i = this.findIndexAfterWindow(records, i, windowEndTime);
-        }
-      }
-    }
-
-    return offloadingEvents;
-  }
-
-  private hasSignificantDropBefore(records: (TankData & { parsedDate: Date })[], increaseIndex: number): boolean {
-    const LOOKBACK_RECORDS = 10;
-    const SIGNIFICANT_DROP_THRESHOLD = 1000;
-    
-    const startIndex = Math.max(0, increaseIndex - LOOKBACK_RECORDS);
-    
-    if (startIndex >= increaseIndex) return false;
-    
-    const increaseRecord = records[increaseIndex];
-    const lookbackRecord = records[startIndex];
-    
-    const volumeDifference = lookbackRecord.fuel_volume - increaseRecord.fuel_volume;
-    
-    return volumeDifference > SIGNIFICANT_DROP_THRESHOLD;
-  }
-
-  private isFastSuddenDrop(records: (TankData & { parsedDate: Date })[], startIndex: number): boolean {
-    if (startIndex >= records.length - 1) return false;
-    
-    const startRecord = records[startIndex];
-    const DROP_CHECK_MINUTES = 30;
-    const SUDDEN_DROP_THRESHOLD = this.MIN_OFFLOADING_THRESHOLD * 0.8;
-    
-    const checkEndTime = new Date(startRecord.parsedDate.getTime() + DROP_CHECK_MINUTES * 60 * 1000);
-    
-    for (let i = startIndex + 1; i < records.length; i++) {
-      const currentRecord = records[i];
-      
-      if (currentRecord.parsedDate > checkEndTime) {
-        break;
-      }
-      
-      const volumeChange = currentRecord.fuel_volume - startRecord.fuel_volume;
-      if (volumeChange <= -SUDDEN_DROP_THRESHOLD) {
-        return true;
-      }
-    }
-    
-    return false;
-  }
-
-  private findIndexAfterWindow(
-    records: (TankData & { parsedDate: Date })[], 
-    currentIndex: number, 
-    windowEndTime: Date
-  ): number {
-    for (let i = currentIndex + 1; i < records.length; i++) {
-      if (records[i].parsedDate > windowEndTime) {
-        return i - 1;
-      }
-    }
-    return records.length - 1;
-  }
-
-  generateSummary(offloadingEvents: OffloadingEvent[]): OffloadingSummary {
-    const summary: OffloadingSummary = {
-      totalEvents: offloadingEvents.length,
-      byStation: {},
-      byProduct: {},
-      totalQuantity: 0,
-      averageQuantity: 0,
-      dateRange: {
-        earliest: null,
-        latest: null
-      }
-    };
-
-    offloadingEvents.forEach(event => {
-      if (!summary.byStation[event.stationSerial]) {
-        summary.byStation[event.stationSerial] = {
-          count: 0,
-          totalQuantity: 0,
-          events: []
-        };
-      }
-      summary.byStation[event.stationSerial].count++;
-      summary.byStation[event.stationSerial].totalQuantity += event.offloadingQty;
-      summary.byStation[event.stationSerial].events.push(event);
-
-      if (!summary.byProduct[event.productName]) {
-        summary.byProduct[event.productName] = {
-          count: 0,
-          totalQuantity: 0,
-          events: []
-        };
-      }
-      summary.byProduct[event.productName].count++;
-      summary.byProduct[event.productName].totalQuantity += event.offloadingQty;
-      summary.byProduct[event.productName].events.push(event);
-
-      summary.totalQuantity += event.offloadingQty;
-
-      const eventDate = new Date(event.startTime);
-      if (!summary.dateRange.earliest || eventDate < summary.dateRange.earliest) {
-        summary.dateRange.earliest = eventDate;
-      }
-      if (!summary.dateRange.latest || eventDate > summary.dateRange.latest) {
-        summary.dateRange.latest = eventDate;
-      }
-    });
-
-    summary.averageQuantity = offloadingEvents.length > 0 
-      ? parseFloat((summary.totalQuantity / offloadingEvents.length).toFixed(2))
-      : 0;
-
-    return summary;
-  }
-
-  private calculateDuration(startTime: string, endTime: string): string {
-    const start = new Date(startTime);
-    const end = new Date(endTime);
-    const diffMinutes = Math.floor((end.getTime() - start.getTime()) / (1000 * 60));
-    
-    if (diffMinutes < 60) {
-      return `${diffMinutes} minutes`;
-    } else {
-      const hours = Math.floor(diffMinutes / 60);
-      const minutes = diffMinutes % 60;
-      return `${hours}h ${minutes}m`;
-    }
-  }
+  id?: string;
+  station: string;
+  stationSerial?: string;
+  productName?: string;
+  tank: string;
+  date: string;
+  startTime?: string;
+  endTime?: string;
+  startReading?: number;
+  endReading?: number;
+  offload_volume_liters: number;
+  offloadingQty?: number;
+  startRecordId?: number;
+  endRecordId?: number;
+  detectionWindow?: number;
+  tankId?: string;
+  tankName?: string;
+  duration?: string;
+  formattedStartTime?: string;
+  formattedEndTime?: string;
+  formattedQuantity?: string;
 }
 
 const styles = {
@@ -501,20 +226,14 @@ export default function StationDashboard({
 }) {
   const { id } = use(params);
   const { logout } = useAuth();
+  
+  // State declarations
   const [stationData, setStationData] = useState<StationData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refillData, setRefillData] = useState<any[]>([]);
-  const [allTankData, setAllTankData] = useState<TankData[]>([]);
   const [offloadingEvents, setOffloadingEvents] = useState<OffloadingEvent[]>([]);
-  const [offloadingSummary, setOffloadingSummary] = useState<OffloadingSummary | null>(null);
-  const [isAnalyzingOffloading, setIsAnalyzingOffloading] = useState(false);
-
-  // Initialize offloading detector
-  const offloadingDetector = useMemo(() => new OffloadingDetector(), []);
-
-  // SIGNAL - Check if getBigTanksData returned data
-  const hasTankData = allTankData && allTankData.length > 0;
+  const [isLoadingOffloading, setIsLoadingOffloading] = useState(false);
 
   // CALCULATION FUNCTIONS
   const getUnleadedOrderQty = () => {
@@ -530,41 +249,36 @@ export default function StationDashboard({
   };
 
   const getUnleadedOffloading = () => {
-    const unleadedOffloading = offloadingEvents
-      .filter(event => 
-        (event.productName === "UNLEADED" || event.productName === "Unleaded") &&
-        event.stationSerial === stationData?.LicenseeTraSerialNo
-      )
-      .slice(-1)[0];
-    
-    return unleadedOffloading 
-      ? `${(unleadedOffloading.offloadingQty + 500).toLocaleString()} L`
-      : "0 L";
+    const events = offloadingEvents.filter(e => 
+      e.tank.toUpperCase() === "UNLEADED" && 
+      e.station === stationData?.LicenseeTraSerialNo
+    );
+    if (events.length === 0) return "0 L";
+    const latest = events[events.length - 1];
+    return `${(latest.offload_volume_liters).toLocaleString()} L`;
   };
 
   const getDieselOffloading = () => {
-    const dieselOffloading = offloadingEvents
-      .filter(event => 
-        (event.productName === "DIESEL" || event.productName === "DIESLE") &&
-        event.stationSerial === stationData?.LicenseeTraSerialNo
-      )
-      .slice(-1)[0];
-    
-    return dieselOffloading 
-      ? `${(dieselOffloading.offloadingQty + 500).toLocaleString()} L`
-      : "0 L";
+    const events = offloadingEvents.filter(e => 
+      (e.tank.toUpperCase() === "DIESEL" || e.tank.toUpperCase() === "DIESLE") && 
+      e.station === stationData?.LicenseeTraSerialNo
+    );
+    if (events.length === 0) return "0 L";
+    const latest = events[events.length - 1];
+    return `${(latest.offload_volume_liters).toLocaleString()} L`;
   };
 
   const getUnleadedOffloadingDate = () => {
     const unleadedOffloading = offloadingEvents
       .filter(event => 
-        (event.productName === "UNLEADED" || event.productName === "Unleaded") &&
-        event.stationSerial === stationData?.LicenseeTraSerialNo
+        (event.productName === "UNLEADED" || event.productName === "Unleaded" || event.tank.toUpperCase() === "UNLEADED") &&
+        (event.stationSerial === stationData?.LicenseeTraSerialNo || event.station === stationData?.LicenseeTraSerialNo)
       )
       .slice(-1)[0];
       
     if (unleadedOffloading) {
-      return `Date: ${new Date(unleadedOffloading.startTime).toLocaleDateString()}`;
+      const dateStr = unleadedOffloading.startTime || unleadedOffloading.date;
+      return `Date: ${new Date(dateStr).toLocaleDateString()}`;
     }
     return "No recent offloading";
   };
@@ -572,37 +286,34 @@ export default function StationDashboard({
   const getDieselOffloadingDate = () => {
     const dieselOffloading = offloadingEvents
       .filter(event => 
-        (event.productName === "DIESEL" || event.productName === "DIESLE") &&
-        event.stationSerial === stationData?.LicenseeTraSerialNo
+        (event.productName === "DIESEL" || event.productName === "DIESLE" || event.tank.toUpperCase() === "DIESEL" || event.tank.toUpperCase() === "DIESLE") &&
+        (event.stationSerial === stationData?.LicenseeTraSerialNo || event.station === stationData?.LicenseeTraSerialNo)
       )
       .slice(-1)[0];
       
     if (dieselOffloading) {
-      return `Date: ${new Date(dieselOffloading.startTime).toLocaleDateString()}`;
+      const dateStr = dieselOffloading.startTime || dieselOffloading.date;
+      return `Date: ${new Date(dateStr).toLocaleDateString()}`;
     }
     return "No recent offloading";
   };
 
   const getUnleadedOffloadingValue = () => {
-    const unleadedOffloading = offloadingEvents
-      .filter(event => 
-        (event.productName === "UNLEADED" || event.productName === "Unleaded") &&
-        event.stationSerial === stationData?.LicenseeTraSerialNo
-      )
-      .slice(-1)[0];
-    
-    return unleadedOffloading ? unleadedOffloading.offloadingQty + 500 : 0;
+    const events = offloadingEvents.filter(e => 
+      e.tank.toUpperCase() === "UNLEADED" && 
+      e.station === stationData?.LicenseeTraSerialNo
+    );
+    if (events.length === 0) return 0;
+    return events[events.length - 1].offload_volume_liters + 500;
   };
 
   const getDieselOffloadingValue = () => {
-    const dieselOffloading = offloadingEvents
-      .filter(event => 
-        (event.productName === "DIESEL" || event.productName === "DIESLE") &&
-        event.stationSerial === stationData?.LicenseeTraSerialNo
-      )
-      .slice(-1)[0];
-    
-    return dieselOffloading ? dieselOffloading.offloadingQty + 500 : 0;
+    const events = offloadingEvents.filter(e => 
+      (e.tank.toUpperCase() === "DIESEL" || e.tank.toUpperCase() === "DIESLE") && 
+      e.station === stationData?.LicenseeTraSerialNo
+    );
+    if (events.length === 0) return 0;
+    return events[events.length - 1].offload_volume_liters + 500;
   };
 
   const getUnleadedOrderValue = () => {
@@ -673,54 +384,20 @@ export default function StationDashboard({
     return null;
   };
 
-  // Offloading Analysis Function
-  const analyzeOffloading = useCallback(async (tankDataForAnalysis: TankData[]) => {
-    if (!tankDataForAnalysis || tankDataForAnalysis.length === 0) {
-      console.log('No tank data available for offloading analysis');
-      return;
-    }
-
-    setIsAnalyzingOffloading(true);
+  // API Functions
+  const fetchOffloadingData = async () => {
+    setIsLoadingOffloading(true);
     try {
-      console.log('Starting offloading analysis with', tankDataForAnalysis.length, 'records');
-      
-      const events = offloadingDetector.detectOffloadingEvents(tankDataForAnalysis);
-      const summary = offloadingDetector.generateSummary(events);
-      
-      setOffloadingEvents(events);
-      setOffloadingSummary(summary);
-      
-      console.log('Offloading Analysis Complete:', {
-        totalEvents: events.length,
-        totalQuantity: summary.totalQuantity,
-        summary
-      });
-      
-    } catch (error) {
-      console.error('Error analyzing offloading:', error);
-    } finally {
-      setIsAnalyzingOffloading(false);
-    }
-  }, [offloadingDetector]);
-
-  const fetchAllTankData = async () => {
-    try {
-      const response = await apiService.getBigTanksData();
+      const response = await apiService.getStationAutoRefillReport();
       
       if (response && response.data) {
-        setAllTankData(response.data);
-        
-        if (stationData?.LicenseeTraSerialNo) {
-          const stationTankData = response.data.filter((record: TankData) => 
-            record.LicenseeTraSerialNo === stationData.LicenseeTraSerialNo
-          );
-          await analyzeOffloading(stationTankData);
-        } else {
-          await analyzeOffloading(response.data);
-        }
+        const events = Object.values(response.data) as OffloadingEvent[];
+        setOffloadingEvents(events);
       }
     } catch (error) {
-      console.error('Error in fetchAllTankData:', error);
+      console.error('Error fetching offloading data:', error);
+    } finally {
+      setIsLoadingOffloading(false);
     }
   };
 
@@ -768,7 +445,6 @@ export default function StationDashboard({
         setStationData({
           id: station.id,
           name: station.RetailStationName,
-         
           ewuraLicense: station.EWURALicenseNo,
           tanks: station.TotalNoTanks,
           username: station.automation_server_username,
@@ -784,8 +460,6 @@ export default function StationDashboard({
       setStationData({
         id: parseInt(id),
         name: `Station ${id} (Fallback)`,
-       
-        
         tanks: 2,
         ewuraLicense: "License unavailable",
       });
@@ -795,25 +469,24 @@ export default function StationDashboard({
   };
 
   const refreshAllData = async () => {
-    await Promise.all([fetchStationData()]);
+    await Promise.all([
+      fetchStationData(),
+      fetchRefillData(),
+      fetchOffloadingData()
+    ]);
   };
 
+  // Effects - Consolidated to prevent multiple calls
   useEffect(() => {
-    if (stationData?.ewuraLicense) {
-      fetchRefillData();
-    }
-  }, [stationData]);
-
-  useEffect(() => {
-    refreshAllData();
-  }, []);
+    fetchStationData();
+  }, [id]);
 
   useEffect(() => {
     if (stationData?.LicenseeTraSerialNo) {
       fetchRefillData();
-      fetchAllTankData();
+      fetchOffloadingData();
     }
-  }, [stationData]);
+  }, [stationData?.LicenseeTraSerialNo]);
 
   const handleSignOut = async () => {
     await logout();
@@ -941,32 +614,6 @@ export default function StationDashboard({
               </button>
             </div>
           )}
-        </div>
-
-        {/* Tank Data Signal */}
-        <div style={{
-          marginBottom: "16px",
-          padding: "12px 16px",
-          backgroundColor: hasTankData ? "#dcfce7" : "#fee2e2",
-          borderRadius: "8px",
-          border: `1px solid ${hasTankData ? "#16a34a" : "#dc2626"}`,
-          display: "flex",
-          alignItems: "center",
-          gap: "8px"
-        }}>
-          <div style={{
-            width: "12px",
-            height: "12px",
-            borderRadius: "50%",
-            backgroundColor: hasTankData ? "#16a34a" : "#dc2626"
-          }}></div>
-          <span style={{
-            fontSize: "14px",
-            fontWeight: "500",
-            color: hasTankData ? "#166534" : "#dc2626"
-          }}>
-            Tank Data: {hasTankData ? "Available" : "Not Available"}
-          </span>
         </div>
 
         {/* Unleaded Order Analysis */}
