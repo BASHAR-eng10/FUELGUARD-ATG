@@ -193,6 +193,7 @@ export default function StationDashboard({
   const [offloadingEvents, setOffloadingEvents] = useState<OffloadingEvent[]>([]);
   const [isLoadingOffloading, setIsLoadingOffloading] = useState(false);
 
+  // CALCULATION FUNCTIONS
   const getUnleadedOrderQty = () => {
     const unleadedRefills = refillData.filter((refill: any) => 
       refill.product === "UNLEADED" || refill.product === "Unleaded"
@@ -369,13 +370,16 @@ export default function StationDashboard({
     return null;
   };
 
+  // Fetch offloading data from API
   const fetchOffloadingData = async () => {
     setIsLoadingOffloading(true);
     try {
+      console.log("Fetching offloading data...");
       const response = await apiService.getStationAutoRefillReport();
       
       let events: OffloadingEvent[] = [];
       
+      // Handle different response formats
       if (Array.isArray(response)) {
         events = response as OffloadingEvent[];
       } else if (response && response.data) {
@@ -386,6 +390,7 @@ export default function StationDashboard({
         }
       }
       
+      console.log('Offloading events loaded:', events);
       setOffloadingEvents(events);
     } catch (error: any) {
       console.error('Error fetching offloading data:', error);
@@ -399,16 +404,24 @@ export default function StationDashboard({
     }
   };
 
+  // Fetch refill data from API
   const fetchRefillData = async () => {
     try {
+      console.log("Fetching refill data...");
       const response = await apiService.getStationRefillReport();
+      
       if (response && response.data && response.data.records) {
         const currentStationSerial = stationData?.LicenseeTraSerialNo;
+        
+        console.log('Current station serial:', currentStationSerial);
+        console.log('All refill records:', response.data.records);
         
         if (currentStationSerial) {
           const filteredRecords = response.data.records.filter((record: any) =>
             record.station_serial === currentStationSerial
           );
+          
+          console.log('Filtered refill records:', filteredRecords);
           
           const latestByProduct: { [key: string]: any } = {};
           filteredRecords.forEach((record: any) => {
@@ -419,6 +432,7 @@ export default function StationDashboard({
           });
           
           const latestRecords = Object.values(latestByProduct).sort((a: any, b: any) => b.id - a.id);
+          console.log('Latest refill records by product:', latestRecords);
           setRefillData(latestRecords);
         } else {
           setRefillData(response.data.records);
@@ -432,14 +446,17 @@ export default function StationDashboard({
     }
   };
 
+  // Fetch station data from API
   const fetchStationData = async () => {
     try {
       setLoading(true);
       setError(null);
 
+      console.log("Fetching station data for ID:", id);
       const station = await apiService.getStation(id);
 
       if (station) {
+        console.log("Station data loaded:", station);
         setStationData({
           id: station.id,
           name: station.RetailStationName,
@@ -466,6 +483,7 @@ export default function StationDashboard({
     }
   };
 
+  // Refresh all data
   const refreshAllData = async () => {
     await Promise.all([
       fetchStationData(),
@@ -474,10 +492,12 @@ export default function StationDashboard({
     ]);
   };
 
+  // Load station data on mount
   useEffect(() => {
     fetchStationData();
   }, [id]);
 
+  // Load refill and offloading data when station is loaded
   useEffect(() => {
     if (stationData?.LicenseeTraSerialNo) {
       fetchRefillData();
