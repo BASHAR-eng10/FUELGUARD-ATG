@@ -1,4 +1,70 @@
-"use client";
+const getUnleadedOffloading = () => {
+    const events = offloadingEvents.filter(e => 
+      e.tank.toUpperCase() === "UNLEADED" && 
+      e.station === stationData?.LicenseeTraSerialNo
+    );
+    if (events.length === 0) return "0 L";
+    const latest = events[events.length - 1];
+    return `${(latest.offload_volume_liters).toLocaleString()} L`;
+  };
+
+  const getDieselOffloading = () => {
+    const events = offloadingEvents.filter(e => 
+      (e.tank.toUpperCase() === "DIESEL" || e.tank.toUpperCase() === "DIESLE") && 
+      e.station === stationData?.LicenseeTraSerialNo
+    );
+    if (events.length === 0) return "0 L";
+    const latest = events[events.length - 1];
+    return `${(latest.offload_volume_liters).toLocaleString()} L`;
+  };
+
+  const getUnleadedOffloadingDate = () => {
+    const unleadedOffloading = offloadingEvents
+      .filter(event => 
+        (event.productName === "UNLEADED" || event.productName === "Unleaded" || event.tank.toUpperCase() === "UNLEADED") &&
+        (event.stationSerial === stationData?.LicenseeTraSerialNo || event.station === stationData?.LicenseeTraSerialNo)
+      )
+      .slice(-1)[0];
+      
+    if (unleadedOffloading) {
+      const dateStr = unleadedOffloading.startTime || unleadedOffloading.date;
+      return `Date: ${new Date(dateStr).toLocaleDateString()}`;
+    }
+    return "No recent offloading";
+  };
+
+  const getDieselOffloadingDate = () => {
+    const dieselOffloading = offloadingEvents
+      .filter(event => 
+        (event.productName === "DIESEL" || event.productName === "DIESLE" || event.tank.toUpperCase() === "DIESEL" || event.tank.toUpperCase() === "DIESLE") &&
+        (event.stationSerial === stationData?.LicenseeTraSerialNo || event.station === stationData?.LicenseeTraSerialNo)
+      )
+      .slice(-1)[0];
+      
+    if (dieselOffloading) {
+      const dateStr = dieselOffloading.startTime || dieselOffloading.date;
+      return `Date: ${new Date(dateStr).toLocaleDateString()}`;
+    }
+    return "No recent offloading";
+  };
+
+  const getUnleadedOffloadingValue = () => {
+    const events = offloadingEvents.filter(e => 
+      e.tank.toUpperCase() === "UNLEADED" && 
+      e.station === stationData?.LicenseeTraSerialNo
+    );
+    if (events.length === 0) return 0;
+    return events[events.length - 1].offload_volume_liters;
+  };
+
+  const getDieselOffloadingValue = () => {
+    const events = offloadingEvents.filter(e => 
+      (e.tank.toUpperCase() === "DIESEL" || e.tank.toUpperCase() === "DIESLE") && 
+      e.station === stationData?.LicenseeTraSerialNo
+    );
+    if (events.length === 0) return 0;
+    return events[events.length - 1].offload_volume_liters;
+  };"use client";
 
 import { useState, useEffect, use } from "react";
 import {
@@ -237,15 +303,21 @@ export default function StationDashboard({
 
   // CALCULATION FUNCTIONS
   const getUnleadedOrderQty = () => {
-    return refillData.length > 0 
-      ? (refillData.find(refill => refill.product === "UNLEADED" || refill.product === "Unleaded")?.fuel_amount || "0") + " L" 
-      : "0 L";
+    const unleadedRefills = refillData.filter(refill => 
+      refill.product === "UNLEADED" || refill.product === "Unleaded"
+    );
+    if (unleadedRefills.length === 0) return "0 L";
+    const latest = unleadedRefills[unleadedRefills.length - 1];
+    return (latest.fuel_amount || "0") + " L";
   };
 
   const getDieselOrderQty = () => {
-    return refillData.length > 0 
-      ? (refillData.find(refill => refill.product === "DIESEL" || refill.product === "Diesel" || refill.product === "DIESLE")?.fuel_amount || "0") + " L" 
-      : "0 L";
+    const dieselRefills = refillData.filter(refill => 
+      refill.product === "DIESEL" || refill.product === "Diesel" || refill.product === "DIESLE"
+    );
+    if (dieselRefills.length === 0) return "0 L";
+    const latest = dieselRefills[dieselRefills.length - 1];
+    return (latest.fuel_amount || "0") + " L";
   };
 
   const getUnleadedOffloading = () => {
@@ -319,15 +391,21 @@ export default function StationDashboard({
   };
 
   const getUnleadedOrderValue = () => {
-    return refillData.length > 0 
-      ? (refillData.find(refill => refill.product === "UNLEADED" || refill.product === "Unleaded")?.fuel_amount || 0)
-      : 0;
+    const unleadedRefills = refillData.filter(refill => 
+      refill.product === "UNLEADED" || refill.product === "Unleaded"
+    );
+    if (unleadedRefills.length === 0) return 0;
+    const latest = unleadedRefills[unleadedRefills.length - 1];
+    return latest.fuel_amount || 0;
   };
 
   const getDieselOrderValue = () => {
-    return refillData.length > 0 
-      ? (refillData.find(refill => refill.product === "DIESEL" || refill.product === "Diesel" || refill.product === "DIESLE")?.fuel_amount || 0)
-      : 0;
+    const dieselRefills = refillData.filter(refill => 
+      refill.product === "DIESEL" || refill.product === "Diesel" || refill.product === "DIESLE"
+    );
+    if (dieselRefills.length === 0) return 0;
+    const latest = dieselRefills[dieselRefills.length - 1];
+    return latest.fuel_amount || 0;
   };
 
   const getUnleadedDifference = () => {
@@ -379,9 +457,11 @@ export default function StationDashboard({
   };
 
   const getUnleadedDipstickDate = () => {
-    const unleadedRefill = refillData.find(refill => 
+    const unleadedRefills = refillData.filter(refill => 
       refill.product === "UNLEADED" || refill.product === "Unleaded"
     );
+    if (unleadedRefills.length === 0) return null;
+    const unleadedRefill = unleadedRefills[unleadedRefills.length - 1];
     if (unleadedRefill && unleadedRefill.issue_date) {
       return `Date: ${new Date(unleadedRefill.issue_date).toLocaleDateString()}`;
     }
@@ -389,7 +469,11 @@ export default function StationDashboard({
   };
 
   const getDieselDipstickDate = () => {
-    const dieselRefill = refillData.find(refill => refill.product === "DIESEL" || refill.product === "DIESLE");
+    const dieselRefills = refillData.filter(refill => 
+      refill.product === "DIESEL" || refill.product === "DIESLE"
+    );
+    if (dieselRefills.length === 0) return null;
+    const dieselRefill = dieselRefills[dieselRefills.length - 1];
     if (dieselRefill && dieselRefill.issue_date) {
       return `Date: ${new Date(dieselRefill.issue_date).toLocaleDateString()}`;
     }
