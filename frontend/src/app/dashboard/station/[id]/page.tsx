@@ -254,10 +254,6 @@ export default function StationDashboard({
       e.station === stationData?.LicenseeTraSerialNo
     );
     
-    console.log('Unleaded offloading events:', events);
-    console.log('Current station serial:', stationData?.LicenseeTraSerialNo);
-    console.log('All offloading events:', offloadingEvents);
-    
     if (events.length === 0) return "0 L";
     const latest = events[events.length - 1];
     return `${(latest.offload_volume_liters).toLocaleString()} L`;
@@ -268,8 +264,6 @@ export default function StationDashboard({
       (e.tank.toUpperCase() === "DIESEL" || e.tank.toUpperCase() === "DIESLE") && 
       e.station === stationData?.LicenseeTraSerialNo
     );
-    
-    console.log('Diesel offloading events:', events);
     
     if (events.length === 0) return "0 L";
     const latest = events[events.length - 1];
@@ -430,26 +424,7 @@ export default function StationDashboard({
     try {
       const response = await apiService.getStationRefillReport();
       if (response && response.data && response.data.records) {
-        const currentStationSerial = stationData?.LicenseeTraSerialNo;
-        
-        if (currentStationSerial) {
-          const filteredRecords = response.data.records.filter((record: any) =>
-            record.station_serial === currentStationSerial
-          );
-          
-          const latestByProduct: { [key: string]: any } = {};
-          filteredRecords.forEach((record: any) => {
-            const product = record.product;
-            if (!latestByProduct[product] || record.id > latestByProduct[product].id) {
-              latestByProduct[product] = record;
-            }
-          });
-          
-          const latestRecords = Object.values(latestByProduct).sort((a: any, b: any) => b.id - a.id);
-          setRefillData(latestRecords);
-        } else {
-          setRefillData(response.data.records);
-        }
+        setRefillData(response.data.records);
       } else {
         throw new Error("Invalid API response structure");
       }
