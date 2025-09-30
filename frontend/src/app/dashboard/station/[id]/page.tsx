@@ -349,9 +349,13 @@ export default function StationDashboard({
   };
 
   const getUnleadedDipstick = () => {
-    const unleadedRefill = refillData.find(refill => 
+    const unleadedRefills = refillData.filter(refill => 
       refill.product === "UNLEADED" || refill.product === "Unleaded"
     );
+    
+    if (unleadedRefills.length === 0) return "0 L";
+    
+    const unleadedRefill = unleadedRefills[unleadedRefills.length - 1];
 
     if (unleadedRefill && unleadedRefill.dip_end && unleadedRefill.dip_start) {
       return (unleadedRefill.dip_end - unleadedRefill.dip_start).toLocaleString() + " L";
@@ -360,7 +364,13 @@ export default function StationDashboard({
   };
 
   const getDieselDipstick = () => {
-    const dieselRefill = refillData.find(refill => refill.product === "DIESEL" || refill.product === "DIESLE");
+    const dieselRefills = refillData.filter(refill => 
+      refill.product === "DIESEL" || refill.product === "DIESLE"
+    );
+    
+    if (dieselRefills.length === 0) return "0 L";
+    
+    const dieselRefill = dieselRefills[dieselRefills.length - 1];
 
     if (dieselRefill && dieselRefill.dip_end && dieselRefill.dip_start) {
       return (dieselRefill.dip_end - dieselRefill.dip_start).toLocaleString() + " L";
