@@ -105,9 +105,8 @@ class ApiService {
   }
 
   async getStationAutoRefillReport() {
-    return this.request(`/ak4tek/tanks/autorefill`);
-  }
-
+  return this.request(`/ak4tek/tanks/autorefill`);
+}
   async getCurrentUser() {
     const session = await getSession();
     return session?.user || null;

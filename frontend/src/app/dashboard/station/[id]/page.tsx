@@ -374,39 +374,65 @@ export default function StationDashboard({
     return null;
   };
 
-  // Fetch offloading data from API
   const fetchOffloadingData = async () => {
-    setIsLoadingOffloading(true);
-    try {
-      console.log("Fetching offloading data...");
-      const response = await apiService.getStationAutoRefillReport();
+  setIsLoadingOffloading(true);
+  try {
+    console.log("Fetching offloading data...");
+    const response = await apiService.getStationAutoRefillReport();
+    
+    // Match refill response handling exactly
+    if (response && response.data && response.data.records) {
+      const currentStationSerial = stationData?.LicenseeTraSerialNo;
       
-      let events: OffloadingEvent[] = [];
+      console.log('Current station serial:', currentStationSerial);
+      console.log('All autorefill records:', response.data.records);
       
-      // Handle different response formats
-      if (Array.isArray(response)) {
-        events = response as OffloadingEvent[];
-      } else if (response && response.data) {
-        if (Array.isArray(response.data)) {
-          events = response.data as OffloadingEvent[];
-        } else {
-          events = Object.values(response.data) as OffloadingEvent[];
-        }
+      if (currentStationSerial) {
+        // Filter by station serial
+        const filteredRecords = response.data.records.filter((record: any) =>
+          record.station_serial === currentStationSerial
+        );
+        
+        console.log('Filtered autorefill records:', filteredRecords);
+        
+        // Get latest by product (same logic as refill)
+        const latestByProduct: { [key: string]: any } = {};
+        filteredRecords.forEach((record: any) => {
+          const product = record.product;
+          if (!latestByProduct[product] || record.id > latestByProduct[product].id) {
+            latestByProduct[product] = record;
+          }
+        });
+        
+        const latestRecords = Object.values(latestByProduct).sort((a: any, b: any) => b.id - a.id);
+        console.log('Latest autorefill records by product:', latestRecords);
+        
+        // Convert to OffloadingEvent format for display
+        const events: OffloadingEvent[] = latestRecords.map((record: any) => ({
+          id: record.id?.toString(),
+          station: record.station_serial,
+          stationSerial: record.station_serial,
+          productName: record.product,
+          tank: record.product,
+          date: record.issue_date,
+          startTime: record.issue_date,
+          offload_volume_liters: record.fuel_volume || 0
+        }));
+        
+        setOffloadingEvents(events);
+      } else {
+        setOffloadingEvents([]);
       }
-      
-      console.log('Offloading events loaded:', events);
-      setOffloadingEvents(events);
-    } catch (error: any) {
-      console.error('Error fetching offloading data:', error);
-      setOffloadingEvents([]);
-      
-      if (error?.message?.includes('No associated station found')) {
-        console.warn('No offloading data available for this station');
-      }
-    } finally {
-      setIsLoadingOffloading(false);
+    } else {
+      throw new Error("Invalid API response structure");
     }
-  };
+  } catch (error: any) {
+    console.error('Error fetching offloading data:', error);
+    setOffloadingEvents([]);
+  } finally {
+    setIsLoadingOffloading(false);
+  }
+};
 
   // Fetch refill data from API
   const fetchRefillData = async () => {
