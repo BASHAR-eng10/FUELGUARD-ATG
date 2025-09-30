@@ -304,7 +304,7 @@ export default function StationDashboard({
       e.station === stationData?.LicenseeTraSerialNo
     );
     if (events.length === 0) return 0;
-    return events[events.length - 1].offload_volume_liters + 500;
+    return events[events.length - 1].offload_volume_liters;
   };
 
   const getDieselOffloadingValue = () => {
@@ -313,7 +313,7 @@ export default function StationDashboard({
       e.station === stationData?.LicenseeTraSerialNo
     );
     if (events.length === 0) return 0;
-    return events[events.length - 1].offload_volume_liters + 500;
+    return events[events.length - 1].offload_volume_liters;
   };
 
   const getUnleadedOrderValue = () => {
@@ -394,8 +394,15 @@ export default function StationDashboard({
         const events = Object.values(response.data) as OffloadingEvent[];
         setOffloadingEvents(events);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching offloading data:', error);
+      // Set empty array if API fails - dashboard will show "0 L" and "No recent offloading"
+      setOffloadingEvents([]);
+      
+      // Only show error in console, not to user since it's handled gracefully
+      if (error?.message?.includes('No associated station found')) {
+        console.warn('No offloading data available for this station');
+      }
     } finally {
       setIsLoadingOffloading(false);
     }
@@ -725,25 +732,39 @@ export default function StationDashboard({
                 }}
               >
                 <div style={styles.nozzleMetric}>
-                  <p
-                    style={{
-                      ...styles.nozzleMetricValue,
-                      fontSize: "20px",
-                      color: "#581c87",
-                    }}
-                  >
-                    {getUnleadedOffloading()}
-                  </p>
-                  <p style={styles.nozzleMetricLabel}>Offloaded Quantity</p>
-                  
-                  <p style={{
-                    fontSize: "11px",
-                    color: "#a855f7",
-                    marginTop: "4px",
-                    fontStyle: "italic"
-                  }}>
-                    {getUnleadedOffloadingDate()}
-                  </p>
+                  {isLoadingOffloading ? (
+                    <p
+                      style={{
+                        ...styles.nozzleMetricValue,
+                        fontSize: "14px",
+                        color: "#a855f7",
+                      }}
+                    >
+                      Loading...
+                    </p>
+                  ) : (
+                    <>
+                      <p
+                        style={{
+                          ...styles.nozzleMetricValue,
+                          fontSize: "20px",
+                          color: "#581c87",
+                        }}
+                      >
+                        {getUnleadedOffloading()}
+                      </p>
+                      <p style={styles.nozzleMetricLabel}>Offloaded Quantity</p>
+                      
+                      <p style={{
+                        fontSize: "11px",
+                        color: "#a855f7",
+                        marginTop: "4px",
+                        fontStyle: "italic"
+                      }}>
+                        {getUnleadedOffloadingDate()}
+                      </p>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
