@@ -1,70 +1,4 @@
-const getUnleadedOffloading = () => {
-    const events = offloadingEvents.filter(e => 
-      e.tank.toUpperCase() === "UNLEADED" && 
-      e.station === stationData?.LicenseeTraSerialNo
-    );
-    if (events.length === 0) return "0 L";
-    const latest = events[events.length - 1];
-    return `${(latest.offload_volume_liters).toLocaleString()} L`;
-  };
-
-  const getDieselOffloading = () => {
-    const events = offloadingEvents.filter(e => 
-      (e.tank.toUpperCase() === "DIESEL" || e.tank.toUpperCase() === "DIESLE") && 
-      e.station === stationData?.LicenseeTraSerialNo
-    );
-    if (events.length === 0) return "0 L";
-    const latest = events[events.length - 1];
-    return `${(latest.offload_volume_liters).toLocaleString()} L`;
-  };
-
-  const getUnleadedOffloadingDate = () => {
-    const unleadedOffloading = offloadingEvents
-      .filter(event => 
-        (event.productName === "UNLEADED" || event.productName === "Unleaded" || event.tank.toUpperCase() === "UNLEADED") &&
-        (event.stationSerial === stationData?.LicenseeTraSerialNo || event.station === stationData?.LicenseeTraSerialNo)
-      )
-      .slice(-1)[0];
-      
-    if (unleadedOffloading) {
-      const dateStr = unleadedOffloading.startTime || unleadedOffloading.date;
-      return `Date: ${new Date(dateStr).toLocaleDateString()}`;
-    }
-    return "No recent offloading";
-  };
-
-  const getDieselOffloadingDate = () => {
-    const dieselOffloading = offloadingEvents
-      .filter(event => 
-        (event.productName === "DIESEL" || event.productName === "DIESLE" || event.tank.toUpperCase() === "DIESEL" || event.tank.toUpperCase() === "DIESLE") &&
-        (event.stationSerial === stationData?.LicenseeTraSerialNo || event.station === stationData?.LicenseeTraSerialNo)
-      )
-      .slice(-1)[0];
-      
-    if (dieselOffloading) {
-      const dateStr = dieselOffloading.startTime || dieselOffloading.date;
-      return `Date: ${new Date(dateStr).toLocaleDateString()}`;
-    }
-    return "No recent offloading";
-  };
-
-  const getUnleadedOffloadingValue = () => {
-    const events = offloadingEvents.filter(e => 
-      e.tank.toUpperCase() === "UNLEADED" && 
-      e.station === stationData?.LicenseeTraSerialNo
-    );
-    if (events.length === 0) return 0;
-    return events[events.length - 1].offload_volume_liters;
-  };
-
-  const getDieselOffloadingValue = () => {
-    const events = offloadingEvents.filter(e => 
-      (e.tank.toUpperCase() === "DIESEL" || e.tank.toUpperCase() === "DIESLE") && 
-      e.station === stationData?.LicenseeTraSerialNo
-    );
-    if (events.length === 0) return 0;
-    return events[events.length - 1].offload_volume_liters;
-  };"use client";
+"use client";
 
 import { useState, useEffect, use } from "react";
 import {
@@ -88,30 +22,6 @@ interface StationData {
   LicenseeTraSerialNo?: string;
 }
 
-interface TankData {
-  id: number;
-  probe_id: string;
-  date: string;
-  updated_at: string;
-  tank_id: string;
-  tank_name: string;
-  physical_id: string;
-  identification_code: string;
-  product_name: string;
-  tank_capacity: number;
-  fuel_lvl_mm: number;
-  fuel_offset: number;
-  fuel_volume: number;
-  fuel_volume_15: number;
-  water_lvl_mm: number;
-  water_offset: number;
-  water_volume: number;
-  water_volume_15: number;
-  average_temp: number;
-  EWURALicenseNo: string;
-  LicenseeTraSerialNo: string;
-}
-
 interface OffloadingEvent {
   id?: string;
   station: string;
@@ -121,19 +31,7 @@ interface OffloadingEvent {
   date: string;
   startTime?: string;
   endTime?: string;
-  startReading?: number;
-  endReading?: number;
   offload_volume_liters: number;
-  offloadingQty?: number;
-  startRecordId?: number;
-  endRecordId?: number;
-  detectionWindow?: number;
-  tankId?: string;
-  tankName?: string;
-  duration?: string;
-  formattedStartTime?: string;
-  formattedEndTime?: string;
-  formattedQuantity?: string;
 }
 
 const styles = {
@@ -264,11 +162,6 @@ const styles = {
     fontWeight: "600",
     color: "#1e293b",
   },
-  nozzleMetrics: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: "8px",
-  },
   nozzleMetric: {
     textAlign: "center" as const,
   },
@@ -293,7 +186,6 @@ export default function StationDashboard({
   const { id } = use(params);
   const { logout } = useAuth();
   
-  // State declarations
   const [stationData, setStationData] = useState<StationData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -301,9 +193,8 @@ export default function StationDashboard({
   const [offloadingEvents, setOffloadingEvents] = useState<OffloadingEvent[]>([]);
   const [isLoadingOffloading, setIsLoadingOffloading] = useState(false);
 
-  // CALCULATION FUNCTIONS
   const getUnleadedOrderQty = () => {
-    const unleadedRefills = refillData.filter(refill => 
+    const unleadedRefills = refillData.filter((refill: any) => 
       refill.product === "UNLEADED" || refill.product === "Unleaded"
     );
     if (unleadedRefills.length === 0) return "0 L";
@@ -312,7 +203,7 @@ export default function StationDashboard({
   };
 
   const getDieselOrderQty = () => {
-    const dieselRefills = refillData.filter(refill => 
+    const dieselRefills = refillData.filter((refill: any) => 
       refill.product === "DIESEL" || refill.product === "Diesel" || refill.product === "DIESLE"
     );
     if (dieselRefills.length === 0) return "0 L";
@@ -321,22 +212,20 @@ export default function StationDashboard({
   };
 
   const getUnleadedOffloading = () => {
-    const events = offloadingEvents.filter(e => 
+    const events = offloadingEvents.filter((e: OffloadingEvent) => 
       e.tank.toUpperCase() === "UNLEADED" && 
       e.station === stationData?.LicenseeTraSerialNo
     );
-    
     if (events.length === 0) return "0 L";
     const latest = events[events.length - 1];
     return `${(latest.offload_volume_liters).toLocaleString()} L`;
   };
 
   const getDieselOffloading = () => {
-    const events = offloadingEvents.filter(e => 
+    const events = offloadingEvents.filter((e: OffloadingEvent) => 
       (e.tank.toUpperCase() === "DIESEL" || e.tank.toUpperCase() === "DIESLE") && 
       e.station === stationData?.LicenseeTraSerialNo
     );
-    
     if (events.length === 0) return "0 L";
     const latest = events[events.length - 1];
     return `${(latest.offload_volume_liters).toLocaleString()} L`;
@@ -344,7 +233,7 @@ export default function StationDashboard({
 
   const getUnleadedOffloadingDate = () => {
     const unleadedOffloading = offloadingEvents
-      .filter(event => 
+      .filter((event: OffloadingEvent) => 
         (event.productName === "UNLEADED" || event.productName === "Unleaded" || event.tank.toUpperCase() === "UNLEADED") &&
         (event.stationSerial === stationData?.LicenseeTraSerialNo || event.station === stationData?.LicenseeTraSerialNo)
       )
@@ -359,7 +248,7 @@ export default function StationDashboard({
 
   const getDieselOffloadingDate = () => {
     const dieselOffloading = offloadingEvents
-      .filter(event => 
+      .filter((event: OffloadingEvent) => 
         (event.productName === "DIESEL" || event.productName === "DIESLE" || event.tank.toUpperCase() === "DIESEL" || event.tank.toUpperCase() === "DIESLE") &&
         (event.stationSerial === stationData?.LicenseeTraSerialNo || event.station === stationData?.LicenseeTraSerialNo)
       )
@@ -373,7 +262,7 @@ export default function StationDashboard({
   };
 
   const getUnleadedOffloadingValue = () => {
-    const events = offloadingEvents.filter(e => 
+    const events = offloadingEvents.filter((e: OffloadingEvent) => 
       e.tank.toUpperCase() === "UNLEADED" && 
       e.station === stationData?.LicenseeTraSerialNo
     );
@@ -382,7 +271,7 @@ export default function StationDashboard({
   };
 
   const getDieselOffloadingValue = () => {
-    const events = offloadingEvents.filter(e => 
+    const events = offloadingEvents.filter((e: OffloadingEvent) => 
       (e.tank.toUpperCase() === "DIESEL" || e.tank.toUpperCase() === "DIESLE") && 
       e.station === stationData?.LicenseeTraSerialNo
     );
@@ -391,7 +280,7 @@ export default function StationDashboard({
   };
 
   const getUnleadedOrderValue = () => {
-    const unleadedRefills = refillData.filter(refill => 
+    const unleadedRefills = refillData.filter((refill: any) => 
       refill.product === "UNLEADED" || refill.product === "Unleaded"
     );
     if (unleadedRefills.length === 0) return 0;
@@ -400,7 +289,7 @@ export default function StationDashboard({
   };
 
   const getDieselOrderValue = () => {
-    const dieselRefills = refillData.filter(refill => 
+    const dieselRefills = refillData.filter((refill: any) => 
       refill.product === "DIESEL" || refill.product === "Diesel" || refill.product === "DIESLE"
     );
     if (dieselRefills.length === 0) return 0;
@@ -427,7 +316,7 @@ export default function StationDashboard({
   };
 
   const getUnleadedDipstick = () => {
-    const unleadedRefills = refillData.filter(refill => 
+    const unleadedRefills = refillData.filter((refill: any) => 
       refill.product === "UNLEADED" || refill.product === "Unleaded"
     );
     
@@ -442,7 +331,7 @@ export default function StationDashboard({
   };
 
   const getDieselDipstick = () => {
-    const dieselRefills = refillData.filter(refill => 
+    const dieselRefills = refillData.filter((refill: any) => 
       refill.product === "DIESEL" || refill.product === "DIESLE"
     );
     
@@ -457,7 +346,7 @@ export default function StationDashboard({
   };
 
   const getUnleadedDipstickDate = () => {
-    const unleadedRefills = refillData.filter(refill => 
+    const unleadedRefills = refillData.filter((refill: any) => 
       refill.product === "UNLEADED" || refill.product === "Unleaded"
     );
     if (unleadedRefills.length === 0) return null;
@@ -469,7 +358,7 @@ export default function StationDashboard({
   };
 
   const getDieselDipstickDate = () => {
-    const dieselRefills = refillData.filter(refill => 
+    const dieselRefills = refillData.filter((refill: any) => 
       refill.product === "DIESEL" || refill.product === "DIESLE"
     );
     if (dieselRefills.length === 0) return null;
@@ -480,13 +369,11 @@ export default function StationDashboard({
     return null;
   };
 
-  // API Functions
   const fetchOffloadingData = async () => {
     setIsLoadingOffloading(true);
     try {
       const response = await apiService.getStationAutoRefillReport();
       
-      // Handle both array response and object with data property
       let events: OffloadingEvent[] = [];
       
       if (Array.isArray(response)) {
@@ -502,10 +389,8 @@ export default function StationDashboard({
       setOffloadingEvents(events);
     } catch (error: any) {
       console.error('Error fetching offloading data:', error);
-      // Set empty array if API fails - dashboard will show "0 L" and "No recent offloading"
       setOffloadingEvents([]);
       
-      // Only show error in console, not to user since it's handled gracefully
       if (error?.message?.includes('No associated station found')) {
         console.warn('No offloading data available for this station');
       }
@@ -518,7 +403,26 @@ export default function StationDashboard({
     try {
       const response = await apiService.getStationRefillReport();
       if (response && response.data && response.data.records) {
-        setRefillData(response.data.records);
+        const currentStationSerial = stationData?.LicenseeTraSerialNo;
+        
+        if (currentStationSerial) {
+          const filteredRecords = response.data.records.filter((record: any) =>
+            record.station_serial === currentStationSerial
+          );
+          
+          const latestByProduct: { [key: string]: any } = {};
+          filteredRecords.forEach((record: any) => {
+            const product = record.product;
+            if (!latestByProduct[product] || record.id > latestByProduct[product].id) {
+              latestByProduct[product] = record;
+            }
+          });
+          
+          const latestRecords = Object.values(latestByProduct).sort((a: any, b: any) => b.id - a.id);
+          setRefillData(latestRecords);
+        } else {
+          setRefillData(response.data.records);
+        }
       } else {
         throw new Error("Invalid API response structure");
       }
@@ -570,7 +474,6 @@ export default function StationDashboard({
     ]);
   };
 
-  // Effects - Consolidated to prevent multiple calls
   useEffect(() => {
     fetchStationData();
   }, [id]);
@@ -588,7 +491,6 @@ export default function StationDashboard({
 
   return (
     <div style={styles.container}>
-      {/* Header */}
       <header style={styles.header}>
         <div style={styles.headerContent}>
           <div style={styles.logoSection}>
@@ -644,9 +546,7 @@ export default function StationDashboard({
         </div>
       </header>
 
-      {/* Main Content */}
       <main style={styles.main}>
-        {/* Welcome Section */}
         <div style={styles.welcomeSection}>
           <p style={styles.welcomeText}>
             {loading
@@ -745,7 +645,6 @@ export default function StationDashboard({
             <TrendingUp size={20} color="#16a34a" />⛽ Unleaded Order Analysis
           </h3>
           <div style={styles.nozzleGrid}>
-            {/* Order Qty */}
             <div
               style={{
                 ...styles.nozzleCard,
@@ -789,7 +688,6 @@ export default function StationDashboard({
               </div>
             </div>
 
-            {/* Latest Offloading (ATG) */}
             <div
               style={{
                 ...styles.nozzleCard,
@@ -856,7 +754,6 @@ export default function StationDashboard({
               </div>
             </div>
 
-            {/* Difference of ATG and Order Qty */}
             <div
               style={{
                 ...styles.nozzleCard,
@@ -902,7 +799,6 @@ export default function StationDashboard({
               </div>
             </div>
 
-            {/* Order (Dipstick) */}
             <div
               style={{
                 ...styles.nozzleCard,
@@ -995,7 +891,6 @@ export default function StationDashboard({
             🚛 Diesel Order Analysis
           </h3>
           <div style={styles.nozzleGrid}>
-            {/* Order Qty */}
             <div
               style={{
                 ...styles.nozzleCard,
@@ -1039,7 +934,6 @@ export default function StationDashboard({
               </div>
             </div>
 
-            {/* Latest Diesel Offloading (ATG) */}
             <div
               style={{
                 ...styles.nozzleCard,
@@ -1106,7 +1000,6 @@ export default function StationDashboard({
               </div>
             </div>
 
-            {/* Difference of ATG and Order Qty */}
             <div
               style={{
                 ...styles.nozzleCard,
@@ -1152,7 +1045,6 @@ export default function StationDashboard({
               </div>
             </div>
 
-            {/* Order (Dipstick) */}
             <div
               style={{
                 ...styles.nozzleCard,
