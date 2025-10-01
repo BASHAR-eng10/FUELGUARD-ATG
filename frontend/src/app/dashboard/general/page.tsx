@@ -699,58 +699,7 @@ export default function GeneralDashboard() {
           </div>
         </div>
 
-        {/* Recent Alerts - Now centered and taking more space */}
-        <div style={styles.overviewCard}>
-          <h3 style={styles.cardTitle}>Recent Alerts</h3>
-          <div style={styles.alertsList}>
-            {malerts.map((alertItem, index) => (
-              <div
-                key={index}
-                style={{
-                  ...styles.alertItem,
-                  cursor: "pointer",
-                }}
-                onClick={() => {
-                  alert(alertItem.message);
-                }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.backgroundColor = "#f9fafb")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.backgroundColor = "transparent")
-                }
-              >
-                <div style={styles.alertInfo}>
-                  <div
-                    style={{
-                      ...styles.alertDot,
-                      backgroundColor:
-                        alertItem.type == "high" ? "#dc2626" : "#fbbf24",
-                    }}
-                  ></div>
-                  <div style={styles.alertDetails}>
-                    <p style={styles.alertType}>{alertItem.type}</p>
-                    <p style={styles.alertStation}>{alertItem.station}</p>
-                  </div>
-                </div>
-                <p style={styles.alertTime}>{alertItem.time}</p>
-              </div>
-            ))}
-          </div>
-          <button
-            style={styles.viewAllButton}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = "#dbeafe";
-              e.currentTarget.style.color = "#1d4ed8";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = "transparent";
-              e.currentTarget.style.color = "#2563eb";
-            }}
-          >
-            View All Alerts
-          </button>
-        </div>
+       
 
         {/* Success Message */}
       </main>

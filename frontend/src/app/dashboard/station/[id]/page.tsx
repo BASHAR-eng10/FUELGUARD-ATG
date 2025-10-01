@@ -380,7 +380,6 @@ export default function StationDashboard({
     console.log("Fetching offloading data...");
     const response = await apiService.getStationAutoRefillReport();
     
-    // Match refill response handling exactly
     if (response && response.data && response.data.records) {
       const currentStationSerial = stationData?.LicenseeTraSerialNo;
       
@@ -388,27 +387,15 @@ export default function StationDashboard({
       console.log('All autorefill records:', response.data.records);
       
       if (currentStationSerial) {
-        // Filter by station serial
+        // Filter by station serial - GET ALL RECORDS, not just latest
         const filteredRecords = response.data.records.filter((record: any) =>
           record.station_serial === currentStationSerial
         );
         
         console.log('Filtered autorefill records:', filteredRecords);
         
-        // Get latest by product (same logic as refill)
-        const latestByProduct: { [key: string]: any } = {};
-        filteredRecords.forEach((record: any) => {
-          const product = record.product;
-          if (!latestByProduct[product] || record.id > latestByProduct[product].id) {
-            latestByProduct[product] = record;
-          }
-        });
-        
-        const latestRecords = Object.values(latestByProduct).sort((a: any, b: any) => b.id - a.id);
-        console.log('Latest autorefill records by product:', latestRecords);
-        
-        // Convert to OffloadingEvent format for display
-        const events: OffloadingEvent[] = latestRecords.map((record: any) => ({
+        // Convert ALL records to OffloadingEvent format
+        const events: OffloadingEvent[] = filteredRecords.map((record: any) => ({
           id: record.id?.toString(),
           station: record.station_serial,
           stationSerial: record.station_serial,
@@ -418,6 +405,9 @@ export default function StationDashboard({
           startTime: record.issue_date,
           offload_volume_liters: record.fuel_volume || 0
         }));
+        
+        // Sort by date descending (newest first)
+        events.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
         
         setOffloadingEvents(events);
       } else {
@@ -1150,6 +1140,96 @@ export default function StationDashboard({
             </div>
           </div>
         </div>
+        {/* Autorefill History Table */}
+        {offloadingEvents.length > 0 && (
+          <div
+            style={{
+              ...styles.nozzleSection,
+              background: "#ffffff",
+            }}
+          >
+            <h3
+              style={{
+                ...styles.nozzleTitle,
+                color: "#111827",
+              }}
+            >
+              <TrendingUp size={20} color="#3b82f6" />
+              📊 Autorefill History (ATG Detected Offloading)
+            </h3>
+            
+            <div style={{ overflowX: "auto" }}>
+              <table style={{
+                width: "100%",
+                borderCollapse: "collapse",
+                fontSize: "14px"
+              }}>
+                <thead>
+                  <tr style={{ backgroundColor: "#f8fafc", borderBottom: "2px solid #e2e8f0" }}>
+                    <th style={{ padding: "12px", textAlign: "left", fontWeight: "600", color: "#475569" }}>Date</th>
+                    <th style={{ padding: "12px", textAlign: "left", fontWeight: "600", color: "#475569" }}>Product</th>
+                    <th style={{ padding: "12px", textAlign: "right", fontWeight: "600", color: "#475569" }}>Volume (L)</th>
+                    <th style={{ padding: "12px", textAlign: "left", fontWeight: "600", color: "#475569" }}>Station Serial</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {offloadingEvents.map((event, index) => (
+                    <tr 
+                      key={event.id || index}
+                      style={{ 
+                        borderBottom: "1px solid #e2e8f0",
+                        backgroundColor: index % 2 === 0 ? "#ffffff" : "#f8fafc"
+                      }}
+                    >
+                      <td style={{ padding: "12px", color: "#64748b" }}>
+                        {new Date(event.date).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </td>
+                      <td style={{ padding: "12px" }}>
+                        <span style={{
+                          padding: "4px 8px",
+                          borderRadius: "4px",
+                          fontSize: "12px",
+                          fontWeight: "600",
+                          backgroundColor: event.tank.toUpperCase() === "UNLEADED" ? "#dcfce7" : "#dbeafe",
+                          color: event.tank.toUpperCase() === "UNLEADED" ? "#166534" : "#1e40af"
+                        }}>
+                          {event.tank}
+                        </span>
+                      </td>
+                      <td style={{ 
+                        padding: "12px", 
+                        textAlign: "right",
+                        fontWeight: "600",
+                        color: "#0f172a"
+                      }}>
+                        {event.offload_volume_liters.toLocaleString()}
+                      </td>
+                      <td style={{ padding: "12px", color: "#64748b", fontSize: "12px" }}>
+                        {event.station}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {offloadingEvents.length === 0 && (
+              <div style={{
+                textAlign: "center",
+                padding: "32px",
+                color: "#64748b"
+              }}>
+                No autorefill records found for this station
+              </div>
+            )}
+          </div>
+        )}
       </main>
     </div>
   );
