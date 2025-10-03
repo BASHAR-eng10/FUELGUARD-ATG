@@ -213,76 +213,100 @@ export default function StationDashboard({
   };
 
   const getUnleadedOffloading = () => {
-    const events = offloadingEvents.filter((e: OffloadingEvent) => {
-      const stationMatch = (e.station || e.stationSerial) === stationData?.LicenseeTraSerialNo;
-      const tankMatch = e.tank.toUpperCase() === "UNLEADED";
-      return tankMatch && stationMatch;
-    });
-    if (events.length === 0) return "0 L";
-    const latest = events[events.length - 1];
-    return `${(latest.offload_volume_liters).toLocaleString()} L`;
-  };
+  const events = offloadingEvents.filter((e: OffloadingEvent) => {
+    const stationMatch = (e.station || e.stationSerial) === stationData?.LicenseeTraSerialNo;
+    const tankMatch = e.tank.toUpperCase() === "UNLEADED";
+    return tankMatch && stationMatch;
+  });
+  
+  if (events.length === 0) return "0 L";
+  
+  const latest = events.sort((a, b) => 
+    new Date(b.date).getTime() - new Date(a.date).getTime()
+  )[0];
+  
+  return `${latest.offload_volume_liters.toLocaleString()} L`;
+};
 
-  const getDieselOffloading = () => {
-    const events = offloadingEvents.filter((e: OffloadingEvent) => {
-      const stationMatch = (e.station || e.stationSerial) === stationData?.LicenseeTraSerialNo;
-      const tankMatch = e.tank.toUpperCase() === "DIESEL" || e.tank.toUpperCase() === "DIESLE";
-      return tankMatch && stationMatch;
-    });
-    if (events.length === 0) return "0 L";
-    const latest = events[events.length - 1];
-    return `${(latest.offload_volume_liters).toLocaleString()} L`;
-  };
+const getDieselOffloading = () => {
+  const events = offloadingEvents.filter((e: OffloadingEvent) => {
+    const stationMatch = (e.station || e.stationSerial) === stationData?.LicenseeTraSerialNo;
+    const tankMatch = e.tank.toUpperCase() === "DIESEL" || e.tank.toUpperCase() === "DIESLE";
+    return tankMatch && stationMatch;
+  });
+  
+  if (events.length === 0) return "0 L";
+  
+  const latest = events.sort((a, b) => 
+    new Date(b.date).getTime() - new Date(a.date).getTime()
+  )[0];
+  
+  return `${latest.offload_volume_liters.toLocaleString()} L`;
+};
 
-  const getUnleadedOffloadingDate = () => {
-    const unleadedOffloading = offloadingEvents
-      .filter((event: OffloadingEvent) => 
-        (event.productName === "UNLEADED" || event.productName === "Unleaded" || event.tank.toUpperCase() === "UNLEADED") &&
-        (event.stationSerial === stationData?.LicenseeTraSerialNo || event.station === stationData?.LicenseeTraSerialNo)
-      )
-      .slice(-1)[0];
-      
-    if (unleadedOffloading) {
-      const dateStr = unleadedOffloading.startTime || unleadedOffloading.date;
-      return `Date: ${new Date(dateStr).toLocaleDateString()}`;
-    }
-    return "No recent offloading";
-  };
+const getUnleadedOffloadingDate = () => {
+  const events = offloadingEvents.filter((e: OffloadingEvent) => {
+    const stationMatch = (e.station || e.stationSerial) === stationData?.LicenseeTraSerialNo;
+    const tankMatch = e.tank.toUpperCase() === "UNLEADED";
+    return tankMatch && stationMatch;
+  });
+  
+  if (events.length === 0) return "No recent offloading";
+  
+  const latest = events.sort((a, b) => 
+    new Date(b.date).getTime() - new Date(a.date).getTime()
+  )[0];
+  
+  return `Date: ${new Date(latest.date).toLocaleDateString()}`;
+};
 
-  const getDieselOffloadingDate = () => {
-    const dieselOffloading = offloadingEvents
-      .filter((event: OffloadingEvent) => 
-        (event.productName === "DIESEL" || event.productName === "DIESLE" || event.tank.toUpperCase() === "DIESEL" || event.tank.toUpperCase() === "DIESLE") &&
-        (event.stationSerial === stationData?.LicenseeTraSerialNo || event.station === stationData?.LicenseeTraSerialNo)
-      )
-      .slice(-1)[0];
-      
-    if (dieselOffloading) {
-      const dateStr = dieselOffloading.startTime || dieselOffloading.date;
-      return `Date: ${new Date(dateStr).toLocaleDateString()}`;
-    }
-    return "No recent offloading";
-  };
+const getDieselOffloadingDate = () => {
+  const events = offloadingEvents.filter((e: OffloadingEvent) => {
+    const stationMatch = (e.station || e.stationSerial) === stationData?.LicenseeTraSerialNo;
+    const tankMatch = e.tank.toUpperCase() === "DIESEL" || e.tank.toUpperCase() === "DIESLE";
+    return tankMatch && stationMatch;
+  });
+  
+  if (events.length === 0) return "No recent offloading";
+  
+  const latest = events.sort((a, b) => 
+    new Date(b.date).getTime() - new Date(a.date).getTime()
+  )[0];
+  
+  return `Date: ${new Date(latest.date).toLocaleDateString()}`;
+};
 
-  const getUnleadedOffloadingValue = () => {
-    const events = offloadingEvents.filter((e: OffloadingEvent) => {
-      const stationMatch = (e.station || e.stationSerial) === stationData?.LicenseeTraSerialNo;
-      const tankMatch = e.tank.toUpperCase() === "UNLEADED";
-      return tankMatch && stationMatch;
-    });
-    if (events.length === 0) return 0;
-    return events[events.length - 1].offload_volume_liters;
-  };
+const getUnleadedOffloadingValue = () => {
+  const events = offloadingEvents.filter((e: OffloadingEvent) => {
+    const stationMatch = (e.station || e.stationSerial) === stationData?.LicenseeTraSerialNo;
+    const tankMatch = e.tank.toUpperCase() === "UNLEADED";
+    return tankMatch && stationMatch;
+  });
+  
+  if (events.length === 0) return 0;
+  
+  const latest = events.sort((a, b) => 
+    new Date(b.date).getTime() - new Date(a.date).getTime()
+  )[0];
+  
+  return latest.offload_volume_liters;
+};
 
-  const getDieselOffloadingValue = () => {
-    const events = offloadingEvents.filter((e: OffloadingEvent) => {
-      const stationMatch = (e.station || e.stationSerial) === stationData?.LicenseeTraSerialNo;
-      const tankMatch = e.tank.toUpperCase() === "DIESEL" || e.tank.toUpperCase() === "DIESLE";
-      return tankMatch && stationMatch;
-    });
-    if (events.length === 0) return 0;
-    return events[events.length - 1].offload_volume_liters;
-  };
+const getDieselOffloadingValue = () => {
+  const events = offloadingEvents.filter((e: OffloadingEvent) => {
+    const stationMatch = (e.station || e.stationSerial) === stationData?.LicenseeTraSerialNo;
+    const tankMatch = e.tank.toUpperCase() === "DIESEL" || e.tank.toUpperCase() === "DIESLE";
+    return tankMatch && stationMatch;
+  });
+  
+  if (events.length === 0) return 0;
+  
+  const latest = events.sort((a, b) => 
+    new Date(b.date).getTime() - new Date(a.date).getTime()
+  )[0];
+  
+  return latest.offload_volume_liters;
+};
 
   const getUnleadedOrderValue = () => {
     const unleadedRefills = refillData.filter((refill: any) => 
@@ -1169,7 +1193,7 @@ export default function StationDashboard({
                     <th style={{ padding: "12px", textAlign: "left", fontWeight: "600", color: "#475569" }}>Date</th>
                     <th style={{ padding: "12px", textAlign: "left", fontWeight: "600", color: "#475569" }}>Product</th>
                     <th style={{ padding: "12px", textAlign: "right", fontWeight: "600", color: "#475569" }}>Volume (L)</th>
-                    <th style={{ padding: "12px", textAlign: "left", fontWeight: "600", color: "#475569" }}>Station Serial</th>
+                    
                   </tr>
                 </thead>
                 <tbody>

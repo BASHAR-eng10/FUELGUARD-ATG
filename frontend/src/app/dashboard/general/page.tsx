@@ -429,11 +429,8 @@ export default function GeneralDashboard() {
             tanks: station.TotalNoTanks,
             username: station.automation_server_username,
             password: station.automation_server_pass,
-            // Mock data for demo - in production these would come from separate endpoints
-            status: index === 0 ? "excellent" : index === 1 ? "good" : "fair",
-            efficiency: index === 0 ? 92 : index === 1 ? 88 : 75,
-            revenue: index === 0 ? "$4,280" : index === 1 ? "$5,120" : "$3,050",
-            nozzles: index === 0 ? 6 : index === 1 ? 8 : 6,
+            LicenseeTraSerialNo: station.LicenseeTraSerialNo,
+            
             alerts: index === 0 ? 0 : index === 1 ? 1 : 2,
             color:
               index === 0 ? "#22c55e" : index === 1 ? "#3b82f6" : "#eab308",
@@ -783,50 +780,48 @@ export default function GeneralDashboard() {
               </div>
             ) : (
               <div style={styles.stationsList}>
-                {stations.map((station) => (
-                  <div
-                    key={station.id}
-                    style={styles.stationCard}
-                    onClick={() => handleStationClick(station.id)}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = "#ffffff";
-                      e.currentTarget.style.boxShadow =
-                        "0 4px 6px -1px rgba(0, 0, 0, 0.1)";
-                      e.currentTarget.style.borderColor = "#d1d5db";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = "#f9fafb";
-                      e.currentTarget.style.boxShadow = "none";
-                      e.currentTarget.style.borderColor = "#e5e7eb";
-                    }}
-                  >
-                    <div style={styles.stationInfo}>
-                      <div
-                        style={{
-                          ...styles.stationIcon,
-                          backgroundColor: `
-                      e.currentTarget.style.backgroundColor = "#f9fafb"20`,
-                        }}
-                      >
-                        <Building2 size={20} color="#2563eb" />
-                      </div>
-                      <div style={styles.stationDetails}>
-                        <h4 style={styles.stationName}>{station.name}</h4>
-                       
-                        
-                        {station.LicenseeTraSerialNo && (
-                          <p
-                            style={{
-                              ...styles.stationLocation,
-                              color: "#9ca3af",
-                              fontSize: "11px",
-                            }}
-                          >
-                            License: {station.ewuraLicense}
-                          </p>
-                        )}
-                      </div>
-                    </div>
+  {stations.map((station) => (
+    <div
+      key={station.id}
+      style={styles.stationCard}
+      onClick={() => handleStationClick(station.id)}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.backgroundColor = "#ffffff";
+        e.currentTarget.style.boxShadow =
+          "0 4px 6px -1px rgba(0, 0, 0, 0.1)";
+        e.currentTarget.style.borderColor = "#d1d5db";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.backgroundColor = "#f9fafb";
+        e.currentTarget.style.boxShadow = "none";
+        e.currentTarget.style.borderColor = "#e5e7eb";
+      }}
+    >
+      <div style={styles.stationInfo}>
+        <div
+          style={{
+            ...styles.stationIcon,
+            backgroundColor: "#2563eb20",
+          }}
+        >
+          <Building2 size={20} color="#2563eb" />
+        </div>
+        <div style={styles.stationDetails}>
+          <h4 style={styles.stationName}>{station.name}</h4>
+          
+          {station.LicenseeTraSerialNo && (
+            <p
+              style={{
+                ...styles.stationLocation,
+                color: "#9ca3af",
+                fontSize: "11px",
+              }}
+            >
+              Serial No: {station.LicenseeTraSerialNo}
+            </p>
+          )}
+        </div>
+      </div>
 
                     
                   </div>
