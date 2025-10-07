@@ -543,7 +543,7 @@ export default function GeneralDashboard() {
               }}
             />
             <div>
-              <h1 style={styles.logoTitle}>LAKE ENERGIES GROUP</h1>
+              <h1 style={styles.logoTitle}>LAKE ENERGIES </h1>
               <p style={styles.logoSubtitle}>General Manager</p>
             </div>
           </div>
