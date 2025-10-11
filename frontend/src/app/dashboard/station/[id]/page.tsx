@@ -447,6 +447,79 @@ const getDieselOffloadingValue = () => {
     setIsLoadingOffloading(false);
   }
 };
+// Add this new function after the other calculation functions and before fetchOffloadingData
+
+const getCombinedHistory = () => {
+  // Create a map to combine records by date and product
+  const combinedMap = new Map<string, {
+    date: string;
+    product: string;
+    autorefill: number;
+    refillQty: number;
+    refillDipstick: number;
+    stationSerial: string;
+  }>();
+
+  // Add autorefill records
+  offloadingEvents.forEach(event => {
+    const dateKey = new Date(event.date).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    });
+    const product = event.tank.toUpperCase();
+    const key = `${dateKey}-${product}`;
+
+    if (!combinedMap.has(key)) {
+      combinedMap.set(key, {
+        date: event.date,
+        product: event.tank,
+        autorefill: event.offload_volume_liters,
+        refillQty: 0,
+        refillDipstick: 0,
+        stationSerial: event.station || event.stationSerial || ''
+      });
+    } else {
+      const existing = combinedMap.get(key)!;
+      existing.autorefill += event.offload_volume_liters;
+    }
+  });
+
+  // Add refill records
+  refillData.forEach(refill => {
+    const dateKey = new Date(refill.issue_date).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    });
+    const product = refill.product.toUpperCase();
+    const key = `${dateKey}-${product}`;
+
+    const dipstickValue = (refill.dip_end && refill.dip_start) 
+      ? (refill.dip_end - refill.dip_start) 
+      : 0;
+
+    if (!combinedMap.has(key)) {
+      combinedMap.set(key, {
+        date: refill.issue_date,
+        product: refill.product,
+        autorefill: 0,
+        refillQty: refill.fuel_amount || 0,
+        refillDipstick: dipstickValue,
+        stationSerial: refill.station_serial || ''
+      });
+    } else {
+      const existing = combinedMap.get(key)!;
+      existing.refillQty = refill.fuel_amount || 0;
+      existing.refillDipstick = dipstickValue;
+    }
+  });
+
+  // Convert map to array and sort by date (newest first)
+  return Array.from(combinedMap.values()).sort((a, b) => 
+    new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
+};
 
   // Fetch refill data from API
   const fetchRefillData = async () => {
@@ -1164,8 +1237,8 @@ const getDieselOffloadingValue = () => {
             </div>
           </div>
         </div>
-        {/* Autorefill History Table */}
-        {offloadingEvents.length > 0 && (
+        {/* Combined History Table */}
+        {(offloadingEvents.length > 0 || refillData.length > 0) && (
           <div
             style={{
               ...styles.nozzleSection,
@@ -1179,7 +1252,7 @@ const getDieselOffloadingValue = () => {
               }}
             >
               <TrendingUp size={20} color="#3b82f6" />
-              📊 Autorefill History (ATG Detected Offloading)
+              📊 Refill & Autorefill History
             </h3>
             
             <div style={{ overflowX: "auto" }}>
@@ -1192,64 +1265,93 @@ const getDieselOffloadingValue = () => {
                   <tr style={{ backgroundColor: "#f8fafc", borderBottom: "2px solid #e2e8f0" }}>
                     <th style={{ padding: "12px", textAlign: "left", fontWeight: "600", color: "#475569" }}>Date</th>
                     <th style={{ padding: "12px", textAlign: "left", fontWeight: "600", color: "#475569" }}>Product</th>
-                    <th style={{ padding: "12px", textAlign: "right", fontWeight: "600", color: "#475569" }}>Volume (L)</th>
-                    
+                    <th style={{ padding: "12px", textAlign: "right", fontWeight: "600", color: "#475569" }}>Autorefill (L)</th>
+                    <th style={{ padding: "12px", textAlign: "right", fontWeight: "600", color: "#475569" }}>Refill Qty (L)</th>
+                    <th style={{ padding: "12px", textAlign: "right", fontWeight: "600", color: "#475569" }}>Refill Dipstick (L)</th>
+                    <th style={{ padding: "12px", textAlign: "right", fontWeight: "600", color: "#475569" }}>Difference</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {offloadingEvents.map((event, index) => (
-                    <tr 
-                      key={event.id || index}
-                      style={{ 
-                        borderBottom: "1px solid #e2e8f0",
-                        backgroundColor: index % 2 === 0 ? "#ffffff" : "#f8fafc"
-                      }}
-                    >
-                      <td style={{ padding: "12px", color: "#64748b" }}>
-                        {new Date(event.date).toLocaleDateString('en-US', {
-                          year: 'numeric',
-                          month: 'short',
-                          day: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        })}
-                      </td>
-                      <td style={{ padding: "12px" }}>
-                        <span style={{
-                          padding: "4px 8px",
-                          borderRadius: "4px",
-                          fontSize: "12px",
+                  {getCombinedHistory().map((record, index) => {
+                    const difference = record.autorefill - record.refillQty;
+                    const differenceColor = difference === 0 ? '#16a34a' : difference > 0 ? '#f59e0b' : '#dc2626';
+                    
+                    return (
+                      <tr 
+                        key={`${record.date}-${record.product}-${index}`}
+                        style={{ 
+                          borderBottom: "1px solid #e2e8f0",
+                          backgroundColor: index % 2 === 0 ? "#ffffff" : "#f8fafc"
+                        }}
+                      >
+                        <td style={{ padding: "12px", color: "#64748b" }}>
+                          {new Date(record.date).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric'
+                          })}
+                        </td>
+                        <td style={{ padding: "12px" }}>
+                          <span style={{
+                            padding: "4px 8px",
+                            borderRadius: "4px",
+                            fontSize: "12px",
+                            fontWeight: "600",
+                            backgroundColor: record.product.toUpperCase().includes("UNLEADED") ? "#dcfce7" : "#dbeafe",
+                            color: record.product.toUpperCase().includes("UNLEADED") ? "#166534" : "#1e40af"
+                          }}>
+                            {record.product}
+                          </span>
+                        </td>
+                        <td style={{ 
+                          padding: "12px", 
+                          textAlign: "right",
                           fontWeight: "600",
-                          backgroundColor: event.tank.toUpperCase() === "UNLEADED" ? "#dcfce7" : "#dbeafe",
-                          color: event.tank.toUpperCase() === "UNLEADED" ? "#166534" : "#1e40af"
+                          color: record.autorefill > 0 ? "#7c3aed" : "#94a3b8"
                         }}>
-                          {event.tank}
-                        </span>
-                      </td>
-                      <td style={{ 
-                        padding: "12px", 
-                        textAlign: "right",
-                        fontWeight: "600",
-                        color: "#0f172a"
-                      }}>
-                        {event.offload_volume_liters.toLocaleString()}
-                      </td>
-                      <td style={{ padding: "12px", color: "#64748b", fontSize: "12px" }}>
-                        {event.station}
-                      </td>
-                    </tr>
-                  ))}
+                          {record.autorefill > 0 ? record.autorefill.toLocaleString() : '-'}
+                        </td>
+                        <td style={{ 
+                          padding: "12px", 
+                          textAlign: "right",
+                          fontWeight: "600",
+                          color: record.refillQty > 0 ? "#0ea5e9" : "#94a3b8"
+                        }}>
+                          {record.refillQty > 0 ? record.refillQty.toLocaleString() : '-'}
+                        </td>
+                        <td style={{ 
+                          padding: "12px", 
+                          textAlign: "right",
+                          fontWeight: "600",
+                          color: record.refillDipstick > 0 ? "#22c55e" : "#94a3b8"
+                        }}>
+                          {record.refillDipstick > 0 ? record.refillDipstick.toLocaleString() : '-'}
+                        </td>
+                        <td style={{ 
+                          padding: "12px", 
+                          textAlign: "right",
+                          fontWeight: "700",
+                          color: differenceColor
+                        }}>
+                          {record.autorefill > 0 && record.refillQty > 0 
+                            ? `${difference > 0 ? '+' : ''}${difference.toLocaleString()}` 
+                            : '-'
+                          }
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
 
-            {offloadingEvents.length === 0 && (
+            {getCombinedHistory().length === 0 && (
               <div style={{
                 textAlign: "center",
                 padding: "32px",
                 color: "#64748b"
               }}>
-                No autorefill records found for this station
+                No records found for this station
               </div>
             )}
           </div>
