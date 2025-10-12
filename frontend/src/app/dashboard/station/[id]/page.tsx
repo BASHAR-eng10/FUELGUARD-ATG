@@ -398,50 +398,76 @@ const getDieselOffloadingValue = () => {
     return null;
   };
 
-  const fetchOffloadingData = async () => {
+ const fetchOffloadingData = async () => {
   setIsLoadingOffloading(true);
   try {
     console.log("Fetching offloading data...");
     const response = await apiService.getStationAutoRefillReport();
     
-    if (response && response.data && response.data.records) {
-      const currentStationSerial = stationData?.LicenseeTraSerialNo;
-      
-      console.log('Current station serial:', currentStationSerial);
-      console.log('All autorefill records:', response.data.records);
-      
-      if (currentStationSerial) {
-        // Filter by station serial - GET ALL RECORDS, not just latest
-        const filteredRecords = response.data.records.filter((record: any) =>
-          record.station_serial === currentStationSerial
-        );
-        
-        console.log('Filtered autorefill records:', filteredRecords);
-        
-        // Convert ALL records to OffloadingEvent format
-        const events: OffloadingEvent[] = filteredRecords.map((record: any) => ({
-          id: record.id?.toString(),
-          station: record.station_serial,
-          stationSerial: record.station_serial,
-          productName: record.product,
-          tank: record.product,
-          date: record.issue_date,
-          startTime: record.issue_date,
-          offload_volume_liters: record.fuel_volume || 0
-        }));
-        
-        // Sort by date descending (newest first)
-        events.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-        
-        setOffloadingEvents(events);
-      } else {
-        setOffloadingEvents([]);
-      }
-    } else {
+    console.log('Raw API response:', response);
+    
+    // Handle different response structures
+    let records = [];
+    
+    // Check if response.data is an array directly
+    if (Array.isArray(response.data)) {
+      records = response.data;
+      console.log('Response structure: direct array');
+    }
+    // Check if response.data.records exists
+    else if (response && response.data && response.data.records) {
+      records = response.data.records;
+      console.log('Response structure: nested records');
+    }
+    // Check if response.data.data exists (double nested)
+    else if (response && response.data && response.data.data) {
+      records = response.data.data;
+      console.log('Response structure: double nested data');
+    }
+    else {
       throw new Error("Invalid API response structure");
+    }
+    
+    console.log('Total records found:', records.length);
+    
+    const currentStationSerial = stationData?.LicenseeTraSerialNo;
+    
+    console.log('Current station serial:', currentStationSerial);
+    
+    if (currentStationSerial) {
+      // Filter by station serial - GET ALL RECORDS, not just latest
+      const filteredRecords = records.filter((record: any) =>
+        record.station_serial === currentStationSerial
+      );
+      
+      console.log('Filtered autorefill records for station:', filteredRecords);
+      
+      // Convert ALL records to OffloadingEvent format
+      const events: OffloadingEvent[] = filteredRecords.map((record: any) => ({
+        id: record.id?.toString(),
+        station: record.station_serial,
+        stationSerial: record.station_serial,
+        productName: record.product,
+        tank: record.product,
+        tankName: record.tank_name || `Tank ${record.tank_id}`, // Use tank_name from response
+        tankId: record.tank_id,
+        date: record.issue_date,
+        startTime: record.issue_date,
+        offload_volume_liters: record.fuel_volume || 0
+      }));
+      
+      // Sort by date descending (newest first)
+      events.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      
+      console.log('Processed offloading events:', events);
+      
+      setOffloadingEvents(events);
+    } else {
+      setOffloadingEvents([]);
     }
   } catch (error: any) {
     console.error('Error fetching offloading data:', error);
+    console.error('Error details:', error.message);
     setOffloadingEvents([]);
   } finally {
     setIsLoadingOffloading(false);
