@@ -28,6 +28,8 @@ interface OffloadingEvent {
   stationSerial?: string;
   productName?: string;
   tank: string;
+  tankName?: string;
+  tankId?: string;
   date: string;
   startTime?: string;
   endTime?: string;
@@ -449,7 +451,7 @@ const getDieselOffloadingValue = () => {
         stationSerial: record.station_serial,
         productName: record.product,
         tank: record.product,
-        tankName: record.tank_name || `Tank ${record.tank_id}`, // Use tank_name from response
+        tankName: record.tank_name || `Tank ${record.tank_id}`,
         tankId: record.tank_id,
         date: record.issue_date,
         startTime: record.issue_date,
@@ -473,81 +475,56 @@ const getDieselOffloadingValue = () => {
     setIsLoadingOffloading(false);
   }
 };
-// Add this new function after the other calculation functions and before fetchOffloadingData
 
-const getCombinedHistory = () => {
-  // Create a map to combine records by date and product
-  const combinedMap = new Map<string, {
+// Modified function to get ALL history records separately
+const getAllHistory = () => {
+  const allRecords: Array<{
     date: string;
     product: string;
-    autorefill: number;
-    refillQty: number;
-    refillDipstick: number;
-    stationSerial: string;
-  }>();
+    type: 'autorefill' | 'refill';
+    tankId?: string;
+    tankName?: string;
+    volume: number;
+    refillQty?: number;
+    refillDipstick?: number;
+  }> = [];
 
-  // Add autorefill records
+  // Add ALL autorefill records
   offloadingEvents.forEach(event => {
-    const dateKey = new Date(event.date).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit'
+    allRecords.push({
+      date: event.date,
+      product: event.tank,
+      type: 'autorefill',
+      tankId: event.tankId,
+      tankName: event.tankName,
+      volume: event.offload_volume_liters,
     });
-    const product = event.tank.toUpperCase();
-    const key = `${dateKey}-${product}`;
-
-    if (!combinedMap.has(key)) {
-      combinedMap.set(key, {
-        date: event.date,
-        product: event.tank,
-        autorefill: event.offload_volume_liters,
-        refillQty: 0,
-        refillDipstick: 0,
-        stationSerial: event.station || event.stationSerial || ''
-      });
-    } else {
-      const existing = combinedMap.get(key)!;
-      existing.autorefill += event.offload_volume_liters;
-    }
   });
 
-  // Add refill records
+  // Add ALL refill records
   refillData.forEach(refill => {
-    const dateKey = new Date(refill.issue_date).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit'
-    });
-    const product = refill.product.toUpperCase();
-    const key = `${dateKey}-${product}`;
-
     const dipstickValue = (refill.dip_end && refill.dip_start) 
       ? (refill.dip_end - refill.dip_start) 
       : 0;
 
-    if (!combinedMap.has(key)) {
-      combinedMap.set(key, {
-        date: refill.issue_date,
-        product: refill.product,
-        autorefill: 0,
-        refillQty: refill.fuel_amount || 0,
-        refillDipstick: dipstickValue,
-        stationSerial: refill.station_serial || ''
-      });
-    } else {
-      const existing = combinedMap.get(key)!;
-      existing.refillQty = refill.fuel_amount || 0;
-      existing.refillDipstick = dipstickValue;
-    }
+    allRecords.push({
+      date: refill.issue_date,
+      product: refill.product,
+      type: 'refill',
+      tankId: refill.tank_id,
+      volume: refill.fuel_amount || 0,
+      refillQty: refill.fuel_amount || 0,
+      refillDipstick: dipstickValue,
+    });
   });
 
-  // Convert map to array and sort by date (newest first)
-  return Array.from(combinedMap.values()).sort((a, b) => 
+  // Sort by date (newest first)
+  return allRecords.sort((a, b) => 
     new Date(b.date).getTime() - new Date(a.date).getTime()
   );
 };
 
-  // Fetch refill data from API
+  // Fetch refill data from API - Modified to get ALL records
   const fetchRefillData = async () => {
     try {
       console.log("Fetching refill data...");
@@ -560,23 +537,21 @@ const getCombinedHistory = () => {
         console.log('All refill records:', response.data.records);
         
         if (currentStationSerial) {
+          // Get ALL records for this station, not just latest by product
           const filteredRecords = response.data.records.filter((record: any) =>
             record.station_serial === currentStationSerial
           );
           
-          console.log('Filtered refill records:', filteredRecords);
+          console.log('All filtered refill records:', filteredRecords);
           
-          const latestByProduct: { [key: string]: any } = {};
-          filteredRecords.forEach((record: any) => {
-            const product = record.product;
-            if (!latestByProduct[product] || record.id > latestByProduct[product].id) {
-              latestByProduct[product] = record;
-            }
+          // Sort by date descending
+          filteredRecords.sort((a: any, b: any) => {
+            const dateA = new Date(a.issue_date).getTime();
+            const dateB = new Date(b.issue_date).getTime();
+            return dateB - dateA;
           });
           
-          const latestRecords = Object.values(latestByProduct).sort((a: any, b: any) => b.id - a.id);
-          console.log('Latest refill records by product:', latestRecords);
-          setRefillData(latestRecords);
+          setRefillData(filteredRecords);
         } else {
           setRefillData(response.data.records);
         }
@@ -598,111 +573,161 @@ const getCombinedHistory = () => {
       console.log("Fetching station data for ID:", id);
       const station = await apiService.getStation(id);
 
-      if (station) {
-        console.log("Station data loaded:", station);
-        setStationData({
-          id: station.id,
-          name: station.RetailStationName,
-          ewuraLicense: station.EWURALicenseNo,
-          tanks: station.TotalNoTanks,
-          username: station.automation_server_username,
-          password: station.automation_server_pass,
-          LicenseeTraSerialNo: station.LicenseeTraSerialNo,
-        });
+      console.log("Received station data:", station);
+
+      if (station && station.data) {
+        const stationInfo = station.data;
+        setStationData(stationInfo);
+        console.log("Station data set successfully:", stationInfo);
       } else {
-        throw new Error(`Station with ID ${id} not found`);
+        throw new Error("Invalid station data structure");
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error("Error fetching station data:", err);
-      setError((err as Error).message);
-      setStationData({
-        id: parseInt(id),
-        name: `Station ${id} (Fallback)`,
-        tanks: 2,
-        ewuraLicense: "License unavailable",
-      });
+      setError(err.message || "Failed to load station data");
     } finally {
       setLoading(false);
     }
   };
 
-  // Refresh all data
-  const refreshAllData = async () => {
-    await Promise.all([
-      fetchStationData(),
-      fetchRefillData(),
-      fetchOffloadingData()
-    ]);
-  };
-
-  // Load station data on mount
   useEffect(() => {
     fetchStationData();
   }, [id]);
 
-  // Load refill and offloading data when station is loaded
   useEffect(() => {
-    if (stationData?.LicenseeTraSerialNo) {
+    if (stationData) {
       fetchRefillData();
       fetchOffloadingData();
     }
-  }, [stationData?.LicenseeTraSerialNo]);
+  }, [stationData]);
 
-  const handleSignOut = async () => {
-    await logout();
+  const handleSignOut = () => {
+    logout();
   };
+
+  if (loading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "100vh",
+          background: "linear-gradient(135deg, #f9fafb 0%, #e5e7eb 100%)",
+        }}
+      >
+        <div style={{ textAlign: "center" }}>
+          <div
+            style={{
+              width: "48px",
+              height: "48px",
+              border: "4px solid #e5e7eb",
+              borderTopColor: "#3b82f6",
+              borderRadius: "50%",
+              animation: "spin 1s linear infinite",
+              margin: "0 auto 16px",
+            }}
+          />
+          <p style={{ color: "#6b7280", fontSize: "16px" }}>
+            Loading station data...
+          </p>
+        </div>
+        <style>{`
+          @keyframes spin {
+            to { transform: rotate(360deg); }
+          }
+        `}</style>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "100vh",
+          background: "linear-gradient(135deg, #f9fafb 0%, #e5e7eb 100%)",
+        }}
+      >
+        <div
+          style={{
+            background: "#ffffff",
+            borderRadius: "12px",
+            padding: "32px",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            maxWidth: "400px",
+            textAlign: "center",
+          }}
+        >
+          <div
+            style={{
+              width: "48px",
+              height: "48px",
+              background: "#fee2e2",
+              borderRadius: "50%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              margin: "0 auto 16px",
+            }}
+          >
+            <Shield size={24} color="#dc2626" />
+          </div>
+          <h2
+            style={{
+              fontSize: "20px",
+              fontWeight: "600",
+              color: "#111827",
+              marginBottom: "8px",
+            }}
+          >
+            Error Loading Station
+          </h2>
+          <p style={{ color: "#6b7280", marginBottom: "24px" }}>{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            style={{
+              background: "#3b82f6",
+              color: "white",
+              padding: "8px 24px",
+              border: "none",
+              borderRadius: "8px",
+              cursor: "pointer",
+              fontSize: "14px",
+              fontWeight: "500",
+            }}
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={styles.container}>
       <header style={styles.header}>
         <div style={styles.headerContent}>
           <div style={styles.logoSection}>
-            <Shield size={32} color="#2563eb" />
+            <Shield size={28} color="#3b82f6" />
             <div>
-              <h1 style={styles.logoTitle}>
-                {loading
-                  ? "Loading..."
-                  : stationData?.name || "Station Dashboard"}
-              </h1>
-              <p style={styles.logoSubtitle}>Station Manager</p>
+              <h1 style={styles.logoTitle}>Mazady Fuel Station</h1>
+              <p style={styles.logoSubtitle}>Management System</p>
             </div>
           </div>
-
           <div style={styles.headerActions}>
-            <button
-              style={styles.iconButton}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor = "#f3f4f6")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.backgroundColor = "transparent")
-              }
-            >
+            <button style={styles.iconButton}>
               <Bell size={20} />
-              <span style={styles.badge}>1</span>
+              <span style={styles.badge}>3</span>
             </button>
-            <button
-              style={styles.iconButton}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor = "#f3f4f6")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.backgroundColor = "transparent")
-              }
-            >
+            <button style={styles.iconButton}>
               <Settings size={20} />
             </button>
-            <button
-              onClick={handleSignOut}
-              style={styles.signOutButton}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor = "#f3f4f6")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.backgroundColor = "transparent")
-              }
-            >
-              <LogOut size={16} />
+            <button onClick={handleSignOut} style={styles.signOutButton}>
+              <LogOut size={18} />
               <span>Sign Out</span>
             </button>
           </div>
@@ -711,109 +736,28 @@ const getCombinedHistory = () => {
 
       <main style={styles.main}>
         <div style={styles.welcomeSection}>
+          <h2 style={{ fontSize: "28px", fontWeight: "700", color: "#111827" }}>
+            Welcome back, Station Manager
+          </h2>
           <p style={styles.welcomeText}>
-            {loading
-              ? "Loading station information..."
-              : error
-              ? `Error: ${error}`
-              : `Monitor ${
-                  stationData?.name || "your station"
-                }'s operations and performance in real-time.`}
+            Here's what's happening at {stationData?.name || "your station"}{" "}
+            today
           </p>
-          {stationData && !loading && (
-            <div
-              style={{
-                marginTop: "16px",
-                padding: "12px",
-                backgroundColor: "#f8fafc",
-                borderRadius: "8px",
-                border: "1px solid #e2e8f0",
-              }}
-            >
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-                  gap: "12px",
-                  fontSize: "14px",
-                  color: "#64748b",
-                }}
-              >
-                <div>
-                  🏢 <strong>Serial No:</strong> {stationData.LicenseeTraSerialNo}
-                </div>
-                <div>
-                  📋 <strong>License:</strong> {stationData.ewuraLicense}
-                </div>
-                <div>
-                  🛢️ <strong>Tanks:</strong> {stationData.tanks}
-                </div>
-              </div>
-
-              <button
-                onClick={refreshAllData}
-                style={{
-                  marginTop: "8px",
-                  padding: "6px 12px",
-                  backgroundColor: "#3b82f6",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "6px",
-                  fontSize: "12px",
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "4px",
-                }}
-              >
-                <RefreshCw size={12} />
-                Refresh All Data
-              </button>
-            </div>
-          )}
         </div>
 
-        {/* Unleaded Order Analysis */}
-        <div
-          style={{
-            ...styles.nozzleSection,
-            background:
-              "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%)",
-            border: "3px solid #16a34a",
-            borderRadius: "20px",
-            boxShadow: "0 8px 25px rgba(22, 163, 74, 0.15)",
-            position: "relative",
-            overflow: "hidden",
-          }}
-        >
-          <div
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              height: "4px",
-              background:
-                "linear-gradient(90deg, #16a34a 0%, #22c55e 50%, #16a34a 100%)",
-            }}
-          ></div>
-
-          <h3
-            style={{
-              ...styles.nozzleTitle,
-              color: "#14532d",
-              textShadow: "0 1px 2px rgba(0,0,0,0.1)",
-            }}
-          >
-            <TrendingUp size={20} color="#16a34a" />⛽ Unleaded Order Analysis
+        {/* Unleaded Section */}
+        <div style={styles.nozzleSection}>
+          <h3 style={styles.nozzleTitle}>
+            <TrendingUp size={20} color="#10b981" />
+            ⛽ Unleaded
           </h3>
           <div style={styles.nozzleGrid}>
             <div
               style={{
                 ...styles.nozzleCard,
-                background: "linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)",
-                border: "2px solid #0ea5e9",
-                boxShadow: "0 4px 12px rgba(14, 165, 233, 0.15)",
+                background: "linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)",
+                border: "2px solid #3b82f6",
+                boxShadow: "0 4px 12px rgba(59, 130, 246, 0.15)",
               }}
             >
               <div style={styles.nozzleHeader}>
@@ -822,10 +766,10 @@ const getCombinedHistory = () => {
                     ...styles.nozzleName,
                     fontSize: "16px",
                     fontWeight: "700",
-                    color: "#0c4a6e",
+                    color: "#1e3a8a",
                   }}
                 >
-                  Order Qty
+                  Order Quantity
                 </span>
               </div>
               <div
@@ -841,12 +785,12 @@ const getCombinedHistory = () => {
                     style={{
                       ...styles.nozzleMetricValue,
                       fontSize: "20px",
-                      color: "#0c4a6e",
+                      color: "#1e40af",
                     }}
                   >
                     {getUnleadedOrderQty()}
                   </p>
-                  <p style={styles.nozzleMetricLabel}>Order Quantity</p>
+                  <p style={styles.nozzleMetricLabel}>Ordered Quantity</p>
                 </div>
               </div>
             </div>
@@ -854,7 +798,7 @@ const getCombinedHistory = () => {
             <div
               style={{
                 ...styles.nozzleCard,
-                background: "linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%)",
+                background: "linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%)",
                 border: "2px solid #a855f7",
                 boxShadow: "0 4px 12px rgba(168, 85, 247, 0.15)",
               }}
@@ -868,7 +812,7 @@ const getCombinedHistory = () => {
                     color: "#581c87",
                   }}
                 >
-                  Latest Offloading (ATG)
+                  ATG Quantity
                 </span>
               </div>
               <div
@@ -881,22 +825,29 @@ const getCombinedHistory = () => {
               >
                 <div style={styles.nozzleMetric}>
                   {isLoadingOffloading ? (
-                    <p
-                      style={{
-                        ...styles.nozzleMetricValue,
-                        fontSize: "14px",
-                        color: "#a855f7",
-                      }}
-                    >
-                      Loading...
-                    </p>
+                    <>
+                      <div
+                        style={{
+                          width: "24px",
+                          height: "24px",
+                          border: "3px solid #e9d5ff",
+                          borderTopColor: "#a855f7",
+                          borderRadius: "50%",
+                          animation: "spin 1s linear infinite",
+                          margin: "0 auto",
+                        }}
+                      />
+                      <p style={{ ...styles.nozzleMetricLabel, marginTop: "8px" }}>
+                        Loading...
+                      </p>
+                    </>
                   ) : (
                     <>
                       <p
                         style={{
                           ...styles.nozzleMetricValue,
                           fontSize: "20px",
-                          color: "#581c87",
+                          color: "#7c3aed",
                         }}
                       >
                         {getUnleadedOffloading()}
@@ -913,51 +864,6 @@ const getCombinedHistory = () => {
                       </p>
                     </>
                   )}
-                </div>
-              </div>
-            </div>
-
-            <div
-              style={{
-                ...styles.nozzleCard,
-                background: "linear-gradient(135deg, #fefce8 0%, #fef3c7 100%)",
-                border: "2px solid #eab308",
-                boxShadow: "0 4px 12px rgba(234, 179, 8, 0.15)",
-              }}
-            >
-              <div style={styles.nozzleHeader}>
-                <span
-                  style={{
-                    ...styles.nozzleName,
-                    fontSize: "16px",
-                    fontWeight: "700",
-                    color: "#713f12",
-                  }}
-                >
-                  Difference of ATG and Order Qty
-                </span>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginTop: "16px",
-                }}
-              >
-                <div style={styles.nozzleMetric}>
-                  <p
-                    style={{
-                      ...styles.nozzleMetricValue,
-                      fontSize: "20px",
-                      color: "#ca8a04",
-                    }}
-                  >
-                    <span style={{ color: getUnleadedDifference().color }}>
-                      {getUnleadedDifference().value}
-                    </span>
-                  </p>
-                  <p style={styles.nozzleMetricLabel}>Difference</p>
                 </div>
               </div>
             </div>
@@ -1018,48 +924,19 @@ const getCombinedHistory = () => {
           </div>
         </div>
 
-        {/* Diesel Order Analysis */}
-        <div
-          style={{
-            ...styles.nozzleSection,
-            background:
-              "linear-gradient(135deg, #eff6ff 0%, #dbeafe 50%, #bfdbfe 100%)",
-            border: "3px solid #3b82f6",
-            borderRadius: "20px",
-            boxShadow: "0 8px 25px rgba(59, 130, 246, 0.15)",
-            position: "relative",
-            overflow: "hidden",
-          }}
-        >
-          <div
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              height: "4px",
-              background:
-                "linear-gradient(90deg, #3b82f6 0%, #60a5fa 50%, #3b82f6 100%)",
-            }}
-          ></div>
-
-          <h3
-            style={{
-              ...styles.nozzleTitle,
-              color: "#1e3a8a",
-              textShadow: "0 1px 2px rgba(0,0,0,0.1)",
-            }}
-          >
-            <TrendingUp size={20} color="#3b82f6" />
-            🚛 Diesel Order Analysis
+        {/* Diesel Section */}
+        <div style={styles.nozzleSection}>
+          <h3 style={styles.nozzleTitle}>
+            <TrendingUp size={20} color="#f59e0b" />
+            ⛽ Diesel
           </h3>
           <div style={styles.nozzleGrid}>
             <div
               style={{
                 ...styles.nozzleCard,
-                background: "linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)",
-                border: "2px solid #0ea5e9",
-                boxShadow: "0 4px 12px rgba(14, 165, 233, 0.15)",
+                background: "linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)",
+                border: "2px solid #3b82f6",
+                boxShadow: "0 4px 12px rgba(59, 130, 246, 0.15)",
               }}
             >
               <div style={styles.nozzleHeader}>
@@ -1068,10 +945,10 @@ const getCombinedHistory = () => {
                     ...styles.nozzleName,
                     fontSize: "16px",
                     fontWeight: "700",
-                    color: "#0c4a6e",
+                    color: "#1e3a8a",
                   }}
                 >
-                  Order Qty
+                  Order Quantity
                 </span>
               </div>
               <div
@@ -1087,12 +964,12 @@ const getCombinedHistory = () => {
                     style={{
                       ...styles.nozzleMetricValue,
                       fontSize: "20px",
-                      color: "#0c4a6e",
+                      color: "#1e40af",
                     }}
                   >
                     {getDieselOrderQty()}
                   </p>
-                  <p style={styles.nozzleMetricLabel}>Order Quantity</p>
+                  <p style={styles.nozzleMetricLabel}>Ordered Quantity</p>
                 </div>
               </div>
             </div>
@@ -1100,7 +977,7 @@ const getCombinedHistory = () => {
             <div
               style={{
                 ...styles.nozzleCard,
-                background: "linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%)",
+                background: "linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%)",
                 border: "2px solid #a855f7",
                 boxShadow: "0 4px 12px rgba(168, 85, 247, 0.15)",
               }}
@@ -1114,7 +991,7 @@ const getCombinedHistory = () => {
                     color: "#581c87",
                   }}
                 >
-                  Latest Offloading (ATG)
+                  ATG Quantity
                 </span>
               </div>
               <div
@@ -1127,22 +1004,29 @@ const getCombinedHistory = () => {
               >
                 <div style={styles.nozzleMetric}>
                   {isLoadingOffloading ? (
-                    <p
-                      style={{
-                        ...styles.nozzleMetricValue,
-                        fontSize: "14px",
-                        color: "#a855f7",
-                      }}
-                    >
-                      Loading...
-                    </p>
+                    <>
+                      <div
+                        style={{
+                          width: "24px",
+                          height: "24px",
+                          border: "3px solid #e9d5ff",
+                          borderTopColor: "#a855f7",
+                          borderRadius: "50%",
+                          animation: "spin 1s linear infinite",
+                          margin: "0 auto",
+                        }}
+                      />
+                      <p style={{ ...styles.nozzleMetricLabel, marginTop: "8px" }}>
+                        Loading...
+                      </p>
+                    </>
                   ) : (
                     <>
                       <p
                         style={{
                           ...styles.nozzleMetricValue,
                           fontSize: "20px",
-                          color: "#581c87",
+                          color: "#7c3aed",
                         }}
                       >
                         {getDieselOffloading()}
@@ -1159,51 +1043,6 @@ const getCombinedHistory = () => {
                       </p>
                     </>
                   )}
-                </div>
-              </div>
-            </div>
-
-            <div
-              style={{
-                ...styles.nozzleCard,
-                background: "linear-gradient(135deg, #fefce8 0%, #fef3c7 100%)",
-                border: "2px solid #eab308",
-                boxShadow: "0 4px 12px rgba(234, 179, 8, 0.15)",
-              }}
-            >
-              <div style={styles.nozzleHeader}>
-                <span
-                  style={{
-                    ...styles.nozzleName,
-                    fontSize: "16px",
-                    fontWeight: "700",
-                    color: "#713f12",
-                  }}
-                >
-                  Difference of ATG and Order Qty
-                </span>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginTop: "16px",
-                }}
-              >
-                <div style={styles.nozzleMetric}>
-                  <p
-                    style={{
-                      ...styles.nozzleMetricValue,
-                      fontSize: "20px",
-                      color: "#ca8a04",
-                    }}
-                  >
-                    <span style={{ color: getDieselDifference().color }}>
-                      {getDieselDifference().value}
-                    </span>
-                  </p>
-                  <p style={styles.nozzleMetricLabel}>Difference</p>
                 </div>
               </div>
             </div>
@@ -1263,7 +1102,7 @@ const getCombinedHistory = () => {
             </div>
           </div>
         </div>
-        {/* Combined History Table */}
+        {/* All History Table - Shows every refill and autorefill separately */}
         {(offloadingEvents.length > 0 || refillData.length > 0) && (
           <div
             style={{
@@ -1290,21 +1129,18 @@ const getCombinedHistory = () => {
                 <thead>
                   <tr style={{ backgroundColor: "#f8fafc", borderBottom: "2px solid #e2e8f0" }}>
                     <th style={{ padding: "12px", textAlign: "left", fontWeight: "600", color: "#475569" }}>Date</th>
+                    <th style={{ padding: "12px", textAlign: "left", fontWeight: "600", color: "#475569" }}>Type</th>
                     <th style={{ padding: "12px", textAlign: "left", fontWeight: "600", color: "#475569" }}>Product</th>
-                    <th style={{ padding: "12px", textAlign: "right", fontWeight: "600", color: "#475569" }}>Autorefill (L)</th>
-                    <th style={{ padding: "12px", textAlign: "right", fontWeight: "600", color: "#475569" }}>Refill Qty (L)</th>
-                    <th style={{ padding: "12px", textAlign: "right", fontWeight: "600", color: "#475569" }}>Refill Dipstick (L)</th>
-                    <th style={{ padding: "12px", textAlign: "right", fontWeight: "600", color: "#475569" }}>Difference</th>
+                    <th style={{ padding: "12px", textAlign: "left", fontWeight: "600", color: "#475569" }}>Tank ID</th>
+                    <th style={{ padding: "12px", textAlign: "right", fontWeight: "600", color: "#475569" }}>Volume (L)</th>
+                    <th style={{ padding: "12px", textAlign: "right", fontWeight: "600", color: "#475569" }}>Dipstick (L)</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {getCombinedHistory().map((record, index) => {
-                    const difference = record.autorefill - record.refillQty;
-                    const differenceColor = difference === 0 ? '#16a34a' : difference > 0 ? '#f59e0b' : '#dc2626';
-                    
+                  {getAllHistory().map((record, index) => {
                     return (
                       <tr 
-                        key={`${record.date}-${record.product}-${index}`}
+                        key={`${record.date}-${record.product}-${record.type}-${index}`}
                         style={{ 
                           borderBottom: "1px solid #e2e8f0",
                           backgroundColor: index % 2 === 0 ? "#ffffff" : "#f8fafc"
@@ -1314,7 +1150,9 @@ const getCombinedHistory = () => {
                           {new Date(record.date).toLocaleDateString('en-US', {
                             year: 'numeric',
                             month: 'short',
-                            day: 'numeric'
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
                           })}
                         </td>
                         <td style={{ padding: "12px" }}>
@@ -1323,46 +1161,46 @@ const getCombinedHistory = () => {
                             borderRadius: "4px",
                             fontSize: "12px",
                             fontWeight: "600",
-                            backgroundColor: record.product.toUpperCase().includes("UNLEADED") ? "#dcfce7" : "#dbeafe",
-                            color: record.product.toUpperCase().includes("UNLEADED") ? "#166534" : "#1e40af"
+                            backgroundColor: record.type === 'autorefill' ? "#f3e8ff" : "#dbeafe",
+                            color: record.type === 'autorefill' ? "#7c3aed" : "#0ea5e9"
+                          }}>
+                            {record.type === 'autorefill' ? 'Autorefill' : 'Refill'}
+                          </span>
+                        </td>
+                        <td style={{ padding: "12px" }}>
+                          <span style={{
+                            padding: "4px 8px",
+                            borderRadius: "4px",
+                            fontSize: "12px",
+                            fontWeight: "600",
+                            backgroundColor: record.product.toUpperCase().includes("UNLEADED") ? "#dcfce7" : "#fef3c7",
+                            color: record.product.toUpperCase().includes("UNLEADED") ? "#166534" : "#92400e"
                           }}>
                             {record.product}
                           </span>
                         </td>
                         <td style={{ 
-                          padding: "12px", 
-                          textAlign: "right",
+                          padding: "12px",
                           fontWeight: "600",
-                          color: record.autorefill > 0 ? "#7c3aed" : "#94a3b8"
+                          color: "#475569"
                         }}>
-                          {record.autorefill > 0 ? record.autorefill.toLocaleString() : '-'}
+                          {record.tankId || record.tankName || '-'}
                         </td>
                         <td style={{ 
                           padding: "12px", 
                           textAlign: "right",
                           fontWeight: "600",
-                          color: record.refillQty > 0 ? "#0ea5e9" : "#94a3b8"
+                          color: record.type === 'autorefill' ? "#7c3aed" : "#0ea5e9"
                         }}>
-                          {record.refillQty > 0 ? record.refillQty.toLocaleString() : '-'}
+                          {record.volume > 0 ? record.volume.toLocaleString() : '-'}
                         </td>
                         <td style={{ 
                           padding: "12px", 
                           textAlign: "right",
                           fontWeight: "600",
-                          color: record.refillDipstick > 0 ? "#22c55e" : "#94a3b8"
+                          color: record.refillDipstick && record.refillDipstick > 0 ? "#22c55e" : "#94a3b8"
                         }}>
-                          {record.refillDipstick > 0 ? record.refillDipstick.toLocaleString() : '-'}
-                        </td>
-                        <td style={{ 
-                          padding: "12px", 
-                          textAlign: "right",
-                          fontWeight: "700",
-                          color: differenceColor
-                        }}>
-                          {record.autorefill > 0 && record.refillQty > 0 
-                            ? `${difference > 0 ? '+' : ''}${difference.toLocaleString()}` 
-                            : '-'
-                          }
+                          {record.refillDipstick && record.refillDipstick > 0 ? record.refillDipstick.toLocaleString() : '-'}
                         </td>
                       </tr>
                     );
@@ -1371,7 +1209,7 @@ const getCombinedHistory = () => {
               </table>
             </div>
 
-            {getCombinedHistory().length === 0 && (
+            {getAllHistory().length === 0 && (
               <div style={{
                 textAlign: "center",
                 padding: "32px",
